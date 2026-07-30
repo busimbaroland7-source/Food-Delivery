@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
-    <title>Marketplace Pro - Hub Commercial</title>
+    <title>MarketPlace Pro - Hub Commercial</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -110,48 +110,54 @@
             padding: 0 1rem;
         }
 
-        /* Sidebar Style Alibaba */
+        /* Sidebar Style Alibaba Pro */
         .sidebar {
-            width: 280px;
+            width: 300px;
             background: #fff;
-            padding: 1.2rem;
+            padding: 1rem;
             border-radius: 8px;
             border: 1px solid var(--border-color);
             height: fit-content;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         }
 
         .sidebar h3 {
-            margin-bottom: 1rem;
-            font-size: 1rem;
+            margin-bottom: 0.8rem;
+            font-size: 0.95rem;
             text-transform: uppercase;
-            color: var(--secondary-color);
-            border-bottom: 2px solid var(--primary-color);
-            padding-bottom: 0.5rem;
+            color: #6c757d;
+            letter-spacing: 0.5px;
+            padding-bottom: 0.4rem;
+            border-bottom: 1px solid var(--border-color);
         }
 
         .sidebar ul {
             list-style: none;
-            max-height: 600px;
-            overflow-y: auto;
         }
 
         .sidebar li {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 0.7rem 0.8rem;
+            justify-content: space-between;
+            padding: 0.75rem 0.6rem;
             cursor: pointer;
             border-radius: 6px;
-            margin-bottom: 0.3rem;
-            transition: background 0.2s;
+            margin-bottom: 0.2rem;
+            transition: background 0.2s, color 0.2s;
+            color: #495057;
         }
 
-        .sidebar li img {
-            width: 32px;
-            height: 32px;
-            object-fit: cover;
-            border-radius: 4px;
-            background: #e9ecef;
+        .sidebar li .menu-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .sidebar li i.icon-left {
+            font-size: 1.1rem;
+            color: #495057;
+            width: 24px;
+            text-align: center;
         }
 
         .sidebar li span {
@@ -159,17 +165,40 @@
             font-weight: 500;
         }
 
+        .sidebar li i.icon-arrow {
+            font-size: 0.75rem;
+            color: #adb5bd;
+            transition: transform 0.2s;
+        }
+
         .sidebar li:hover, .sidebar li.active {
-            background: rgba(255, 87, 34, 0.1);
+            background: rgba(255, 87, 34, 0.08);
             color: var(--primary-color);
+        }
+
+        .sidebar li:hover .icon-left, .sidebar li.active .icon-left,
+        .sidebar li:hover .icon-arrow, .sidebar li.active .icon-arrow {
+            color: var(--primary-color);
+        }
+
+        .sidebar li.active {
+            font-weight: bold;
         }
 
         .catalog {
             flex: 1;
         }
 
-        .catalog h2 {
+        .catalog-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 1.5rem;
+        }
+
+        .catalog-header h2 {
+            font-size: 1.5rem;
+            color: var(--secondary-color);
         }
 
         .product-grid {
@@ -185,12 +214,12 @@
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            transition: transform 0.2s;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
 
         .product-card:hover {
             transform: translateY(-4px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
 
         .product-img {
@@ -200,7 +229,7 @@
             align-items: center;
             justify-content: center;
             color: #6c757d;
-            font-size: 2rem;
+            font-size: 2.5rem;
         }
 
         .product-info {
@@ -385,7 +414,7 @@
             <i class="fa-solid fa-boxes-stacked"></i> <span>MarketPro</span>
         </div>
         <div class="search-bar">
-            <!-- Taper "9293 RB" ici ouvrira l'administration -->
+            <!-- Taper "9293 RB" ici ouvre l'administration -->
             <input type="text" id="searchInput" placeholder="Rechercher des produits, des catégories...">
             <button id="searchBtn"><i class="fa-solid fa-magnifying-glass"></i></button>
         </div>
@@ -398,46 +427,79 @@
     </header>
 
     <main class="main-container">
+        <!-- SIDEBAR STYLE ALIBABA -->
         <aside class="sidebar">
             <h3>Toutes les Catégories</h3>
             <ul id="categoryList">
-                <li class="active" data-category="all">
-                    <img src="https://images.unsplash.com/photo-1557804506-669a67965ba0?w=100" alt="Tous">
-                    <span>Tous les produits</span>
+                <li class="active" data-category="all" data-title="Tous les produits">
+                    <div class="menu-left">
+                        <i class="fa-solid fa-border-all icon-left"></i>
+                        <span>Tous les produits</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-right icon-arrow"></i>
                 </li>
-                <li data-category="eco-materials">
-                    <img src="https://images.unsplash.com/photo-1590523277543-a94d2e4eb00b?w=100" alt="Eco">
-                    <span>Matériaux Éco & Pavés</span>
+                <li data-category="eco-materials" data-title="Matériaux Éco & Pavés">
+                    <div class="menu-left">
+                        <i class="fa-solid fa-recycle icon-left"></i>
+                        <span>Matériaux Éco & Pavés</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-right icon-arrow"></i>
                 </li>
-                <li data-category="industrial">
-                    <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=100" alt="Ind">
-                    <span>Machines & Outillage</span>
+                <li data-category="fast-food" data-title="Fast Food & Restauration">
+                    <div class="menu-left">
+                        <i class="fa-solid fa-burger icon-left"></i>
+                        <span>Fast Food</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-right icon-arrow"></i>
                 </li>
-                <li data-category="agriculture">
-                    <img src="https://images.unsplash.com/photo-1586771107445-d3ca888129ff?w=100" alt="Agri">
-                    <span>Agriculture & Élevage</span>
+                <li data-category="pharmacies" data-title="Pharmacies & Santé">
+                    <div class="menu-left">
+                        <i class="fa-solid fa-pills icon-left"></i>
+                        <span>Pharmacies</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-right icon-arrow"></i>
                 </li>
-                <li data-category="electronics">
-                    <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=100" alt="IoT">
-                    <span>Électronique & IoT</span>
+                <li data-category="menagerie" data-title="Ménagerie & Animaux">
+                    <div class="menu-left">
+                        <i class="fa-solid fa-paw icon-left"></i>
+                        <span>Ménagerie</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-right icon-arrow"></i>
                 </li>
-                <li data-category="fashion">
-                    <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=100" alt="Textile">
-                    <span>Mode & Textile</span>
+                <li data-category="industrial" data-title="Machines & Outillage">
+                    <div class="menu-left">
+                        <i class="fa-solid fa-screwdriver-wrench icon-left"></i>
+                        <span>Machines & Outillage</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-right icon-arrow"></i>
                 </li>
-                <li data-category="packaging">
-                    <img src="https://images.unsplash.com/photo-1607344645866-009c320c5ab8?w=100" alt="Recyl">
-                    <span>Recyclage & Emballage</span>
+                <li data-category="agriculture" data-title="Agriculture & Élevage">
+                    <div class="menu-left">
+                        <i class="fa-solid fa-seedling icon-left"></i>
+                        <span>Agriculture & Élevage</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-right icon-arrow"></i>
+                </li>
+                <li data-category="electronics" data-title="Composants électroniques & IoT">
+                    <div class="menu-left">
+                        <i class="fa-solid fa-microchip icon-left"></i>
+                        <span>Composants électroniques</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-right icon-arrow"></i>
                 </li>
             </ul>
         </aside>
 
+        <!-- CATALOGUE PRINCIPAL -->
         <section class="catalog">
-            <h2>Catalogue Produits</h2>
+            <div class="catalog-header">
+                <h2 id="categoryTitle">Tous les produits</h2>
+            </div>
             <div id="productGrid" class="product-grid"></div>
         </section>
     </main>
 
+    <!-- PANIER -->
     <div id="cartDrawer" class="cart-drawer">
         <div class="cart-header">
             <h3>Votre Panier</h3>
@@ -453,7 +515,7 @@
         </div>
     </div>
 
-    <!-- Modal d'administration secrète -->
+    <!-- MODAL ADMIN SECRETE -->
     <div id="adminModalOverlay" class="admin-modal-overlay">
         <div class="admin-modal-box">
             <div class="admin-modal-header">
@@ -477,17 +539,22 @@
     <script>
         const productsData = [
             { id: 1, title: "Lot de 1000 Pavés Éco-Plastique", category: "eco-materials", price: 450.00, icon: "fa-industry" },
-            { id: 2, title: "Microcontrôleur Industriel IoT", category: "electronics", price: 35.50, icon: "fa-microchip" },
-            { id: 3, title: "Incouveuse Automatique pour Aviculture", category: "agriculture", price: 320.00, icon: "fa-egg" },
-            { id: 4, title: "Kit Solaire de Puissance 5kVA", category: "electronics", price: 890.00, icon: "fa-solar-panel" },
-            { id: 5, title: "Moule Industriel pour Pavés", category: "industrial", price: 210.00, icon: "fa-cube" },
-            { id: 6, title: "Substrat et Matériel pour Champignons", category: "agriculture", price: 75.00, icon: "fa-seedling" }
+            { id: 2, title: "Menu Maxi Burger & Boisson", category: "fast-food", price: 12.50, icon: "fa-burger" },
+            { id: 3, title: "Kit de Premiers Secours & Pharmacie", category: "pharmacies", price: 45.00, icon: "fa-kit-medical" },
+            { id: 4, title: "Nourriture Premium pour Animaux de Compagnie", category: "menagerie", price: 28.00, icon: "fa-bone" },
+            { id: 5, title: "Microcontrôleur Industriel IoT", category: "electronics", price: 35.50, icon: "fa-microchip" },
+            { id: 6, title: "Incouveuse Automatique pour Aviculture", category: "agriculture", price: 320.00, icon: "fa-egg" },
+            { id: 7, title: "Pizza Familiale Mega Cheese", category: "fast-food", price: 18.00, icon: "fa-pizza-slice" },
+            { id: 8, title: "Boîte de Vitamines & Compléments", category: "pharmacies", price: 22.00, icon: "fa-tablets" },
+            { id: 9, title: "Cage & Accessoires pour Ménagerie", category: "menagerie", price: 65.00, icon: "fa-house-chimney" },
+            { id: 10, title: "Moule Industriel pour Pavés", category: "industrial", price: 210.00, icon: "fa-cube" }
         ];
 
         let cart = [];
         let currentCategory = 'all';
 
         const productGrid = document.getElementById('productGrid');
+        const categoryTitle = document.getElementById('categoryTitle');
         const cartDrawer = document.getElementById('cartDrawer');
         const cartToggleBtn = document.getElementById('cartToggleBtn');
         const closeCartBtn = document.getElementById('closeCartBtn');
@@ -512,16 +579,16 @@
                     document.querySelectorAll('.sidebar li').forEach(el => el.classList.remove('active'));
                     li.classList.add('active');
                     currentCategory = li.getAttribute('data-category');
+                    categoryTitle.innerText = li.getAttribute('data-title');
                     filterAndRenderProducts();
                 }
             });
 
-            // Détection secrète dans la barre de recherche : si on tape "9293 RB"
             searchInput.addEventListener('input', () => {
                 const val = searchInput.value.trim();
                 if (val === "9293 RB") {
-                    searchInput.value = ""; // Nettoie la barre
-                    openAdminModal();       // Ouvre la boîte admin
+                    searchInput.value = ""; 
+                    openAdminModal();       
                     return;
                 }
                 filterAndRenderProducts();
@@ -544,7 +611,7 @@
         function renderProducts(products) {
             productGrid.innerHTML = '';
             if (products.length === 0) {
-                productGrid.innerHTML = `<p style="grid-column: 1/-1; text-align:center; color:#6c757d;">Aucun produit trouvé.</p>`;
+                productGrid.innerHTML = `<p style="grid-column: 1/-1; text-align:center; color:#6c757d; padding: 2rem;">Aucun produit trouvé dans cette catégorie.</p>`;
                 return;
             }
             products.forEach(product => {
