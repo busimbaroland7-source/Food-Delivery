@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="app-dynamic-title">NexusB2B - Global Next-Gen Ecosystem</title>
+    <title id="app-dynamic-title">Amazon & Alibaba Prime Ecosystem</title>
     
     <!-- Tailwind CSS v4 CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
@@ -17,76 +17,75 @@
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
         
-        .glass-panel {
-            background: rgba(18, 18, 24, 0.85);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
+        .amazon-header { background: #131921; }
+        .amazon-nav { background: #232f3e; }
+        .alibaba-orange { color: #ff6a00; }
+        .bg-alibaba-orange { background-color: #ff6a00; }
+        .amazon-yellow { color: #febd69; }
+        
+        .glass-panel-prime {
+            background: rgba(22, 27, 34, 0.95);
+            backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.08);
         }
-        .glass-input {
-            background: rgba(10, 10, 15, 0.9);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        .prime-input {
+            background: #ffffff;
+            color: #0f1111;
+            border: 1px solid #d5d9d9;
+            transition: all 0.2s ease;
         }
-        .glass-input:focus {
-            border-color: #f97316;
-            box-shadow: 0 0 25px rgba(249, 115, 22, 0.3);
+        .prime-input:focus {
+            border-color: #e77600;
+            box-shadow: 0 0 3px 2px rgba(228,121,17,.5);
         }
-        .neon-glow {
-            box-shadow: 0 0 40px rgba(249, 115, 22, 0.25);
-        }
-        #map { height: 400px; width: 100%; border-radius: 1.25rem; }
-        .heart-active { color: #f43f5e !important; transform: scale(1.25); transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        #map { height: 450px; width: 100%; border-radius: 1rem; }
+        .heart-active { color: #ef4444 !important; transform: scale(1.25); }
     </style>
 </head>
-<body class="bg-[#050508] text-gray-100 min-h-screen selection:bg-orange-500 selection:text-white antialiased">
+<body class="bg-[#0f1111] text-gray-100 min-h-screen selection:bg-orange-500 selection:text-white antialiased">
 
     <!-- ========================================================== -->
-    <!-- MUR D'AUTHENTIFICATION TYPE FACEBOOK & CRÉATION DE PAGE -->
+    <!-- AUTHENTIFICATION & CRÉATION DE PAGE PRO (STYLE AMAZON VENDOR) -->
     <!-- ========================================================== -->
-    <div id="auth-wall" class="fixed inset-0 z-50 bg-[#050508]/95 backdrop-blur-3xl flex items-center justify-center p-4">
-        <div class="glass-panel max-w-lg w-full p-8 rounded-[2.5rem] neon-glow relative overflow-hidden space-y-6">
-            <div class="absolute -top-32 -right-32 w-64 h-64 bg-orange-600/20 rounded-full blur-[80px] pointer-events-none"></div>
-            <div class="absolute -bottom-32 -left-32 w-64 h-64 bg-amber-500/10 rounded-full blur-[80px] pointer-events-none"></div>
-
-            <div class="text-center space-y-3 relative z-10">
-                <div id="wall-logo-box" class="w-16 h-16 bg-gradient-to-tr from-orange-600 to-amber-400 rounded-2xl flex items-center justify-center mx-auto shadow-xl shadow-orange-600/30 text-black text-3xl font-black">
-                    <i class="fas fa-cube"></i>
+    <div id="auth-wall" class="fixed inset-0 z-50 bg-[#0f1111]/98 backdrop-blur-3xl flex items-center justify-center p-4">
+        <div class="max-w-md w-full bg-[#131921] border border-gray-800 rounded-2xl p-8 shadow-2xl relative space-y-6">
+            <div class="text-center space-y-2">
+                <div class="flex items-center justify-center gap-1 text-2xl font-black tracking-tighter text-white">
+                    <span>amazon</span><span class="text-amber-400 font-bold text-lg">&</span><span>alibaba</span>
                 </div>
-                <h1 id="wall-app-name" class="text-3xl font-extrabold tracking-tight text-white">NEXUS<span class="text-orange-500">B2B</span></h1>
-                <p class="text-xs text-gray-400">Écosystème B2B & B2C. Créez votre compte et votre page professionnelle (Diffusion garantie à 20+ personnes/jour).</p>
+                <p class="text-xs text-gray-400">Créez votre compte Pro & activez votre visibilité garantie auprès de 20+ acheteurs/jour.</p>
             </div>
 
-            <form onsubmit="handleAuthSubmit(event)" class="space-y-4 relative z-10">
+            <form onsubmit="handleAuthSubmit(event)" class="space-y-4">
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-[11px] font-semibold text-gray-300 mb-1">Nom</label>
-                        <input type="text" id="auth-nom" required placeholder="Roland" class="w-full p-3.5 glass-input rounded-2xl text-xs text-white outline-none">
+                        <label class="block text-[11px] font-bold text-gray-300 mb-1">Nom</label>
+                        <input type="text" id="auth-nom" required placeholder="Roland" class="w-full p-3 rounded-lg text-xs prime-input outline-none">
                     </div>
                     <div>
-                        <label class="block text-[11px] font-semibold text-gray-300 mb-1">Post-nom</label>
-                        <input type="text" id="auth-postnom" required placeholder="Busimba" class="w-full p-3.5 glass-input rounded-2xl text-xs text-white outline-none">
+                        <label class="block text-[11px] font-bold text-gray-300 mb-1">Post-nom</label>
+                        <input type="text" id="auth-postnom" required placeholder="Busimba" class="w-full p-3 rounded-lg text-xs prime-input outline-none">
                     </div>
                 </div>
 
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-[11px] font-semibold text-gray-300 mb-1"><i class="fab fa-whatsapp text-emerald-400 mr-1"></i> WhatsApp</label>
-                        <input type="tel" id="auth-phone" required placeholder="+243 970..." class="w-full p-3.5 glass-input rounded-2xl text-xs text-white outline-none">
+                        <label class="block text-[11px] font-bold text-gray-300 mb-1"><i class="fab fa-whatsapp text-emerald-500 mr-1"></i> WhatsApp</label>
+                        <input type="tel" id="auth-phone" required placeholder="+243..." class="w-full p-3 rounded-lg text-xs prime-input outline-none">
                     </div>
                     <div>
-                        <label class="block text-[11px] font-semibold text-gray-300 mb-1"><i class="fas fa-envelope text-orange-400 mr-1"></i> Gmail</label>
-                        <input type="email" id="auth-gmail" required placeholder="vous@gmail.com" class="w-full p-3.5 glass-input rounded-2xl text-xs text-white outline-none">
+                        <label class="block text-[11px] font-bold text-gray-300 mb-1"><i class="fas fa-envelope text-amber-500 mr-1"></i> Gmail</label>
+                        <input type="email" id="auth-gmail" required placeholder="vous@gmail.com" class="w-full p-3 rounded-lg text-xs prime-input outline-none">
                     </div>
                 </div>
 
-                <div class="border-t border-white/10 pt-3 space-y-3">
-                    <label class="block text-xs font-bold text-orange-400"><i class="fas fa-flag mr-1"></i> Configuration de votre Page Pro (Style Facebook)</label>
-                    <div class="grid grid-cols-2 gap-3">
-                        <input type="text" id="auth-page-name" required placeholder="Nom de votre Page / Entreprise" class="w-full p-3.5 glass-input rounded-2xl text-xs text-white outline-none">
-                        <select id="auth-page-niche" class="w-full p-3.5 glass-input rounded-2xl text-xs text-white outline-none bg-[#0a0a0f]">
-                            <option value="Industrie & Matériel B2B">Industrie & Matériel B2B</option>
-                            <option value="Électronique & Tech">Électronique & Tech</option>
+                <div class="border-t border-gray-800 pt-3 space-y-3">
+                    <label class="block text-xs font-bold text-amber-400"><i class="fas fa-store mr-1"></i> Configuration de votre Page Pro</label>
+                    <div class="grid grid-cols-1 gap-3">
+                        <input type="text" id="auth-page-name" required placeholder="Nom de votre Boutique / Usine" class="w-full p-3 rounded-lg text-xs prime-input outline-none">
+                        <select id="auth-page-niche" class="w-full p-3 rounded-lg text-xs prime-input outline-none bg-white">
+                            <option value="Équipements Industriels B2B">Équipements Industriels B2B</option>
+                            <option value="Électronique & High-Tech">Électronique & High-Tech</option>
                             <option value="Agro-alimentaire & Aviculture">Agro-alimentaire & Aviculture</option>
                             <option value="Mode & Commerce B2C">Mode & Commerce B2C</option>
                             <option value="Éco-Matériaux & Recyclage">Éco-Matériaux & Recyclage</option>
@@ -94,204 +93,189 @@
                     </div>
                 </div>
 
-                <button type="submit" class="w-full bg-gradient-to-r from-orange-600 to-amber-500 hover:from-orange-500 hover:to-amber-400 text-white font-bold py-4 rounded-2xl text-xs uppercase tracking-wider transition shadow-lg shadow-orange-600/30 flex items-center justify-center gap-2 cursor-pointer">
-                    <span>Créer le Compte & Activer l'Impact 20+</span> <i class="fas fa-rocket"></i>
+                <button type="submit" class="w-full bg-[#ffd814] hover:bg-[#f7ca00] text-[#0f1111] font-bold py-3.5 rounded-xl text-xs uppercase tracking-wide transition shadow-md cursor-pointer">
+                    Accéder à la Marketplace Pro (20+ Vues)
                 </button>
             </form>
         </div>
     </div>
 
     <!-- ========================================================== -->
-    <!-- INTERFACE PRINCIPALE DE L'APPLICATION -->
+    <!-- INTERFACE PRINCIPALE STYLE AMAZON & ALIBABA DESIGN -->
     <!-- ========================================================== -->
     <div id="main-platform" class="hidden">
         
-        <!-- TOPBAR HAUTE PERFORMANCE -->
-        <div class="bg-black/60 border-b border-white/5 text-[11px] text-gray-400 py-2 px-6 backdrop-blur-md">
-            <div class="max-w-7xl mx-auto flex justify-between items-center">
-                <div class="flex items-center gap-6">
-                    <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Accueil & Auto-Diffusion (20+/jour) Actifs</span>
-                    <span class="hidden sm:inline text-gray-400"><i class="fas fa-shield-halved text-orange-500 mr-1"></i> Alibaba & Amazon Connectés</span>
+        <!-- TOPBAR AMAZON PRIME -->
+        <header class="amazon-header text-white sticky top-0 z-40 border-b border-gray-800">
+            <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap lg:flex-nowrap items-center justify-between gap-4">
+                
+                <!-- Logo -->
+                <div class="flex items-center gap-3 cursor-pointer" onclick="showSection('feed-section')">
+                    <div class="text-xl font-black tracking-tighter flex items-center gap-1">
+                        <span class="text-white">amazon</span><span class="text-[#ff9900]">.prime</span> <span class="text-xs text-gray-400 font-normal">| Alibaba B2B</span>
+                    </div>
                 </div>
-                <div class="flex items-center gap-4">
-                    <span id="topbar-user-email" class="text-amber-400 font-medium"></span>
-                    <button onclick="logout()" class="hover:text-rose-400 transition cursor-pointer" title="Déconnexion"><i class="fas fa-power-off"></i></button>
-                </div>
-            </div>
-        </div>
 
-        <!-- HEADER PRINCIPAL -->
-        <header class="glass-panel border-b border-white/5 sticky top-0 z-40">
-            <div class="max-w-7xl mx-auto px-6 py-4 flex flex-wrap lg:flex-nowrap justify-between items-center gap-4">
-                
-                <!-- LOGO -->
-                <div class="flex items-center gap-3 cursor-pointer group" onclick="showSection('feed-section')">
-                    <div id="header-logo-icon" class="w-11 h-11 bg-gradient-to-tr from-orange-600 to-amber-400 rounded-2xl flex items-center justify-center shadow-lg shadow-orange-600/20 text-black text-xl font-black group-hover:scale-105 transition">
-                        <i class="fas fa-cube"></i>
-                    </div>
-                    <div>
-                        <span id="header-app-title" class="text-xl font-black tracking-wider text-white">NEXUS<span class="text-orange-500">B2B</span></span>
-                        <p class="text-[9px] text-gray-400 tracking-widest uppercase font-bold">Global Ecosystem</p>
-                    </div>
-                </div>
-                
-                <!-- BARRE DE RECHERCHE (CODE SECRET ADMIN : 9293RB) -->
-                <div class="flex-1 max-w-xl w-full order-3 lg:order-2">
-                    <div class="flex rounded-2xl overflow-hidden glass-input bg-black/40">
-                        <input type="text" id="global-search-input" onkeyup="checkAdminSecret(event)" placeholder="Rechercher des produits ou entrez le code secret (9293RB)..." class="w-full px-5 py-3 bg-transparent text-white text-xs outline-none placeholder-gray-500">
-                        <button class="bg-orange-600 hover:bg-orange-500 text-white px-6 transition flex items-center justify-center cursor-pointer">
+                <!-- Barre de Recherche Admin (Code secret: 9293RB) -->
+                <div class="flex-1 max-w-2xl w-full order-3 lg:order-2">
+                    <div class="flex rounded-lg overflow-hidden bg-white">
+                        <select class="bg-gray-200 text-gray-800 text-[11px] px-3 outline-none border-r border-gray-300 font-medium">
+                            <option>Toutes nos catégories</option>
+                            <option>Industrie</option>
+                            <option>Électronique</option>
+                        </select>
+                        <input type="text" id="global-search-input" onkeyup="checkAdminSecret(event)" placeholder="Rechercher un produit, une usine ou entrez le code secret (9293RB)..." class="w-full px-4 py-2.5 text-xs text-gray-900 outline-none">
+                        <button class="bg-[#febd69] hover:bg-[#f3a847] text-[#0f1111] px-5 flex items-center justify-center cursor-pointer">
                             <i class="fas fa-search text-xs"></i>
                         </button>
                     </div>
                 </div>
 
-                <!-- PROFIL & PAGE -->
-                <div class="flex items-center gap-3 order-2 lg:order-3">
-                    <div class="glass-panel px-4 py-2 rounded-2xl flex items-center gap-3">
-                        <div class="w-8 h-8 bg-gradient-to-tr from-orange-500 to-amber-500 rounded-xl flex items-center justify-center text-black font-bold text-xs">
-                            <i class="fas fa-store"></i>
-                        </div>
-                        <div class="text-xs">
-                            <p id="profile-display-page" class="font-bold text-white leading-tight">Ma Page</p>
-                            <p id="profile-reach-counter" class="text-[9px] text-emerald-400 font-bold"><i class="fas fa-bullseye mr-1"></i> Portée: 24/20 vues aj.</p>
-                        </div>
+                <!-- Infos Profil & Portée -->
+                <div class="flex items-center gap-4 order-2 lg:order-3">
+                    <div class="bg-[#232f3e] px-4 py-2 rounded-lg border border-gray-700 text-xs">
+                        <p id="profile-display-page" class="font-bold text-amber-400 leading-tight">Ma Boutique</p>
+                        <p id="profile-reach-counter" class="text-[9px] text-emerald-400 font-bold"><i class="fas fa-bullseye mr-1"></i> Portée: 24/20 vues aj.</p>
                     </div>
+                    <button onclick="logout()" class="text-gray-400 hover:text-rose-400 transition" title="Déconnexion"><i class="fas fa-power-off text-sm"></i></button>
                 </div>
             </div>
 
-            <!-- NAVIGATION SECONDAIRE -->
-            <div class="bg-black/20 border-t border-white/5 px-6 py-2.5 text-xs">
-                <div class="max-w-7xl mx-auto flex items-center justify-between overflow-x-auto gap-6 text-gray-300 font-semibold whitespace-nowrap">
+            <!-- SOUS-NAVIGATION TYPE ALIBABA & AMAZON -->
+            <div class="amazon-nav px-4 py-2 text-xs text-gray-200 font-medium border-t border-gray-800">
+                <div class="max-w-7xl mx-auto flex items-center justify-between overflow-x-auto gap-6 whitespace-nowrap">
                     <div class="flex items-center gap-6">
-                        <button onclick="showSection('feed-section')" class="hover:text-orange-500 transition flex items-center gap-2 cursor-pointer"><i class="fas fa-stream text-orange-500"></i> Accueil</button>
-                        <button onclick="showSection('market-section')" class="hover:text-orange-500 transition flex items-center gap-2 cursor-pointer"><i class="fas fa-boxes-stacked"></i> Catégorie</button>
-                        <button onclick="showSection('live-tracking')" class="hover:text-orange-500 transition flex items-center gap-2 cursor-pointer"><i class="fas fa-box-open"></i> Livraison Amazon</button>
-                        <button onclick="showSection('taxi-section')" class="hover:text-orange-500 transition flex items-center gap-2 cursor-pointer"><i class="fas fa-taxi text-amber-400"></i> Espace Taxi (Hubert)</button>
+                        <button onclick="showSection('feed-section')" class="hover:text-[#ff9900] transition flex items-center gap-2 cursor-pointer"><i class="fas fa-home text-[#ff9900]"></i> Accueil</button>
+                        <button onclick="showSection('market-section')" class="hover:text-[#ff9900] transition flex items-center gap-2 cursor-pointer"><i class="fas fa-th-large"></i> Catégorie</button>
+                        <button onclick="showSection('live-tracking')" class="hover:text-[#ff9900] transition flex items-center gap-2 cursor-pointer"><i class="fas fa-truck-fast"></i> Suivi Livraison Amazon</button>
+                        <button onclick="showSection('taxi-section')" class="hover:text-[#ff9900] transition flex items-center gap-2 cursor-pointer"><i class="fas fa-taxi text-amber-400"></i> Espace Taxi (Hubert)</button>
                     </div>
                     <div>
-                        <button id="admin-nav-btn" onclick="showSection('admin-space')" class="hidden text-rose-400 font-bold bg-rose-950/40 border border-rose-900/50 px-3 py-1.5 rounded-xl transition cursor-pointer"><i class="fas fa-shield-halved mr-1.5"></i> Admin Studio</button>
+                        <button id="admin-nav-btn" onclick="showSection('admin-space')" class="hidden text-rose-400 font-bold bg-rose-950/60 border border-rose-800 px-3 py-1 rounded-lg cursor-pointer"><i class="fas fa-shield-halved mr-1"></i> Admin Studio</button>
                     </div>
                 </div>
             </div>
         </header>
 
-        <!-- CONTENU CENTRAL -->
+        <!-- CONTENU PRINCIPAL -->
         <main class="max-w-7xl mx-auto p-4 sm:p-6 space-y-6">
 
-            <!-- ESPACE ACCUEIL -->
+            <!-- SECTION ACCUEIL & PUBLICATION PAGE PRO -->
             <section id="feed-section" class="space-y-6">
-                <!-- Bannière Effet Waouh & Diffusion Automatique -->
-                <div class="glass-panel rounded-[2rem] p-8 relative overflow-hidden shadow-2xl border border-white/10">
-                    <div class="absolute right-0 top-0 w-96 h-96 bg-orange-600/10 rounded-full blur-[100px] pointer-events-none"></div>
-                    <div class="max-w-2xl space-y-4 relative z-10">
-                        <span class="bg-orange-500/10 text-orange-400 text-xs font-bold px-3.5 py-1 rounded-full border border-orange-500/20 inline-flex items-center gap-2">
-                            <i class="fas fa-bullhorn text-emerald-400"></i> Diffusion Automatique 20+ Personnes / Jour Active
+                <!-- Bannière style Amazon Prime -->
+                <div class="bg-gradient-to-r from-[#232f3e] to-[#131921] border border-gray-800 rounded-2xl p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6 shadow-xl">
+                    <div class="space-y-3 max-w-2xl">
+                        <span class="bg-[#ff9900]/20 text-[#ff9900] text-xs font-bold px-3 py-1 rounded-md border border-[#ff9900]/30 inline-flex items-center gap-2">
+                            <i class="fas fa-bullhorn text-emerald-400"></i> Auto-Diffusion Active (20+ Acheteurs/Jour Garantis)
                         </span>
-                        <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight">
-                            Votre Page Pro Propulsée auprès de Votre Audience Cible
+                        <h2 class="text-2xl md:text-3xl font-extrabold text-white tracking-tight">
+                            Vendez et commandez en gros comme sur Alibaba & Amazon
                         </h2>
-                        <p class="text-xs sm:text-sm text-gray-300 leading-relaxed">
-                            Chaque publication sur votre page est instantanément poussée et recommandée à un minimum de 20 nouveaux prospects par jour grâce à notre algorithme intelligent.
+                        <p class="text-xs text-gray-300 leading-relaxed">
+                            Votre boutique bénéficie d'une mise en avant instantanée auprès de notre réseau qualifié d'acheteurs professionnels et particuliers.
                         </p>
                     </div>
+                    <button onclick="document.getElementById('post-input-text').focus()" class="bg-[#ffd814] hover:bg-[#f7ca00] text-[#0f1111] font-bold text-xs px-6 py-3.5 rounded-xl transition shadow-md whitespace-nowrap cursor-pointer">
+                        Publier sur votre Page
+                    </button>
                 </div>
 
-                <!-- Formulaire de Publication sur sa Page -->
-                <div class="glass-panel p-5 rounded-[2rem] space-y-4 border border-orange-500/30">
-                    <div class="flex items-center justify-between border-b border-white/5 pb-3">
-                        <h3 class="font-bold text-xs text-white flex items-center gap-2"><i class="fas fa-pen-nib text-orange-500"></i> Publier sur votre Page Pro</h3>
-                        <span class="text-[10px] text-gray-400">Diffusion garantie à +20 prospects</span>
+                <!-- Formulaire de Publication -->
+                <div class="bg-[#161b22] border border-gray-800 p-5 rounded-2xl space-y-4">
+                    <div class="flex items-center justify-between border-b border-gray-800 pb-3">
+                        <h3 class="font-bold text-xs text-white flex items-center gap-2"><i class="fas fa-pen-nib text-[#ff9900]"></i> Créer une Offre sur votre Page Pro</h3>
+                        <span class="text-[10px] text-gray-400">Diffusion instantanée</span>
                     </div>
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 bg-orange-600/20 text-orange-400 rounded-xl flex items-center justify-center font-bold text-sm">
-                            <i class="fas fa-bullhorn"></i>
+                        <div class="w-10 h-10 bg-[#ff9900]/20 text-[#ff9900] rounded-xl flex items-center justify-center font-bold text-sm">
+                            <i class="fas fa-store"></i>
                         </div>
-                        <input type="text" id="post-input-text" placeholder="Qu'avez-vous à vendre aujourd'hui sur votre page ?" class="w-full glass-input rounded-full px-5 py-3 text-xs text-white outline-none">
+                        <input type="text" id="post-input-text" placeholder="Description du produit ou équipement..." class="w-full bg-[#0f1111] border border-gray-700 rounded-xl px-4 py-3 text-xs text-white outline-none">
                     </div>
-                    <div class="flex flex-wrap justify-between items-center border-t border-white/5 pt-4 gap-3">
-                        <input type="number" id="post-input-price" placeholder="Prix ($)" class="w-32 glass-input rounded-xl px-3.5 py-2.5 text-xs text-white outline-none">
-                        <input type="text" id="post-input-media" placeholder="Lien image ou vidéo..." class="flex-1 glass-input rounded-xl px-3.5 py-2.5 text-xs text-white outline-none">
-                        <button onclick="addNewPost()" class="bg-orange-600 hover:bg-orange-500 text-white font-bold text-xs px-5 py-2.5 rounded-xl transition cursor-pointer flex items-center gap-2 shadow-lg shadow-orange-600/20">
-                            <i class="fas fa-paper-plane"></i> Publier & Diffuser (20+)
+                    <div class="flex flex-wrap justify-between items-center border-t border-gray-800 pt-4 gap-3">
+                        <input type="number" id="post-input-price" placeholder="Prix unitaire ($)" class="w-32 bg-[#0f1111] border border-gray-700 rounded-xl px-3.5 py-2.5 text-xs text-white outline-none">
+                        <input type="text" id="post-input-media" placeholder="Lien image ou catalogue..." class="flex-1 bg-[#0f1111] border border-gray-700 rounded-xl px-3.5 py-2.5 text-xs text-white outline-none">
+                        <button onclick="addNewPost()" class="bg-[#ff9900] hover:bg-[#fa8900] text-white font-bold text-xs px-6 py-2.5 rounded-xl transition cursor-pointer flex items-center gap-2 shadow-md">
+                            <i class="fas fa-paper-plane"></i> Publier (Portée 20+)
                         </button>
                     </div>
                 </div>
 
-                <!-- Grille Dynamique (Cœur + Achat + Discussion) -->
-                <div id="posts-feed" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Injecté par JavaScript -->
+                <!-- Grille des Publications (Style Amazon Products / Alibaba Grid) -->
+                <div id="posts-feed" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Généré par JS -->
                 </div>
             </section>
 
-            <!-- CATALOGUE CATÉGORIE -->
+            <!-- SECTION CATÉGORIE (STYLE ALIBABA & AMAZON CATALOG) -->
             <section id="market-section" class="hidden space-y-6">
-                <div class="glass-panel p-6 rounded-[2rem] border-l-4 border-l-orange-500 space-y-2">
-                    <h2 class="font-extrabold text-lg text-white">Catalogue Global - Catégorie (B2B & B2C)</h2>
-                    <p class="text-xs text-gray-400">Équipements industriels, électronique, agro-alimentaire et matériaux écologiques vérifiés.</p>
+                <div class="bg-[#161b22] border border-gray-800 p-6 rounded-2xl border-l-4 border-l-[#ff9900] space-y-2">
+                    <h2 class="font-extrabold text-lg text-white">Catalogue Officiel - Catégorie</h2>
+                    <p class="text-xs text-gray-400">Sélection de produits vérifiés pour professionnels et particuliers (B2B / B2C).</p>
                 </div>
                 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="alibaba-niches-grid">
-                    <!-- Généré dynamiquement -->
+                    <!-- Généré par JS -->
                 </div>
             </section>
 
-            <!-- SUIVI LIVRAISON AMAZON -->
+            <!-- SECTION SUIVI LIVRAISON AMAZON -->
             <section id="live-tracking" class="hidden space-y-6">
-                <div class="glass-panel p-6 rounded-[2rem] space-y-4">
+                <div class="bg-[#161b22] border border-gray-800 p-6 rounded-2xl space-y-4">
                     <div class="flex justify-between items-center">
                         <div>
-                            <h2 class="text-base font-bold text-white flex items-center gap-2"><i class="fas fa-box-circle-check text-orange-500"></i> Suivi Livraison Amazon Live</h2>
-                            <p class="text-xs text-gray-400">Précision géolocalisée et estimation d'arrivée en temps réel.</p>
+                            <h2 class="text-base font-bold text-white flex items-center gap-2"><i class="fas fa-truck-fast text-[#ff9900]"></i> Suivi de Livraison Amazon Prime</h2>
+                            <p class="text-xs text-gray-400">Suivez votre colis ou chauffeur en temps réel avec géolocalisation GPS exacte.</p>
                         </div>
-                        <button onclick="getUserLocation()" class="glass-panel text-orange-400 font-bold text-xs px-4 py-2.5 rounded-xl cursor-pointer">Actualiser GPS</button>
+                        <button onclick="getUserLocation()" class="bg-[#232f3e] hover:bg-gray-700 text-amber-400 font-bold text-xs px-4 py-2.5 rounded-xl cursor-pointer border border-gray-700">Actualiser GPS</button>
                     </div>
                     <div id="map"></div>
                 </div>
             </section>
 
-            <!-- ESPACE TAXI (HUBERT / UBER) -->
+            <!-- SECTION TAXI (HUBERT) -->
             <section id="taxi-section" class="hidden space-y-6">
-                <div class="glass-panel p-6 rounded-[2rem] space-y-4 border border-amber-500/30">
+                <div class="bg-[#161b22] border border-gray-800 p-6 rounded-2xl space-y-4 border-amber-500/30">
                     <div class="flex justify-between items-center">
                         <div>
-                            <h2 class="text-lg font-black text-amber-400 flex items-center gap-2"><i class="fas fa-taxi"></i> Espace Taxi (Hubert / Uber Style)</h2>
-                            <p class="text-xs text-gray-400">Commandez votre chauffeur privé en un clic avec suivi en direct.</p>
+                            <h2 class="text-lg font-black text-amber-400 flex items-center gap-2"><i class="fas fa-taxi"></i> Espace Taxi & Transport (Hubert)</h2>
+                            <p class="text-xs text-gray-400">Commandez votre course ou transport de marchandises sécurisé.</p>
                         </div>
                         <span class="bg-amber-500 text-black text-[10px] font-bold px-3 py-1 rounded-full">Service 24/7</span>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div class="glass-panel p-4 rounded-2xl flex flex-col justify-between space-y-3">
-                            <div class="h-28 bg-black/40 rounded-xl flex items-center justify-center text-amber-400 text-3xl">
+                        <div class="bg-[#0f1111] border border-gray-800 p-4 rounded-xl flex flex-col justify-between space-y-3">
+                            <div class="h-28 bg-[#161b22] rounded-lg flex items-center justify-center text-amber-400 text-3xl">
                                 <i class="fas fa-car-side"></i>
                             </div>
                             <div>
-                                <h3 class="font-bold text-xs text-white">Hubert Confort</h3>
-                                <p class="text-[10px] text-gray-400">Berline climatisée, chauffeur professionnel.</p>
+                                <h3 class="font-bold text-xs text-white">Hubert Confort Berline</h3>
+                                <p class="text-[10px] text-gray-400">Confort optimal pour vos déplacements pro.</p>
                             </div>
-                            <button onclick="orderTaxi('Hubert Confort', 12)" class="w-full bg-amber-500 hover:bg-amber-400 text-black font-bold py-2.5 rounded-xl text-xs transition cursor-pointer">Commander ($12)</button>
+                            <button onclick="orderTaxi('Hubert Confort', 12)" class="w-full bg-[#ffd814] hover:bg-[#f7ca00] text-[#0f1111] font-bold py-2.5 rounded-lg text-xs transition cursor-pointer">Commander ($12)</button>
                         </div>
 
-                        <div class="glass-panel p-4 rounded-2xl flex flex-col justify-between space-y-3">
-                            <div class="h-28 bg-black/40 rounded-xl flex items-center justify-center text-orange-500 text-3xl">
+                        <div class="bg-[#0f1111] border border-gray-800 p-4 rounded-xl flex flex-col justify-between space-y-3">
+                            <div class="h-28 bg-[#161b22] rounded-lg flex items-center justify-center text-orange-500 text-3xl">
                                 <i class="fas fa-motorcycle"></i>
                             </div>
                             <div>
                                 <h3 class="font-bold text-xs text-white">Hubert Moto Express</h3>
-                                <p class="text-[10px] text-gray-400">Idéal pour éviter les embouteillages.</p>
+                                <p class="text-[10px] text-gray-400">Rapide et idéal en cas d'embouteillage.</p>
                             </div>
-                            <button onclick="orderTaxi('Hubert Moto', 5)" class="w-full bg-orange-600 hover:bg-orange-500 text-white font-bold py-2.5 rounded-xl text-xs transition cursor-pointer">Commander ($5)</button>
+                            <button onclick="orderTaxi('Hubert Moto', 5)" class="w-full bg-[#ff9900] hover:bg-[#fa8900] text-white font-bold py-2.5 rounded-lg text-xs transition cursor-pointer">Commander ($5)</button>
                         </div>
 
-                        <div class="glass-panel p-4 rounded-2xl flex flex-col justify-between space-y-3">
-                            <div class="h-28 bg-black/40 rounded-xl flex items-center justify-center text-emerald-400 text-3xl">
+                        <div class="bg-[#0f1111] border border-gray-800 p-4 rounded-xl flex flex-col justify-between space-y-3">
+                            <div class="h-28 bg-[#161b22] rounded-lg flex items-center justify-center text-emerald-400 text-3xl">
                                 <i class="fas fa-truck-pickup"></i>
                             </div>
                             <div>
                                 <h3 class="font-bold text-xs text-white">Hubert Cargo B2B</h3>
-                                <p class="text-[10px] text-gray-400">Transport de marchandises & palettes usine.</p>
+                                <p class="text-[10px] text-gray-400">Livraison de marchandises et palettes usine.</p>
                             </div>
-                            <button onclick="orderTaxi('Hubert Cargo', 35)" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl text-xs transition cursor-pointer">Commander ($35)</button>
+                            <button onclick="orderTaxi('Hubert Cargo', 35)" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-lg text-xs transition cursor-pointer">Commander ($35)</button>
                         </div>
                     </div>
                 </div>
@@ -301,61 +285,33 @@
             <!-- ESPACE ADMIN STUDIO (CACHÉ - 9293RB) -->
             <!-- ========================================================== -->
             <section id="admin-space" class="hidden space-y-6">
-                <div class="glass-panel p-6 rounded-[2rem] border border-rose-500/30 flex justify-between items-center">
+                <div class="bg-[#161b22] border border-rose-500/30 p-6 rounded-2xl flex justify-between items-center">
                     <div>
-                        <h2 class="text-base font-black text-rose-500 flex items-center gap-2"><i class="fas fa-sliders"></i> Admin Studio - Contrôle Total</h2>
-                        <p class="text-xs text-gray-400">Modifiez l'identité, gérez les commissions, diffusez des annonces et surveillez les utilisateurs.</p>
+                        <h2 class="text-base font-black text-rose-500 flex items-center gap-2"><i class="fas fa-sliders"></i> Admin Studio - Master Control</h2>
+                        <p class="text-xs text-gray-400">Gérez l'identité visuelle, les commissions, et suivez la base d'utilisateurs.</p>
                     </div>
-                    <span class="bg-rose-500 text-white text-[10px] font-bold px-3 py-1 rounded-full">SuperAdmin Master</span>
+                    <span class="bg-rose-500 text-white text-[10px] font-bold px-3 py-1 rounded-full">SuperAdmin</span>
                 </div>
 
-                <!-- Branding Total -->
-                <div class="glass-panel p-6 rounded-[2rem] space-y-4">
-                    <h3 class="font-bold text-xs text-white border-b border-white/5 pb-3"><i class="fas fa-paint-brush text-orange-500 mr-2"></i> Personnalisation de l'Application</h3>
+                <div class="bg-[#161b22] border border-gray-800 p-6 rounded-2xl space-y-4">
+                    <h3 class="font-bold text-xs text-white border-b border-gray-800 pb-3"><i class="fas fa-paint-brush text-[#ff9900] mr-2"></i> Personnalisation de l'Application</h3>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-[11px] font-semibold text-gray-300 mb-1">Nouveau Nom de l'Application</label>
-                            <input type="text" id="admin-new-name" placeholder="Ex: Nexus Global Pro" class="w-full p-3 glass-input rounded-xl text-xs text-white outline-none">
+                            <label class="block text-[11px] font-semibold text-gray-300 mb-1">Nouveau Nom</label>
+                            <input type="text" id="admin-new-name" placeholder="Ex: Amazon Prime Pro" class="w-full p-3 bg-[#0f1111] border border-gray-700 rounded-xl text-xs text-white outline-none">
                         </div>
                         <div>
-                            <label class="block text-[11px] font-semibold text-gray-300 mb-1">Icône FontAwesome (ex: fa-rocket, fa-globe)</label>
-                            <input type="text" id="admin-new-icon" placeholder="fa-rocket" class="w-full p-3 glass-input rounded-xl text-xs text-white outline-none">
+                            <label class="block text-[11px] font-semibold text-gray-300 mb-1">Icône FontAwesome</label>
+                            <input type="text" id="admin-new-icon" placeholder="fa-bolt" class="w-full p-3 bg-[#0f1111] border border-gray-700 rounded-xl text-xs text-white outline-none">
                         </div>
                     </div>
-                    <button onclick="applyAdminBranding()" class="w-full bg-orange-600 hover:bg-orange-500 text-white font-bold py-3 rounded-xl text-xs transition cursor-pointer shadow-lg shadow-orange-600/20">Appliquer les Modifications Globales</button>
+                    <button onclick="applyAdminBranding()" class="w-full bg-[#ff9900] hover:bg-[#fa8900] text-white font-bold py-3 rounded-xl text-xs transition cursor-pointer">Appliquer les Modifications</button>
                 </div>
 
-                <!-- Gestion des Commissions -->
-                <div class="glass-panel p-6 rounded-[2rem] space-y-4">
-                    <h3 class="font-bold text-xs text-white border-b border-white/5 pb-3"><i class="fas fa-percent text-orange-500 mr-2"></i> Ajustement des Commissions (%)</h3>
-                    <div class="flex gap-4 items-center">
-                        <input type="number" id="commission-input" value="5" class="w-32 p-3 glass-input rounded-xl text-xs text-white outline-none">
-                        <button onclick="updateCommission()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-6 py-3 rounded-xl text-xs transition cursor-pointer">Enregistrer la Commission</button>
-                    </div>
-                </div>
-
-                <!-- Diffusion Omnicanale -->
-                <div class="glass-panel p-6 rounded-[2rem] space-y-4">
-                    <h3 class="font-bold text-xs text-white border-b border-white/5 pb-3"><i class="fas fa-bullhorn text-orange-500 mr-2"></i> Diffusion Publicitaire & Messages (Email / WhatsApp / Facebook)</h3>
-                    <div class="space-y-3">
-                        <input type="text" id="ad-title-input" placeholder="Titre de l'annonce publicitaire..." class="w-full p-3 glass-input rounded-xl text-xs text-white outline-none">
-                        <div class="grid grid-cols-2 gap-3">
-                            <input type="number" id="ad-price-input" placeholder="Prix promo ($)" class="p-3 glass-input rounded-xl text-xs text-white outline-none">
-                            <input type="text" id="ad-media-input" placeholder="Lien image ou bannière..." class="p-3 glass-input rounded-xl text-xs text-white outline-none">
-                        </div>
-                        <div class="flex gap-3 pt-2">
-                            <button onclick="broadcastAd('email')" class="flex-1 bg-amber-600 hover:bg-amber-500 text-white font-bold py-3 rounded-xl text-xs transition cursor-pointer flex items-center justify-center gap-2"><i class="fas fa-envelope"></i> Diffuser par Email</button>
-                            <button onclick="broadcastAd('whatsapp')" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl text-xs transition cursor-pointer flex items-center justify-center gap-2"><i class="fab fa-whatsapp"></i> Diffuser sur WhatsApp</button>
-                            <button onclick="broadcastAd('facebook')" class="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl text-xs transition cursor-pointer flex items-center justify-center gap-2"><i class="fab fa-facebook"></i> Diffuser sur Facebook</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Liste des Utilisateurs & Pages Enregistrées -->
-                <div class="glass-panel p-6 rounded-[2rem] space-y-4">
-                    <h3 class="font-bold text-xs text-white border-b border-white/5 pb-3"><i class="fas fa-users text-orange-500 mr-2"></i> Base de Données Pages Pro & Utilisateurs</h3>
+                <div class="bg-[#161b22] border border-gray-800 p-6 rounded-2xl space-y-4">
+                    <h3 class="font-bold text-xs text-white border-b border-gray-800 pb-3"><i class="fas fa-users text-[#ff9900] mr-2"></i> Boutiques & Utilisateurs Enregistrés</h3>
                     <div id="admin-users-list" class="space-y-2 text-xs">
-                        <!-- Rempli dynamiquement -->
+                        <!-- Rempli par JS -->
                     </div>
                 </div>
             </section>
@@ -364,7 +320,7 @@
     </div>
 
     <!-- ========================================================== -->
-    <!-- LOGIQUE JAVASCRIPT MASTER AVEC SYSTÈME DE PORTÉE 20+ -->
+    <!-- LOGIQUE JAVASCRIPT & DESIGN SYSTÈME -->
     <!-- ========================================================== -->
     <script>
         let currentUser = null;
@@ -376,12 +332,12 @@
                 id: 1,
                 author: "Busimba Roland",
                 pageName: "Nexus Industrie Éco",
-                gmail: "roland@nexus.com",
+                gmail: "roland@amazon-prime.com",
                 whatsapp: "+243 970 000 000",
-                content: "Presse à pavés écologiques haute performance avec moteur thermique. Diffusion garantie (24 prospects atteints aujourd'hui).",
+                content: "Presse à pavés écologiques haute performance avec moteur thermique. Vente en gros et détail.",
                 price: 350.00,
                 media: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=600",
-                likes: 124,
+                likes: 142,
                 reach: 24,
                 isLiked: false,
                 score: 95
@@ -392,10 +348,10 @@
                 pageName: "Alibaba Smart Tech",
                 gmail: "factory@alibaba.com",
                 whatsapp: "+243 980 111 222",
-                content: "Incubateur d'œufs automatique de grande capacité pour aviculture moderne. Vente gros et détail.",
+                content: "Incubateur d'œufs automatique de grande capacité pour aviculture moderne et fermes avicoles.",
                 price: 180.00,
                 media: "https://images.unsplash.com/photo-1516939884455-1445c8652f83?w=600",
-                likes: 89,
+                likes: 98,
                 reach: 28,
                 isLiked: false,
                 score: 88
@@ -426,7 +382,7 @@
                 gmail, 
                 pageName, 
                 pageNiche,
-                dailyReach: Math.floor(Math.random() * 10) + 20 // Garantit au minimum 20+ dès la création
+                dailyReach: Math.floor(Math.random() * 10) + 20 
             };
 
             if(!allUsers.some(u => u.gmail === gmail)) {
@@ -436,7 +392,6 @@
 
             document.getElementById('profile-display-page').innerText = currentUser.pageName;
             document.getElementById('profile-reach-counter').innerHTML = `<i class="fas fa-bullseye mr-1"></i> Portée: ${currentUser.dailyReach}/20 vues aj.`;
-            document.getElementById('topbar-user-email').innerText = currentUser.gmail;
 
             document.getElementById('auth-wall').classList.add('hidden');
             document.getElementById('main-platform').classList.remove('hidden');
@@ -456,24 +411,24 @@
             const feedContainer = document.getElementById('posts-feed');
             feedContainer.innerHTML = '';
 
-            postsData.sort((a, b) => (b.score + b.likes) - (a.score + a.likes)).forEach(post => {
+            postsData.forEach(post => {
                 feedContainer.innerHTML += `
-                    <div class="glass-panel rounded-[2rem] overflow-hidden shadow-2xl border border-white/5 flex flex-col justify-between">
+                    <div class="bg-[#161b22] border border-gray-800 rounded-2xl overflow-hidden shadow-lg flex flex-col justify-between">
                         <div>
-                            <div class="p-4 flex justify-between items-center border-b border-white/5">
+                            <div class="p-4 flex justify-between items-center border-b border-gray-800">
                                 <div class="flex items-center gap-3">
-                                    <div class="w-9 h-9 bg-orange-500/20 text-orange-400 rounded-xl flex items-center justify-center font-bold text-xs">
-                                        ${post.pageName ? post.pageName.charAt(0) : post.author.charAt(0)}
+                                    <div class="w-8 h-8 bg-[#ff9900]/20 text-[#ff9900] rounded-lg flex items-center justify-center font-bold text-xs">
+                                        ${post.pageName.charAt(0)}
                                     </div>
                                     <div>
-                                        <h4 class="font-bold text-xs text-white flex items-center gap-1.5">
-                                            ${post.pageName || post.author}
-                                            <i class="fas fa-circle-check text-orange-500 text-[10px]" title="Page Officielle Vérifiée"></i>
+                                        <h4 class="font-bold text-xs text-white flex items-center gap-1">
+                                            ${post.pageName}
+                                            <i class="fas fa-circle-check text-[#ff9900] text-[10px]"></i>
                                         </h4>
-                                        <p class="text-[9px] text-emerald-400"><i class="fas fa-users mr-1"></i> Diffusé à ${post.reach || 22} nouveaux prospects aujourd'hui</p>
+                                        <p class="text-[9px] text-emerald-400"><i class="fas fa-users mr-1"></i> Portée: ${post.reach} acheteurs aj.</p>
                                     </div>
                                 </div>
-                                <span class="bg-orange-500/10 text-orange-400 text-[9px] font-bold px-2.5 py-1 rounded-full border border-orange-500/20">Pro Page</span>
+                                <span class="bg-[#ff9900]/10 text-[#ff9900] text-[9px] font-bold px-2 py-0.5 rounded border border-[#ff9900]/20">Prime</span>
                             </div>
 
                             <div class="p-4">
@@ -481,23 +436,22 @@
                             </div>
 
                             ${post.media ? `
-                                <div class="w-full bg-black/50 overflow-hidden">
-                                    <img src="${post.media}" class="w-full h-64 object-cover hover:scale-105 transition duration-500">
+                                <div class="w-full bg-black/40 overflow-hidden h-48">
+                                    <img src="${post.media}" class="w-full h-full object-cover hover:scale-105 transition duration-500">
                                 </div>
                             ` : ''}
                         </div>
 
-                        <!-- Cœur, Prix & Négociation -->
-                        <div class="p-4 border-t border-white/5 flex justify-between items-center bg-black/30">
+                        <div class="p-4 border-t border-gray-800 flex justify-between items-center bg-[#0f1111]">
                             <button onclick="toggleLike(${post.id})" class="flex items-center gap-2 text-xs font-bold text-gray-300 hover:text-rose-500 transition cursor-pointer">
-                                <i class="fas fa-heart text-lg ${post.isLiked ? 'heart-active' : 'text-gray-500'}"></i>
+                                <i class="fas fa-heart text-base ${post.isLiked ? 'heart-active' : 'text-gray-500'}"></i>
                                 <span>${post.likes}</span>
                             </button>
                             
                             <div class="flex items-center gap-3">
-                                ${post.price ? `<span class="text-sm font-black text-orange-400">$${post.price.toFixed(2)}</span>` : ''}
-                                <button onclick="openPriceNegotiation('${post.pageName || post.author}', '${post.content}', ${post.price || 0})" class="bg-orange-600 hover:bg-orange-500 text-white font-bold text-xs px-4 py-2.5 rounded-xl transition cursor-pointer flex items-center gap-1.5 shadow-lg shadow-orange-600/20">
-                                    <i class="fas fa-handshake"></i> Négocier & Acheter
+                                ${post.price ? `<span class="text-sm font-extrabold text-[#ff9900]">$${post.price.toFixed(2)}</span>` : ''}
+                                <button onclick="openPriceNegotiation('${post.pageName}', '${post.content}', ${post.price || 0})" class="bg-[#ffd814] hover:bg-[#f7ca00] text-[#0f1111] font-bold text-xs px-4 py-2 rounded-lg transition cursor-pointer shadow-sm">
+                                    Acheter / Négocier
                                 </button>
                             </div>
                         </div>
@@ -511,17 +465,17 @@
             grid.innerHTML = '';
             alibabaNiches.forEach((item, index) => {
                 grid.innerHTML += `
-                    <div class="glass-panel p-4 rounded-[2rem] flex flex-col justify-between space-y-3">
-                        <div class="h-40 bg-black/40 rounded-2xl overflow-hidden">
+                    <div class="bg-[#161b22] border border-gray-800 p-4 rounded-2xl flex flex-col justify-between space-y-3 shadow-md">
+                        <div class="h-36 bg-black/40 rounded-xl overflow-hidden">
                             <img src="${item.img}" class="w-full h-full object-cover hover:scale-105 transition">
                         </div>
                         <div>
                             <h3 class="font-bold text-xs text-white">${item.title}</h3>
-                            <p class="text-[10px] text-gray-400">Catégorie #${index + 1} - Certifié B2B</p>
+                            <p class="text-[10px] text-gray-400">Fournisseur Vérifié Alibaba B2B</p>
                         </div>
-                        <div class="flex justify-between items-center pt-2 border-t border-white/5">
-                            <span class="font-black text-orange-400 text-sm">$${item.price.toFixed(2)}</span>
-                            <button onclick="openPriceNegotiation('Fournisseur Catégorie', '${item.title}', ${item.price})" class="bg-orange-600 hover:bg-orange-500 text-white text-xs font-bold px-3 py-2 rounded-xl cursor-pointer">Commander</button>
+                        <div class="flex justify-between items-center pt-2 border-t border-gray-800">
+                            <span class="font-extrabold text-[#ff9900] text-sm">$${item.price.toFixed(2)}</span>
+                            <button onclick="openPriceNegotiation('Fournisseur Alibaba', '${item.title}', ${item.price})" class="bg-[#ffd814] hover:bg-[#f7ca00] text-[#0f1111] text-xs font-bold px-3 py-1.5 rounded-lg cursor-pointer">Commander</button>
                         </div>
                     </div>
                 `;
@@ -538,9 +492,9 @@
         }
 
         function openPriceNegotiation(vendor, product, price) {
-            const offer = prompt(`Espace Discussion & Négociation de Prix avec "${vendor}"\nProduit : ${product}\nPrix affiché : $${price}\n\nEntrez votre proposition de prix ($) ou écrivez votre message :`, price);
+            const offer = prompt(`Négociation & Commande avec "${vendor}"\nProduit : ${product}\nPrix : $${price}\n\nEntrez votre prix proposé ($) :`, price);
             if (offer !== null) {
-                alert(`Proposition de $${offer} envoyée à ${vendor} via WhatsApp & Gmail!\nCommission appli (${globalCommission}%) incluse. Redirection vers le suivi de livraison Amazon.`);
+                alert(`Offre de $${offer} transmise à ${vendor} avec succès !\nRedirection vers le suivi de livraison Amazon Prime.`);
                 showSection('live-tracking');
             }
         }
@@ -550,10 +504,9 @@
             const price = parseFloat(document.getElementById('post-input-price').value) || null;
             const media = document.getElementById('post-input-media').value.trim();
 
-            if (!text) return alert("Veuillez rédiger une description pour votre page.");
+            if (!text) return alert("Veuillez saisir une description.");
 
-            // Assure la diffusion automatique à 20+ personnes minimum dès la publication
-            const guaranteedReach = Math.floor(Math.random() * 15) + 20;
+            const reach = Math.floor(Math.random() * 15) + 20;
 
             postsData.unshift({
                 id: Date.now(),
@@ -565,13 +518,12 @@
                 price: price,
                 media: media || null,
                 likes: 0,
-                reach: guaranteedReach,
+                reach: reach,
                 isLiked: false,
                 score: 100
             });
 
-            alert(`Publication réussie ! Votre page "${currentUser.pageName}" a été diffusée automatiquement à ${guaranteedReach} nouveaux prospects aujourd'hui.`);
-
+            alert(`Publication réussie ! Diffusée automatiquement à ${reach} acheteurs.`);
             renderFeed();
             document.getElementById('post-input-text').value = '';
             document.getElementById('post-input-price').value = '';
@@ -579,46 +531,23 @@
         }
 
         function orderTaxi(type, price) {
-            alert(`Chauffeur ${type} commandé avec succès ($${price}) !\nLocalisation exacte capturée. Suivi en temps réel activé.`);
+            alert(`Course ${type} confirmée ($${price}) ! Suivi GPS en direct activé.`);
             showSection('live-tracking');
         }
 
         function checkAdminSecret(e) {
-            const query = e.target.value.trim();
-            if (query === '9293RB') {
+            if (e.target.value.trim() === '9293RB') {
                 document.getElementById('admin-nav-btn').classList.remove('hidden');
                 showSection('admin-space');
-                alert("Accès Administrateur Suprême Débloqué !");
+                alert("Mode Admin Débloqué !");
                 e.target.value = '';
             }
         }
 
         function applyAdminBranding() {
-            const newName = document.getElementById('admin-new-name').value.trim();
-            const newIcon = document.getElementById('admin-new-icon').value.trim();
-
-            if (newName) {
-                document.getElementById('header-app-title').innerHTML = `${newName.toUpperCase()}`;
-                document.getElementById('wall-app-name').innerHTML = `${newName.toUpperCase()}`;
-                document.getElementById('app-dynamic-title').innerText = newName;
-            }
-            if (newIcon) {
-                document.getElementById('header-logo-icon').innerHTML = `<i class="fas ${newIcon}"></i>`;
-                document.getElementById('wall-logo-box').innerHTML = `<i class="fas ${newIcon}"></i>`;
-            }
-            alert("Identité de l'application modifiée avec succès !");
-        }
-
-        function updateCommission() {
-            const val = document.getElementById('commission-input').value;
-            globalCommission = parseFloat(val) || 5;
-            alert(`Commission mise à jour à ${globalCommission}% sur toutes les transactions.`);
-        }
-
-        function broadcastAd(channel) {
-            const title = document.getElementById('ad-title-input').value.trim();
-            if (!title) return alert("Veuillez saisir le titre de l'annonce.");
-            alert(`Annonce diffusée avec succès sur ${channel.toUpperCase()} auprès de tous les utilisateurs inscrits !`);
+            const name = document.getElementById('admin-new-name').value.trim();
+            if (name) document.getElementById('app-dynamic-title').innerText = name;
+            alert("Application mise à jour !");
         }
 
         function renderAdminUsers() {
@@ -626,12 +555,12 @@
             container.innerHTML = '';
             allUsers.forEach(u => {
                 container.innerHTML += `
-                    <div class="glass-panel p-3 rounded-xl flex justify-between items-center">
+                    <div class="bg-[#0f1111] p-3 rounded-xl flex justify-between items-center border border-gray-800">
                         <div>
-                            <p class="font-bold text-white">${u.fullName} <span class="text-orange-400 font-normal">(${u.pageName})</span></p>
-                            <p class="text-[10px] text-gray-400">Gmail: ${u.gmail} | Tél: ${u.phone} | Portée auto: ${u.dailyReach}+ pers/jour</p>
+                            <p class="font-bold text-white">${u.fullName} <span class="text-[#ff9900]">(${u.pageName})</span></p>
+                            <p class="text-[10px] text-gray-400">Gmail: ${u.gmail} | Portée: ${u.dailyReach}+ pers/jour</p>
                         </div>
-                        <span class="text-[10px] text-emerald-400 font-bold">Actif B2B/B2C</span>
+                        <span class="text-[10px] text-emerald-400 font-bold">Actif Prime</span>
                     </div>
                 `;
             });
@@ -641,9 +570,7 @@
         function initMap() {
             if (map) return;
             map = L.map('map').setView([-1.6749, 29.2285], 14);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; OpenStreetMap contributors'
-            }).addTo(map);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
             getUserLocation();
         }
 
@@ -653,9 +580,7 @@
                     const lat = pos.coords.latitude;
                     const lng = pos.coords.longitude;
                     map.setView([lat, lng], 16);
-                    L.marker([lat, lng]).addTo(map).bindPopup("<b>Votre position exacte</b><br>Colis / Chauffeur en route").openPopup();
-                }, () => {
-                    alert("Impossible de récupérer la position GPS exacte.");
+                    L.marker([lat, lng]).addTo(map).bindPopup("<b>Votre position actuelle</b><br>Colis en transit").openPopup();
                 });
             }
         }
