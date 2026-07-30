@@ -3,107 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MarketPlace Pro - Standard Alibaba Seller Central</title>
+    <title>SocialMarket Hub - Chat & Livreur</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
             --primary-color: #ff5722;
-            --primary-hover: #f4511e;
-            --secondary-color: #212529;
-            --bg-light: #f8f9fa;
-            --border-color: #dee2e6;
-            --text-color: #333;
-            --admin-danger: #dc3545;
-            --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 6px 16px rgba(255, 87, 34, 0.2);
+            --primary-hover: #e64a19;
+            --secondary-color: #1a1a1a;
+            --bg-body: #f4f6f9;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+            --text-main: #2d3748;
+            --text-muted: #718096;
+            --admin-danger: #e53e3e;
+            --delivery-color: #3182ce;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 8px 24px rgba(255, 87, 34, 0.15);
+            --radius-main: 14px;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
         body {
-            background-color: var(--bg-light);
-            color: var(--text-color);
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* Navbar Moderne & Aérée */
+        /* Navbar Responsive */
         .navbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
             background: #fff;
-            padding: 1rem 2.5rem;
+            padding: 0.8rem 1.5rem;
             border-bottom: 1px solid var(--border-color);
             position: sticky;
             top: 0;
             z-index: 100;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
-            gap: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            gap: 1rem;
         }
 
         .logo {
-            font-size: 1.4rem;
-            font-weight: 700;
+            font-size: 1.25rem;
+            font-weight: 800;
             color: var(--primary-color);
             display: flex;
-            gap: 12px;
             align-items: center;
+            gap: 10px;
             cursor: pointer;
             white-space: nowrap;
         }
 
         .logo img {
-            height: 38px;
+            height: 34px;
             object-fit: contain;
             display: none;
         }
 
-        /* Barre de recherche moderne */
+        /* Recherche */
         .search-container {
             position: relative;
             flex: 1;
-            max-width: 450px;
+            max-width: 400px;
         }
 
         .search-bar {
             display: flex;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
+            border: 1.5px solid var(--border-color);
+            border-radius: 50px;
             overflow: hidden;
-            background: #fff;
-            transition: border-color 0.2s, box-shadow 0.2s;
+            background: #f8fafc;
+            transition: all 0.2s;
         }
 
         .search-bar:focus-within {
             border-color: var(--primary-color);
+            background: #fff;
             box-shadow: 0 0 0 3px rgba(255, 87, 34, 0.1);
         }
 
         .search-bar input {
             width: 100%;
-            padding: 0.75rem 1rem;
+            padding: 0.6rem 1rem;
             border: none;
             outline: none;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
+            background: transparent;
         }
 
         .search-bar button {
-            background: var(--primary-color);
-            color: white;
+            background: transparent;
+            color: var(--text-muted);
             border: none;
-            padding: 0 1.4rem;
+            padding: 0 1.2rem;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: color 0.2s;
         }
 
         .search-bar button:hover {
-            background: var(--primary-hover);
+            color: var(--primary-color);
         }
 
         .suggestions-dropdown {
@@ -113,98 +120,68 @@
             right: 0;
             background: white;
             border: 1px solid var(--border-color);
-            border-radius: 8px;
+            border-radius: 12px;
             list-style: none;
-            max-height: 250px;
+            max-height: 220px;
             overflow-y: auto;
             z-index: 1000;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
             display: none;
         }
 
         .suggestions-dropdown li {
-            padding: 12px 16px;
+            padding: 10px 14px;
             cursor: pointer;
-            font-size: 0.9rem;
-            border-bottom: 1px solid var(--bg-light);
-            transition: background 0.15s;
+            font-size: 0.85rem;
+            border-bottom: 1px solid var(--bg-body);
         }
 
         .suggestions-dropdown li:hover {
-            background-color: rgba(255, 87, 34, 0.06);
+            background-color: rgba(255, 87, 34, 0.05);
             color: var(--primary-color);
         }
 
-        /* Actions de navigation et boutons modernes encadrés */
+        /* Actions de navigation */
         .nav-actions {
             display: flex;
             align-items: center;
-            gap: 14px;
-            white-space: nowrap;
+            gap: 10px;
         }
 
-        /* Bouton orange Alibaba repensé (Moderne, encadré, sans collage) */
-        .btn-alibaba-post {
+        .btn-post-social {
             background: linear-gradient(135deg, #ff5722 0%, #f4511e 100%);
             color: white;
             border: none;
-            padding: 0.7rem 1.2rem;
-            border-radius: 8px;
+            padding: 0.6rem 1.1rem;
+            border-radius: 50px;
             font-weight: 600;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.9rem;
-            box-shadow: var(--shadow-md);
-            transition: transform 0.15s ease, opacity 0.15s ease, box-shadow 0.15s ease;
-        }
-
-        .btn-alibaba-post:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 18px rgba(255, 87, 34, 0.3);
-            opacity: 0.95;
-        }
-
-        .btn-alibaba-post:active {
-            transform: translateY(0);
-        }
-
-        .btn-admin-nav {
-            background: #fff;
-            color: var(--secondary-color);
-            border: 1.5px solid var(--border-color);
-            padding: 0.7rem 1rem;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            font-weight: 600;
             display: flex;
             align-items: center;
             gap: 6px;
-            transition: all 0.2s;
-            box-shadow: var(--shadow-sm);
+            font-size: 0.85rem;
+            box-shadow: var(--shadow-md);
+            transition: transform 0.15s, opacity 0.15s;
+            white-space: nowrap;
         }
 
-        .btn-admin-nav:hover {
-            border-color: var(--secondary-color);
-            background: var(--bg-light);
+        .btn-post-social:hover {
+            opacity: 0.95;
+            transform: translateY(-1px);
         }
 
         .cart-btn {
-            background: #fff;
+            background: #f8fafc;
             border: 1.5px solid var(--border-color);
-            width: 42px;
-            height: 42px;
-            border-radius: 8px;
-            font-size: 1.1rem;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
             cursor: pointer;
             position: relative;
-            color: var(--secondary-color);
+            color: var(--text-main);
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: var(--shadow-sm);
             transition: all 0.2s;
         }
 
@@ -215,34 +192,36 @@
 
         .badge {
             position: absolute;
-            top: -6px;
-            right: -6px;
+            top: -4px;
+            right: -4px;
             background: var(--primary-color);
             color: white;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             font-weight: bold;
-            padding: 2px 6px;
+            padding: 2px 5px;
             border-radius: 50%;
             border: 2px solid #fff;
         }
 
-        /* Layout Principal */
+        /* Container Principal */
         .main-container {
             display: flex;
-            max-width: 1400px;
-            margin: 2rem auto;
-            gap: 2rem;
-            padding: 0 1.5rem;
+            max-width: 1300px;
+            margin: 1.5rem auto;
+            gap: 1.5rem;
+            padding: 0 1rem;
         }
 
-        /* Sidebar Style Alibaba */
+        /* Sidebar Style Moderne */
         .sidebar {
-            width: 300px;
-            background: #fff;
-            padding: 1.2rem;
-            border-radius: 12px;
+            width: 260px;
+            background: var(--card-bg);
+            padding: 1rem;
+            border-radius: var(--radius-main);
             border: 1px solid var(--border-color);
-            height: 78vh;
+            height: calc(100vh - 100px);
+            position: sticky;
+            top: 80px;
             overflow-y: auto;
             box-shadow: var(--shadow-sm);
             flex-shrink: 0;
@@ -250,16 +229,12 @@
 
         .sidebar h3 {
             margin-bottom: 0.8rem;
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             text-transform: uppercase;
-            color: #6c757d;
-            letter-spacing: 0.8px;
-            padding-bottom: 0.5rem;
+            color: var(--text-muted);
+            letter-spacing: 0.6px;
+            padding-bottom: 0.4rem;
             border-bottom: 1px solid var(--border-color);
-            position: sticky;
-            top: 0;
-            background: #fff;
-            z-index: 5;
         }
 
         .sidebar ul { list-style: none; }
@@ -268,29 +243,29 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0.7rem 0.8rem;
+            padding: 0.6rem 0.7rem;
             cursor: pointer;
-            border-radius: 8px;
-            margin-bottom: 0.3rem;
-            color: #495057;
+            border-radius: 10px;
+            margin-bottom: 0.2rem;
+            color: #4a5568;
             transition: background 0.15s, color 0.15s;
         }
 
         .sidebar li .menu-left {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
         }
 
         .sidebar li i.icon-left {
-            font-size: 1rem;
-            color: #6c757d;
-            width: 20px;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            width: 18px;
             text-align: center;
         }
 
-        .sidebar li span { font-size: 0.85rem; font-weight: 500; }
-        .sidebar li i.icon-arrow { font-size: 0.7rem; color: #adb5bd; }
+        .sidebar li span { font-size: 0.82rem; font-weight: 500; }
+        .sidebar li i.icon-arrow { font-size: 0.65rem; color: #cbd5e0; }
 
         .sidebar li:hover, .sidebar li.active {
             background: rgba(255, 87, 34, 0.08);
@@ -301,51 +276,72 @@
             color: var(--primary-color);
         }
 
+        /* Catalogue Fil d'actualité */
         .catalog { flex: 1; }
 
         .catalog-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.2rem;
+            padding: 0 0.5rem;
         }
 
-        .catalog-header h2 { font-size: 1.4rem; color: var(--secondary-color); font-weight: 700; }
+        .catalog-header h2 { font-size: 1.2rem; color: var(--text-main); font-weight: 700; }
 
-        /* Grille de Produits style Alibaba B2B */
         .product-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.2rem;
         }
 
+        /* Carte Produit / Post Social */
         .product-card {
-            background: #fff;
+            background: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 12px;
+            border-radius: var(--radius-main);
             overflow: hidden;
             display: flex;
             flex-direction: column;
             transition: transform 0.2s, box-shadow 0.2s;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+            box-shadow: var(--shadow-sm);
         }
 
         .product-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+        }
+
+        .post-author-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 12px;
+            border-bottom: 1px solid #f7fafc;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .author-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .post-author-header img {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            object-fit: cover;
         }
 
         .product-media-container {
-            height: 190px;
-            background: #fff;
+            height: 180px;
+            background: #edf2f7;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #6c757d;
-            font-size: 2.5rem;
+            color: var(--text-muted);
+            font-size: 2rem;
             position: relative;
             overflow: hidden;
-            border-bottom: 1px solid var(--bg-light);
         }
 
         .product-media-container img, 
@@ -359,81 +355,100 @@
             position: absolute;
             bottom: 8px;
             left: 8px;
-            background: rgba(0, 0, 0, 0.75);
+            background: rgba(0, 0, 0, 0.7);
             color: white;
-            font-size: 0.68rem;
-            padding: 3px 8px;
+            font-size: 0.62rem;
+            padding: 3px 7px;
             border-radius: 6px;
-            backdrop-filter: blur(2px);
         }
 
         .pis-score-badge {
             position: absolute;
             top: 8px;
             right: 8px;
-            background: #28a745;
+            background: #38a169;
             color: white;
-            font-size: 0.65rem;
+            font-size: 0.62rem;
             font-weight: bold;
-            padding: 3px 7px;
+            padding: 3px 6px;
             border-radius: 6px;
         }
 
         .product-info {
-            padding: 1.1rem;
+            padding: 1rem;
             display: flex;
             flex-direction: column;
-            gap: 0.4rem;
+            gap: 0.3rem;
             flex: 1;
         }
 
         .product-title {
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             font-weight: 600;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
-            color: #2b2b2b;
+            color: var(--text-main);
+            line-height: 1.3;
         }
 
         .product-meta-sub {
-            font-size: 0.75rem;
-            color: #6c757d;
+            font-size: 0.72rem;
+            color: var(--text-muted);
         }
 
         .product-price {
             color: var(--primary-color);
             font-weight: 700;
-            font-size: 1.15rem;
+            font-size: 1.05rem;
             margin-top: 4px;
         }
 
+        .card-actions-row {
+            display: flex;
+            gap: 6px;
+            margin-top: 6px;
+        }
+
         .btn-add-cart {
+            flex: 1;
             background: var(--secondary-color);
             color: white;
             border: none;
-            padding: 0.65rem;
+            padding: 0.55rem;
             border-radius: 8px;
             cursor: pointer;
             font-weight: 600;
-            margin-top: 8px;
-            transition: background 0.2s;
+            font-size: 0.8rem;
+            transition: background 0.15s;
         }
-
         .btn-add-cart:hover { background: var(--primary-color); }
+
+        .btn-chat-price {
+            background: rgba(49, 130, 206, 0.1);
+            color: var(--delivery-color);
+            border: 1px solid rgba(49, 130, 206, 0.3);
+            padding: 0.55rem 0.7rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.8rem;
+            transition: background 0.15s;
+        }
+        .btn-chat-price:hover { background: rgba(49, 130, 206, 0.2); }
 
         /* Panier Drawer */
         .cart-drawer {
             position: fixed;
             top: 0;
-            right: -420px;
-            width: 380px;
+            right: -380px;
+            width: 350px;
             height: 100%;
             background: #fff;
-            box-shadow: -8px 0 25px rgba(0,0,0,0.15);
+            box-shadow: -10px 0 30px rgba(0,0,0,0.1);
             z-index: 2000;
-            transition: right 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: right 0.3s ease;
             display: flex;
             flex-direction: column;
         }
@@ -441,106 +456,108 @@
         .cart-drawer.open { right: 0; }
 
         .cart-header {
-            padding: 1.4rem;
+            padding: 1.2rem;
             border-bottom: 1px solid var(--border-color);
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .cart-header h3 { font-size: 1.1rem; font-weight: 700; }
-        .cart-header button { background: none; border: none; font-size: 1.2rem; cursor: pointer; }
-        .cart-items { flex: 1; overflow-y: auto; padding: 1.4rem; }
+        .cart-header h3 { font-size: 1rem; font-weight: 700; }
+        .cart-header button { background: none; border: none; font-size: 1.1rem; cursor: pointer; }
+        .cart-items { flex: 1; overflow-y: auto; padding: 1.2rem; }
 
         .cart-item-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1rem;
-            padding-bottom: 0.8rem;
-            border-bottom: 1px solid var(--bg-light);
+            margin-bottom: 0.9rem;
+            padding-bottom: 0.7rem;
+            border-bottom: 1px solid #f7fafc;
+            font-size: 0.85rem;
         }
 
-        .cart-footer { padding: 1.4rem; border-top: 1px solid var(--border-color); background: #fff; }
-        .cart-total { display: flex; justify-content: space-between; font-size: 1.2rem; font-weight: bold; margin-bottom: 1.2rem; }
+        .cart-footer { padding: 1.2rem; border-top: 1px solid var(--border-color); background: #fff; }
+        .cart-total { display: flex; justify-content: space-between; font-size: 1.1rem; font-weight: bold; margin-bottom: 1rem; }
 
         .btn-primary {
             width: 100%;
             background: var(--primary-color);
             color: white;
             border: none;
-            padding: 0.85rem;
+            padding: 0.75rem;
             border-radius: 8px;
             font-weight: bold;
+            font-size: 0.9rem;
             cursor: pointer;
             transition: opacity 0.2s;
         }
         .btn-primary:hover { opacity: 0.9; }
 
-        /* Modals */
+        /* Modals & Chat Boxes */
         .modal-overlay {
             display: none;
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(4px);
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(3px);
             z-index: 3000;
             justify-content: center;
             align-items: center;
+            padding: 1rem;
         }
 
         .modal-overlay.active { display: flex; }
 
         .modal-box {
             background: #fff;
-            width: 90%;
-            max-width: 520px;
-            padding: 2.2rem;
-            border-radius: 14px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 480px;
+            padding: 1.8rem;
+            border-radius: var(--radius-main);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
             max-height: 90vh;
             overflow-y: auto;
         }
 
-        .admin-box { border-top: 6px solid var(--admin-danger); }
-        .alibaba-box { border-top: 6px solid var(--primary-color); }
+        .admin-box { border-top: 5px solid var(--admin-danger); max-width: 650px; }
+        .delivery-box { border-top: 5px solid var(--delivery-color); max-width: 650px; }
+        .social-box { border-top: 5px solid var(--primary-color); }
+        .chat-box { border-top: 5px solid var(--delivery-color); max-width: 500px; display: flex; flex-direction: column; height: 480px; padding: 1.2rem; }
 
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.2rem;
+            font-size: 1rem;
         }
 
-        .form-group { margin-bottom: 1.2rem; }
+        .form-group { margin-bottom: 1rem; }
 
         .form-group label {
             display: block;
-            font-size: 0.82rem;
+            font-size: 0.78rem;
             font-weight: 700;
-            margin-bottom: 0.4rem;
-            color: #495057;
+            margin-bottom: 0.3rem;
+            color: #4a5568;
         }
 
         .form-group input, .form-group select, .form-group textarea {
             width: 100%;
-            padding: 0.75rem 0.9rem;
+            padding: 0.65rem 0.8rem;
             border: 1px solid var(--border-color);
             border-radius: 8px;
             outline: none;
-            font-size: 0.9rem;
-            transition: border-color 0.2s;
-        }
-
-        .form-group input:focus, .form-group select:focus {
-            border-color: var(--primary-color);
+            font-size: 0.88rem;
+            background: #f8fafc;
         }
 
         .form-hint {
-            font-size: 0.75rem;
-            color: #6c757d;
-            margin-top: 0.3rem;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
         }
 
         .btn-submit {
@@ -548,52 +565,123 @@
             background: var(--secondary-color);
             color: white;
             border: none;
-            padding: 0.85rem;
+            padding: 0.75rem;
             border-radius: 8px;
             font-weight: bold;
+            font-size: 0.88rem;
             cursor: pointer;
-            margin-top: 0.5rem;
-            transition: opacity 0.2s;
+            margin-top: 0.4rem;
         }
-        .btn-submit:hover { opacity: 0.9; }
 
-        /* Responsive Design mobile */
-        @media (max-width: 900px) {
-            .main-container { flex-direction: column; }
-            .sidebar { width: 100%; height: auto; max-height: 250px; }
-            .navbar { padding: 0.8rem 1rem; flex-wrap: wrap; }
-            .search-container { order: 3; width: 100%; max-width: 100%; }
+        /* Interface Chat Interne */
+        .chat-messages-container {
+            flex: 1;
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px;
+            overflow-y: auto;
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .chat-bubble {
+            max-width: 75%;
+            padding: 8px 12px;
+            border-radius: 12px;
+            font-size: 0.84rem;
+            line-height: 1.3;
+        }
+
+        .chat-bubble.sent {
+            background: var(--delivery-color);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 2px;
+        }
+
+        .chat-bubble.received {
+            background: #e2e8f0;
+            color: var(--text-main);
+            align-self: flex-start;
+            border-bottom-left-radius: 2px;
+        }
+
+        .chat-input-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .chat-input-row input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            outline: none;
+            font-size: 0.85rem;
+        }
+
+        .chat-input-row button {
+            background: var(--delivery-color);
+            color: white;
+            border: none;
+            padding: 0 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* Tableaux Admin et Livreur */
+        .leads-table, .delivery-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            font-size: 0.82rem;
+        }
+
+        .leads-table th, .leads-table td, .delivery-table th, .delivery-table td {
+            padding: 8px 10px;
+            border: 1px solid var(--border-color);
+            text-align: left;
+        }
+
+        .leads-table th, .delivery-table th { background: #f8fafc; font-weight: 700; }
+
+        @media (max-width: 768px) {
+            .main-container { flex-direction: column; padding: 0.5rem; }
+            .sidebar { width: 100%; height: auto; max-height: 180px; position: relative; top: 0; margin-bottom: 1rem; }
+            .navbar { padding: 0.6rem 1rem; }
+            .btn-post-social span { display: none; }
+            .btn-post-social { padding: 0.6rem 0.8rem; }
         }
     </style>
 </head>
 <body>
 
     <header class="navbar">
-        <div class="logo" id="logoContainer" onclick="openAdminModal()">
-            <i class="fa-solid fa-boxes-stacked" id="logoIcon"></i>
+        <div class="logo" id="logoContainer">
+            <i class="fa-solid fa-earth-americas" id="logoIcon"></i>
             <img id="customLogoImg" alt="Logo Plateforme"> 
-            <span id="logoText">MarketPro B2B</span>
+            <span id="logoText">SocialMarket</span>
         </div>
         
-        <!-- Barre de recherche avec autocomplétion intelligente -->
+        <!-- Recherche (Tapez 92 93 pour Admin, ou 77 77 pour Espace Livreur) -->
         <div class="search-container">
             <div class="search-bar">
-                <input type="text" id="searchInput" placeholder="Rechercher ou taper 9293 RB pour l'admin..." autocomplete="off">
+                <input type="text" id="searchInput" placeholder="Rechercher ou taper 92 93 / 77 77..." autocomplete="off">
                 <button><i class="fa-solid fa-magnifying-glass"></i></button>
             </div>
             <ul id="suggestionsDropdown" class="suggestions-dropdown"></ul>
         </div>
 
         <div class="nav-actions">
-            <!-- Bouton orange Alibaba moderne et encadré -->
-            <button class="btn-alibaba-post" onclick="openAlibabaModal()">
-                <i class="fa-solid fa-cloud-arrow-up"></i> <span>Publier (Alibaba)</span>
-            </button>
-            <button class="btn-admin-nav" onclick="openAdminModal()" title="Espace Admin">
-                <i class="fa-solid fa-shield-halved"></i> <span>Admin</span>
+            <button class="btn-post-social" onclick="openSocialModal()">
+                <i class="fa-solid fa-plus-circle"></i> <span>Publier</span>
             </button>
             <button id="cartToggleBtn" class="cart-btn">
-                <i class="fa-solid fa-cart-shopping"></i>
+                <i class="fa-solid fa-bag-shopping"></i>
                 <span id="cartCount" class="badge">0</span>
             </button>
         </div>
@@ -602,28 +690,24 @@
     <main class="main-container">
         <!-- SIDEBAR CATÉGORIES -->
         <aside class="sidebar">
-            <h3>Hub des Catégories</h3>
+            <h3>Catégories & Hubs</h3>
             <ul id="categoryList">
-                <li class="active" data-category="all" data-title="Tous les produits">
-                    <div class="menu-left"><i class="fa-solid fa-border-all icon-left"></i><span>Tous les produits</span></div>
+                <li class="active" data-category="all" data-title="Fil d'actualité global">
+                    <div class="menu-left"><i class="fa-solid fa-rss icon-left"></i><span>Fil d'actualité</span></div>
                     <i class="fa-solid fa-chevron-right icon-arrow"></i>
                 </li>
-                <li data-category="machinerie" data-title="Machines industrielles & Équipements"><div class="menu-left"><i class="fa-solid fa-industry icon-left"></i><span>Machines industrielles</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
-                <li data-category="btp" data-title="Machines de construction & BTP"><div class="menu-left"><i class="fa-solid fa-person-digging icon-left"></i><span>Machines de construction & BTP</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
-                <li data-category="electronique-grand-public" data-title="Électronique grand public"><div class="menu-left"><i class="fa-solid fa-tv icon-left"></i><span>Électronique grand public</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
-                <li data-category="composants" data-title="Composants électroniques & Télécoms"><div class="menu-left"><i class="fa-solid fa-microchip icon-left"></i><span>Composants électroniques & Télécoms</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
-                <li data-category="solaire" data-title="Énergies renouvelables & Solaire"><div class="menu-left"><i class="fa-solid fa-solar-panel icon-left"></i><span>Énergies renouvelables & Solaire</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
-                <li data-category="fashion" data-title="Mode, Vêtement & Textile confectionné"><div class="menu-left"><i class="fa-solid fa-shirt icon-left"></i><span>Mode & Vêtement confectionné</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
-                <li data-category="eco-materiaux" data-title="Éco-matériaux & Recyclage"><div class="menu-left"><i class="fa-solid fa-recycle icon-left"></i><span>Éco-matériaux & Recyclage</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
-                <li data-category="pharmacies" data-title="Pharmacies, Santé, Dispositifs & Fournitures"><div class="menu-left"><i class="fa-solid fa-pills icon-left"></i><span>Pharmacies & Santé</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
-                <li data-category="menagerie" data-title="Ménagerie, Animaux de compagnie & Accessoires"><div class="menu-left"><i class="fa-solid fa-paw icon-left"></i><span>Ménagerie & Animaux</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+                <li data-category="machinerie" data-title="Machines & Industrie"><div class="menu-left"><i class="fa-solid fa-industry icon-left"></i><span>Machines & Industrie</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+                <li data-category="btp" data-title="BTP & Construction"><div class="menu-left"><i class="fa-solid fa-helmet-safety icon-left"></i><span>BTP & Construction</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+                <li data-category="electronique" data-title="High-Tech & Électronique"><div class="menu-left"><i class="fa-solid fa-microchip icon-left"></i><span>High-Tech & Électronique</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+                <li data-category="solaire" data-title="Énergies & Solaire"><div class="menu-left"><i class="fa-solid fa-solar-panel icon-left"></i><span>Énergies & Solaire</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+                <li data-category="mode" data-title="Mode & Vêtements"><div class="menu-left"><i class="fa-solid fa-shirt icon-left"></i><span>Mode & Vêtements</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
             </ul>
         </aside>
 
-        <!-- CATALOGUE PRINCIPAL -->
+        <!-- CATALOGUE -->
         <section class="catalog">
             <div class="catalog-header">
-                <h2 id="categoryTitle">Tous les produits</h2>
+                <h2 id="categoryTitle">Fil d'actualité global</h2>
             </div>
             <div id="productGrid" class="product-grid"></div>
         </section>
@@ -632,7 +716,7 @@
     <!-- PANIER -->
     <div id="cartDrawer" class="cart-drawer">
         <div class="cart-header">
-            <h3>Votre Panier</h3>
+            <h3>Mon Panier</h3>
             <button id="closeCartBtn"><i class="fa-solid fa-xmark"></i></button>
         </div>
         <div id="cartItemsContainer" class="cart-items"></div>
@@ -641,102 +725,225 @@
                 <span>Total :</span>
                 <span id="cartTotalPrice">0.00 $</span>
             </div>
-            <button id="checkoutBtn" class="btn-primary">Valider la commande B2B</button>
+            <button id="checkoutBtn" class="btn-primary" onclick="requestClientEmailAndCheckout()">Commander maintenant</button>
         </div>
     </div>
 
-    <!-- MODAL ADMIN -->
+    <!-- MODAL CHAT PRIX (Vendeur / Client) -->
+    <div id="priceChatModalOverlay" class="modal-overlay">
+        <div class="modal-box chat-box">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-comments" style="color:var(--delivery-color);"></i> Négociation de prix</h3>
+                <button style="background:none; border:none; font-size:1.1rem; cursor:pointer;" onclick="closePriceChatModal()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div id="priceChatSubtitle" style="font-size:0.75rem; color:var(--text-muted); margin-bottom: 8px;">Discussion sur l'article</div>
+            <div id="chatMessages" class="chat-messages-container">
+                <div class="chat-bubble received">Bonjour ! Je suis intéressé par cet article. Quel est votre dernier prix ?</div>
+            </div>
+            <form class="chat-input-row" onsubmit="sendChatMessage(event)">
+                <input type="text" id="chatMessageInput" required placeholder="Proposer un prix ou poser une question...">
+                <button type="submit"><i class="fa-solid fa-paper-plane"></i></button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL ESPACE LIVREUR (Caché dans la recherche 77 77) -->
+    <div id="deliveryModalOverlay" class="modal-overlay">
+        <div class="modal-box delivery-box">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-truck-fast" style="color:var(--delivery-color);"></i> Espace Dédié Livreur</h3>
+                <button style="background:none; border:none; font-size:1.1rem; cursor:pointer;" onclick="closeDeliveryModal()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="deliveryLoginForm" onsubmit="handleDeliveryLogin(event)">
+                <div id="deliveryLoginFields">
+                    <div class="form-group">
+                        <label>Identifiant Livreur</label>
+                        <input type="text" id="deliveryKey" required placeholder="livreur">
+                    </div>
+                    <div class="form-group">
+                        <label>Mot de passe</label>
+                        <input type="password" id="deliveryPass" required placeholder="colis2026">
+                    </div>
+                    <button type="submit" class="btn-submit" style="background:var(--delivery-color);">Accéder à l'espace Livreur</button>
+                </div>
+            </form>
+            <div id="deliveryDashboardFields" style="display:none;">
+                <h4 style="margin-bottom: 0.5rem; font-size:0.95rem;">📦 Courses & Livraisons Assignées</h4>
+                <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom: 0.8rem;">Gérez vos courses et communiquez directement avec les clients :</p>
+                <div style="max-height: 280px; overflow-y: auto;">
+                    <table class="delivery-table">
+                        <thead>
+                            <tr>
+                                <th>Client</th>
+                                <th>Article</th>
+                                <th>Statut</th>
+                                <th>Action / Chat</th>
+                            </tr>
+                        </thead>
+                        <tbody id="deliveryTableBody">
+                            <!-- Rempli dynamiquement -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL CHAT LIVREUR-CLIENT -->
+    <div id="deliveryChatModalOverlay" class="modal-overlay">
+        <div class="modal-box chat-box" style="border-top-color:var(--delivery-color);">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-headset" style="color:var(--delivery-color);"></i> Chat Livreur & Client</h3>
+                <button style="background:none; border:none; font-size:1.1rem; cursor:pointer;" onclick="closeDeliveryChatModal()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div id="deliveryChatSubtitle" style="font-size:0.75rem; color:var(--text-muted); margin-bottom: 8px;">Coordination de livraison</div>
+            <div id="deliveryChatMessages" class="chat-messages-container">
+                <div class="chat-bubble received">Bonjour, je suis votre livreur. Je m'apprête à récupérer votre colis.</div>
+            </div>
+            <form class="chat-input-row" onsubmit="sendDeliveryChatMessage(event)">
+                <input type="text" id="deliveryChatMessageInput" required placeholder="Envoyer un message au client...">
+                <button type="submit" style="background:var(--delivery-color);"><i class="fa-solid fa-paper-plane"></i></button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL ADMIN (Caché dans la recherche 92 93) -->
     <div id="adminModalOverlay" class="modal-overlay">
         <div class="modal-box admin-box">
             <div class="modal-header">
-                <h3><i class="fa-solid fa-lock"></i> Panneau Super-Admin</h3>
-                <button style="background:none; border:none; font-size:1.2rem; cursor:pointer;" onclick="closeAdminModal()"><i class="fa-solid fa-xmark"></i></button>
+                <h3><i class="fa-solid fa-lock" style="color:var(--admin-danger);"></i> Administration & CRM Emails</h3>
+                <button style="background:none; border:none; font-size:1.1rem; cursor:pointer;" onclick="closeAdminModal()"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <form id="adminLoginForm" onsubmit="handleAdminAction(event)">
                 <div id="adminLoginFields">
                     <div class="form-group">
-                        <label>Identifiant Super-Admin</label>
-                        <input type="text" id="adminKey" required placeholder="Ex: admin">
+                        <label>Identifiant</label>
+                        <input type="text" id="adminKey" required placeholder="admin">
                     </div>
                     <div class="form-group">
                         <label>Mot de passe</label>
-                        <input type="password" id="adminPass" required placeholder="Ex: root1234">
+                        <input type="password" id="adminPass" required placeholder="root1234">
                     </div>
-                    <button type="submit" class="btn-submit">S'authentifier</button>
+                    <button type="submit" class="btn-submit" style="background:var(--admin-danger);">Connexion Admin</button>
                 </div>
                 
                 <div id="adminDashboardFields" style="display:none;">
                     <div class="form-group">
-                        <label>URL du Logo de la Plateforme (Image nette)</label>
-                        <input type="url" id="adminLogoUrlInput" placeholder="https://exemple.com/logo.png">
-                        <div class="form-hint">Modifie instantanément le logo affiché en haut à gauche.</div>
+                        <label>URL du Logo Global</label>
+                        <input type="url" id="adminLogoUrlInput" placeholder="https://...">
                     </div>
-                    <button type="submit" class="btn-submit">Mettre à jour le Logo global</button>
+                    <button type="submit" class="btn-submit">Mettre à jour le Logo</button>
+                    
+                    <hr style="margin: 1.5rem 0; border:0; border-top:1px solid var(--border-color);">
+                    
+                    <h4 style="margin-bottom: 0.5rem; font-size:0.95rem;">📊 Base de données des Leads / Emails collectés</h4>
+                    <div style="max-height: 200px; overflow-y: auto;">
+                        <table class="leads-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Email</th>
+                                    <th>Rôle</th>
+                                </tr>
+                            </thead>
+                            <tbody id="leadsTableBody"></tbody>
+                        </table>
+                    </div>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- MODAL PUBLICATION STYLE ALIBABA -->
-    <div id="alibabaModalOverlay" class="modal-overlay">
-        <div class="modal-box alibaba-box">
+    <!-- MODAL DE PUBLICATION (AVEC EMAIL VENDEUR OBLIGATOIRE) -->
+    <div id="socialModalOverlay" class="modal-overlay">
+        <div class="modal-box social-box">
             <div class="modal-header">
-                <h3><i class="fa-solid fa-globe"></i> Alibaba Seller Central - Post Product</h3>
-                <button style="background:none; border:none; font-size:1.2rem; cursor:pointer;" onclick="closeAlibabaModal()"><i class="fa-solid fa-xmark"></i></button>
+                <h3><i class="fa-solid fa-pen-nib" style="color:var(--primary-color);"></i> Nouvelle Publication Vendeur</h3>
+                <button style="background:none; border:none; font-size:1.1rem; cursor:pointer;" onclick="closeSocialModal()"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <form id="alibabaPostForm" onsubmit="handleAlibabaPost(event)">
+            <form id="socialPostForm" onsubmit="handleSocialPost(event)">
                 <div class="form-group">
-                    <label>1. Titre SEO B2B</label>
-                    <input type="text" id="alibTitle" required placeholder="Ex: Wholesale Waterproof Smart Watch IP68">
+                    <label>Votre Nom / Entreprise *</label>
+                    <input type="text" id="postAuthor" required placeholder="Ex: Busimba Tech">
                 </div>
                 <div class="form-group">
-                    <label>2. Catégorie Précise</label>
-                    <select id="alibCategory" required>
-                        <option value="machinerie">Machines industrielles & Équipements</option>
-                        <option value="btp">Machines de construction & BTP</option>
-                        <option value="electronique-grand-public">Électronique grand public</option>
-                        <option value="composants">Composants électroniques & Télécoms</option>
-                        <option value="solaire">Énergies renouvelables & Solaire</option>
-                        <option value="fashion">Mode, Vêtement & Textile confectionné</option>
-                        <option value="eco-materiaux">Éco-matériaux & Recyclage</option>
+                    <label>Votre Email Professionnel * (Requis)</label>
+                    <input type="email" id="postEmail" required placeholder="vendeur@exemple.com">
+                </div>
+                <div class="form-group">
+                    <label>Titre de l'annonce / Produit *</label>
+                    <input type="text" id="postTitle" required placeholder="Ex: Kit Solaire Haute Performance">
+                </div>
+                <div class="form-group">
+                    <label>Catégorie *</label>
+                    <select id="postCategory" required>
+                        <option value="machinerie">Machines & Industrie</option>
+                        <option value="btp">BTP & Construction</option>
+                        <option value="electronique">High-Tech & Électronique</option>
+                        <option value="solaire">Énergies & Solaire</option>
+                        <option value="mode">Mode & Vêtements</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>3. Prix Unitaire FOB ($)</label>
-                    <input type="number" step="0.01" id="alibPrice" required placeholder="45.50">
+                    <label>Prix ($) *</label>
+                    <input type="number" step="0.01" id="postPrice" required placeholder="450.00">
                 </div>
                 <div class="form-group">
-                    <label>4. URL Média Principal (Photo HD / Vidéo démo)</label>
-                    <input type="url" id="alibMediaUrl" required placeholder="https://... (image.jpg ou video.mp4)">
+                    <label>Lien Photo ou Vidéo (Optionnel)</label>
+                    <input type="url" id="postMediaUrl" placeholder="https://...">
                 </div>
                 <div class="form-group">
-                    <label>5. Type de média</label>
-                    <select id="alibMediaType">
-                        <option value="image">Photo HD (Fond Blanc)</option>
-                        <option value="video">Courte Vidéo de Démonstration (Usine)</option>
+                    <label>Type de média</label>
+                    <select id="postMediaType">
+                        <option value="image">Photo légère</option>
+                        <option value="video">Vidéo courte (Légère)</option>
                     </select>
                 </div>
+                <button type="submit" class="btn-submit" style="background:var(--primary-color);">Publier sur le fil</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL EMAIL ACHETEUR -->
+    <div id="clientEmailModalOverlay" class="modal-overlay">
+        <div class="modal-box social-box" style="max-width:400px;">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-envelope" style="color:var(--primary-color);"></i> Validation de Commande</h3>
+                <button style="background:none; border:none; font-size:1.1rem; cursor:pointer;" onclick="closeClientEmailModal()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form onsubmit="finalizeCheckout(event)">
                 <div class="form-group">
-                    <label>6. Attributs Clés & Certifications</label>
-                    <input type="text" id="alibAttributes" placeholder="Ex: Certification ISO9001, Garantie 2 ans">
+                    <label>Entrez votre Email pour finaliser l'achat *</label>
+                    <input type="email" id="clientCheckoutEmail" required placeholder="votre.email@client.com">
+                    <div class="form-hint">Une copie et les instructions de livraison vous seront envoyées.</div>
                 </div>
-                <button type="submit" class="btn-submit" style="background: var(--primary-color);">Publier et calculer le score PIS</button>
+                <button type="submit" class="btn-submit" style="background:var(--primary-color);">Confirmer la commande</button>
             </form>
         </div>
     </div>
 
     <script>
+        // Données initiales
         let productsData = [
-            { id: 1, title: "Wholesale Industrial Laser Cutting Machine 3000W", category: "machinerie", price: 3400.00, mediaUrl: "", mediaType: "image", icon: "fa-industry", pis: "PIS: 4.8/5" },
-            { id: 2, title: "Wholesale Residential Solar Panel Kit 5kVA Inverter", category: "solaire", price: 890.00, mediaUrl: "", mediaType: "image", icon: "fa-solar-panel", pis: "PIS: 4.9/5" },
-            { id: 3, title: "Wholesale Eco-Friendly Interlocking Bricks Blocks", category: "eco-materiaux", price: 450.00, mediaUrl: "", mediaType: "image", icon: "fa-recycle", pis: "PIS: 4.7/5" },
-            { id: 4, title: "Wholesale High Visibility Safety Workwear Jacket EPI", category: "fashion", price: 55.00, mediaUrl: "", mediaType: "image", icon: "fa-shirt", pis: "PIS: 4.6/5" },
-            { id: 5, title: "Wholesale Industrial IoT Microcontroller Module", category: "composants", price: 35.50, mediaUrl: "", mediaType: "image", icon: "fa-microchip", pis: "PIS: 4.8/5" }
+            { id: 1, author: "Goma Global Trade", email: "goma.global@trade.com", title: "Machine de découpe laser industrielle 2000W", category: "machinerie", price: 2800.00, mediaUrl: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=500", mediaType: "image", tag: "Vérifié" },
+            { id: 2, author: "Kivu Solar Tech", email: "kivusolar@tech.com", title: "Kit panneau solaire résidentiel complet 3kVA", category: "solaire", price: 750.00, mediaUrl: "https://images.unsplash.com/photo-1509391365360-809292f7d733?w=500", mediaType: "image", tag: "Populaire" }
+        ];
+
+        let collectedLeads = [
+            { date: "2026-06-01", email: "goma.global@trade.com", role: "Vendeur" },
+            { date: "2026-06-02", email: "kivusolar@tech.com", role: "Vendeur" }
+        ];
+
+        // Liste des livraisons assignées aux livreurs
+        let deliveryOrders = [
+            { id: 101, clientEmail: "client1@gmail.com", itemTitle: "Kit panneau solaire résidentiel", status: "En cours de route" }
         ];
 
         let cart = [];
         let currentCategory = 'all';
         let isAdminAuthenticated = false;
+        let isDeliveryAuthenticated = false;
+        let verifiedClientEmail = null;
 
         const productGrid = document.getElementById('productGrid');
         const categoryTitle = document.getElementById('categoryTitle');
@@ -770,13 +977,19 @@
                 }
             });
 
+            // Recherche secrète : 92 93 (Admin) ou 77 77 (Livreur)
             searchInput.addEventListener('input', () => {
                 const val = searchInput.value.trim();
-
-                if (val === "9293 RB") {
+                if (val === "92 93" || val === "9293") {
                     searchInput.value = "";
                     suggestionsDropdown.style.display = 'none';
-                    openAdminModal();
+                    document.getElementById('adminModalOverlay').classList.add('active');
+                    return;
+                }
+                if (val === "77 77" || val === "7777") {
+                    searchInput.value = "";
+                    suggestionsDropdown.style.display = 'none';
+                    document.getElementById('deliveryModalOverlay').classList.add('active');
                     return;
                 }
 
@@ -786,7 +999,7 @@
                 if (query.length === 0) {
                     suggestionsDropdown.style.display = 'none';
                     currentCategory = 'all';
-                    categoryTitle.innerText = "Tous les produits";
+                    categoryTitle.innerText = "Fil d'actualité global";
                     filterAndRenderProducts();
                     return;
                 }
@@ -801,8 +1014,7 @@
                     if (normalizedTitle.includes(query)) {
                         matchCount++;
                         const suggestionItem = document.createElement('li');
-                        suggestionItem.innerHTML = `<i class="fa-solid fa-magnifying-glass" style="margin-right:8px; color:#adb5bd;"></i> ${titleText}`;
-                        
+                        suggestionItem.innerHTML = `<i class="fa-solid fa-magnifying-glass" style="margin-right:6px; color:#cbd5e0;"></i> ${titleText}`;
                         suggestionItem.addEventListener('click', () => {
                             searchInput.value = titleText;
                             suggestionsDropdown.style.display = 'none';
@@ -812,7 +1024,6 @@
                             categoryTitle.innerText = titleText;
                             filterAndRenderProducts();
                         });
-
                         suggestionsDropdown.appendChild(suggestionItem);
                     }
                 });
@@ -828,7 +1039,83 @@
             });
         }
 
-        function openAdminModal() { document.getElementById('adminModalOverlay').classList.add('active'); }
+        // Chat Vendeur-Client
+        function openPriceChat(productTitle) {
+            document.getElementById('priceChatSubtitle').innerText = `Discussion sur : ${productTitle}`;
+            document.getElementById('priceChatModalOverlay').classList.add('active');
+        }
+        function closePriceChatModal() { document.getElementById('priceChatModalOverlay').classList.remove('active'); }
+
+        function sendChatMessage(event) {
+            event.preventDefault();
+            const input = document.getElementById('chatMessageInput');
+            const val = input.value.trim();
+            if(!val) return;
+
+            const container = document.getElementById('chatMessages');
+            container.innerHTML += `<div class="chat-bubble sent">${val}</div>`;
+            input.value = "";
+            container.scrollTop = container.scrollHeight;
+
+            // Réponse automatique simulation vendeur
+            setTimeout(() => {
+                container.innerHTML += `<div class="chat-bubble received">Message bien reçu ! Je reviens vers vous avec le meilleur tarif.</div>`;
+                container.scrollTop = container.scrollHeight;
+            }, 1000);
+        }
+
+        // Espace Livreur & Chat Livreur-Client
+        function closeDeliveryModal() { document.getElementById('deliveryModalOverlay').classList.remove('active'); }
+        
+        function handleDeliveryLogin(event) {
+            event.preventDefault();
+            if (document.getElementById('deliveryKey').value === "livreur" && document.getElementById('deliveryPass').value === "colis2026") {
+                isDeliveryAuthenticated = true;
+                document.getElementById('deliveryLoginFields').style.display = 'none';
+                document.getElementById('deliveryDashboardFields').style.display = 'block';
+                renderDeliveryTable();
+                alert("Connexion Espace Livreur réussie !");
+            } else {
+                alert("Identifiants livreur incorrects.");
+            }
+        }
+
+        function renderDeliveryTable() {
+            const tbody = document.getElementById('deliveryTableBody');
+            tbody.innerHTML = '';
+            deliveryOrders.forEach(order => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${order.clientEmail}</td>
+                    <td><strong>${order.itemTitle}</strong></td>
+                    <td><span style="color:var(--delivery-color); font-weight:600;">${order.status}</span></td>
+                    <td>
+                        <button class="btn-chat-price" onclick="openDeliveryChat('${order.clientEmail}')"><i class="fa-solid fa-comments"></i> Discuter</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function openDeliveryChat(clientEmail) {
+            document.getElementById('deliveryChatSubtitle').innerText = `Discussion avec le client : ${clientEmail}`;
+            document.getElementById('deliveryChatModalOverlay').classList.add('active');
+        }
+        function closeDeliveryChatModal() { document.getElementById('deliveryChatModalOverlay').classList.remove('active'); }
+
+        function sendDeliveryChatMessage(event) {
+            event.preventDefault();
+            const input = document.getElementById('deliveryChatMessageInput');
+            const val = input.value.trim();
+            if(!val) return;
+
+            const container = document.getElementById('deliveryChatMessages');
+            container.innerHTML += `<div class="chat-bubble sent">${val}</div>`;
+            input.value = "";
+            container.scrollTop = container.scrollHeight;
+        }
+
+        // Admin Management
         function closeAdminModal() { document.getElementById('adminModalOverlay').classList.remove('active'); }
 
         function handleAdminAction(event) {
@@ -838,96 +1125,137 @@
                     isAdminAuthenticated = true;
                     document.getElementById('adminLoginFields').style.display = 'none';
                     document.getElementById('adminDashboardFields').style.display = 'block';
-                    alert("Accès Super-Admin validé.");
+                    renderLeadsTable();
+                    alert("Accès Administrateur autorisé.");
                 } else {
-                    alert("Identifiants incorrects (admin / root1234).");
+                    alert("Identifiants admin erronés.");
                 }
             } else {
                 const logoUrl = document.getElementById('adminLogoUrlInput').value.trim();
                 const imgTag = document.getElementById('customLogoImg');
                 const iconTag = document.getElementById('logoIcon');
-
                 if (logoUrl) {
-                    imgTag.src = logoUrl;
-                    imgTag.style.display = 'inline-block';
-                    iconTag.style.display = 'none';
+                    imgTag.src = logoUrl; imgTag.style.display = 'inline-block'; iconTag.style.display = 'none';
                     alert("Logo mis à jour !");
-                } else {
-                    imgTag.style.display = 'none';
-                    iconTag.style.display = 'inline-block';
-                    alert("Logo réinitialisé.");
                 }
                 closeAdminModal();
             }
         }
 
-        function openAlibabaModal() { document.getElementById('alibabaModalOverlay').classList.add('active'); }
-        function closeAlibabaModal() { document.getElementById('alibabaModalOverlay').classList.remove('active'); }
+        function renderLeadsTable() {
+            const tbody = document.getElementById('leadsTableBody');
+            tbody.innerHTML = '';
+            collectedLeads.forEach(lead => {
+                tbody.innerHTML += `<tr><td>${lead.date}</td><td><strong>${lead.email}</strong></td><td>${lead.role}</td></tr>`;
+            });
+        }
 
-        function handleAlibabaPost(event) {
+        // Social Post Management (Vendeur)
+        function openSocialModal() { document.getElementById('socialModalOverlay').classList.add('active'); }
+        function closeSocialModal() { document.getElementById('socialModalOverlay').classList.remove('active'); }
+
+        function handleSocialPost(event) {
             event.preventDefault();
-            const title = document.getElementById('alibTitle').value;
-            const category = document.getElementById('alibCategory').value;
-            const price = parseFloat(document.getElementById('alibPrice').value);
-            const mediaUrl = document.getElementById('alibMediaUrl').value;
-            const mediaType = document.getElementById('alibMediaType').value;
-            const attributes = document.getElementById('alibAttributes').value;
+            const author = document.getElementById('postAuthor').value.trim();
+            const email = document.getElementById('postEmail').value.trim();
+            const title = document.getElementById('postTitle').value.trim();
+            const category = document.getElementById('postCategory').value;
+            const price = parseFloat(document.getElementById('postPrice').value);
+            const mediaUrl = document.getElementById('postMediaUrl').value.trim();
+            const mediaType = document.getElementById('postMediaType').value;
 
-            let calculatedPis = mediaUrl ? "PIS: 4.9/5 (Premium)" : "PIS: 3.5/5";
+            const today = new Date().toISOString().split('T')[0];
+            if (!collectedLeads.some(l => l.email === email)) {
+                collectedLeads.push({ date: today, email: email, role: 'Vendeur' });
+            }
 
-            const newProduct = {
+            productsData.unshift({
                 id: productsData.length + 1,
-                title,
-                category,
-                price,
-                mediaUrl,
-                mediaType,
-                icon: "fa-box",
-                pis: calculatedPis,
-                attributes
-            };
+                author, email, title, category, price,
+                mediaUrl: mediaUrl || "https://images.unsplash.com/photo-1526738549149-8e07eca6c147?w=500",
+                mediaType, tag: "Nouveau"
+            });
 
-            productsData.unshift(newProduct);
             filterAndRenderProducts();
-            closeAlibabaModal();
-            document.getElementById('alibabaPostForm').reset();
-            alert("Produit publié avec succès !");
+            closeSocialModal();
+            document.getElementById('socialPostForm').reset();
+            alert("Publication réussie et email enregistré !");
+        }
+
+        // Commande et Email Client
+        function requestClientEmailAndCheckout() {
+            if (cart.length === 0) { alert("Panier vide."); return; }
+            if (verifiedClientEmail) {
+                alert(`Commande validée pour : ${verifiedClientEmail}`);
+                cart = []; updateCartUI(); cartDrawer.classList.remove('open');
+            } else {
+                document.getElementById('clientEmailModalOverlay').classList.add('active');
+            }
+        }
+        function closeClientEmailModal() { document.getElementById('clientEmailModalOverlay').classList.remove('active'); }
+
+        function finalizeCheckout(event) {
+            event.preventDefault();
+            const clientEmail = document.getElementById('clientCheckoutEmail').value.trim();
+            const today = new Date().toISOString().split('T')[0];
+
+            if (!collectedLeads.some(l => l.email === clientEmail)) {
+                collectedLeads.push({ date: today, email: clientEmail, role: 'Acheteur' });
+            }
+
+            // Ajout automatique de la commande dans l'espace livreur
+            deliveryOrders.push({
+                id: deliveryOrders.length + 101,
+                clientEmail: clientEmail,
+                itemTitle: cart[0] ? cart[0].title : "Article divers",
+                status: "En attente de prise en charge"
+            });
+
+            verifiedClientEmail = clientEmail;
+            closeClientEmailModal();
+            alert(`Achat validé et assigné au service de livraison !`);
+            cart = []; updateCartUI(); cartDrawer.classList.remove('open');
         }
 
         function renderProducts(products) {
             productGrid.innerHTML = '';
             if (products.length === 0) {
-                productGrid.innerHTML = `<p style="grid-column: 1/-1; text-align:center; color:#6c757d; padding: 2rem;">Aucun produit correspondant.</p>`;
+                productGrid.innerHTML = `<p style="grid-column: 1/-1; text-align:center; color:var(--text-muted); padding: 2rem;">Aucune publication disponible.</p>`;
                 return;
             }
             products.forEach(product => {
                 const card = document.createElement('div');
                 card.className = 'product-card';
                 
-                let mediaContent = `<i class="fa-solid ${product.icon}"></i>`;
-                let badgeContent = `<span class="media-badge"><i class="fa-solid fa-image"></i> Photo HD Fond Blanc</span>`;
+                let mediaContent = `<img src="${product.mediaUrl}" alt="${product.title}" loading="lazy">`;
+                let badgeContent = `<span class="media-badge"><i class="fa-solid fa-image"></i> Photo</span>`;
 
-                if (product.mediaUrl) {
-                    if (product.mediaType === 'video') {
-                        mediaContent = `<video src="${product.mediaUrl}" autoplay muted loop playsinline></video>`;
-                        badgeContent = `<span class="media-badge"><i class="fa-solid fa-video"></i> Vidéo Usine</span>`;
-                    } else {
-                        mediaContent = `<img src="${product.mediaUrl}" alt="${product.title}">`;
-                        badgeContent = `<span class="media-badge"><i class="fa-solid fa-image"></i> Photo HD</span>`;
-                    }
+                if (product.mediaType === 'video' && product.mediaUrl) {
+                    mediaContent = `<video src="${product.mediaUrl}" autoplay muted loop playsinline preload="metadata"></video>`;
+                    badgeContent = `<span class="media-badge"><i class="fa-solid fa-video"></i> Vidéo</span>`;
                 }
 
                 card.innerHTML = `
+                    <div class="post-author-header">
+                        <div class="author-info">
+                            <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100" alt="Avatar">
+                            <span>${product.author}</span>
+                        </div>
+                        <span style="font-size:0.7rem; color:var(--text-muted);">Actif</span>
+                    </div>
                     <div class="product-media-container">
                         ${mediaContent}
                         ${badgeContent}
-                        <span class="pis-score-badge">${product.pis || 'PIS: 4.5/5'}</span>
+                        <span class="pis-score-badge">${product.tag}</span>
                     </div>
                     <div class="product-info">
                         <div class="product-title">${product.title}</div>
-                        <div class="product-meta-sub">${product.attributes || 'Standard B2B vérifié'}</div>
+                        <div class="product-meta-sub">Vendeur vérifié</div>
                         <div class="product-price">${product.price.toFixed(2)} $</div>
-                        <button class="btn-add-cart" onclick="addToCart(${product.id})">Ajouter au panier</button>
+                        <div class="card-actions-row">
+                            <button class="btn-chat-price" onclick="openPriceChat('${product.title.replace(/'/g, "\\'")}')"><i class="fa-solid fa-comments"></i> Discuter prix</button>
+                            <button class="btn-add-cart" onclick="addToCart(${product.id})">Acheter</button>
+                        </div>
                     </div>
                 `;
                 productGrid.appendChild(card);
