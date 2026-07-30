@@ -1,547 +1,635 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="page-title">CoolB2B - Social Marketplace & Network</title>
+    <title id="app-dynamic-title">NexusB2B - Global Next-Gen Ecosystem</title>
     
-    <!-- Tailwind CSS & FontAwesome Icons -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tailwind CSS v4 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Carte Temps Réel (Leaflet JS) -->
+    <!-- Leaflet GPS Maps -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        darkbg: '#121212',
-                        darkcard: '#1E1E1E',
-                        darkborder: '#2A2A2A',
-                        brandorange: '#FF6A00',
-                        brandorangeHover: '#E05D00'
-                    }
-                }
-            }
-        }
-    </script>
     <style>
-        #map { height: 300px; width: 100%; border-radius: 0.75rem; }
-        .heart-active { color: #EF4444 !important; transform: scale(1.15); transition: transform 0.2s ease-in-out; }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        
+        .glass-panel {
+            background: rgba(18, 18, 24, 0.8);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glass-input {
+            background: rgba(10, 10, 15, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass-input:focus {
+            border-color: #f97316;
+            box-shadow: 0 0 25px rgba(249, 115, 22, 0.3);
+        }
+        .neon-glow {
+            box-shadow: 0 0 40px rgba(249, 115, 22, 0.25);
+        }
+        #map { height: 400px; width: 100%; border-radius: 1.25rem; }
+        .heart-active { color: #f43f5e !important; transform: scale(1.25); transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
     </style>
 </head>
-<body class="bg-darkbg text-white pb-20 font-sans">
+<body class="bg-[#050508] text-gray-100 min-h-screen selection:bg-orange-500 selection:text-white antialiased">
 
-    <!-- EN-TÊTE FIXE STYLE SOCIAL-COMMERCE -->
-    <header class="bg-darkcard border-b border-darkborder sticky top-0 z-50 shadow-lg">
-        <div class="max-w-7xl mx-auto px-4 py-2.5 flex justify-between items-center gap-3">
-            
-            <div class="flex items-center gap-3 flex-1">
-                <div class="flex items-center gap-2 cursor-pointer" onclick="showSection('feed-section')">
-                    <img id="app-logo" src="https://cdn-icons-png.flaticon.com/512/3081/3081559.png" alt="Logo" class="w-9 h-9 object-contain bg-white rounded-lg p-1">
-                    <span id="app-name-display" class="text-xl font-black text-brandorange tracking-tight uppercase hidden sm:inline">COOL B2B</span>
+    <!-- ========================================================== -->
+    <!-- MUR D'AUTHENTIFICATION (STYLE FACEBOOK / WEB3) -->
+    <!-- ========================================================== -->
+    <div id="auth-wall" class="fixed inset-0 z-50 bg-[#050508]/95 backdrop-blur-3xl flex items-center justify-center p-4">
+        <div class="glass-panel max-w-md w-full p-8 rounded-[2.5rem] neon-glow relative overflow-hidden space-y-6">
+            <div class="absolute -top-32 -right-32 w-64 h-64 bg-orange-600/20 rounded-full blur-[80px] pointer-events-none"></div>
+            <div class="absolute -bottom-32 -left-32 w-64 h-64 bg-amber-500/10 rounded-full blur-[80px] pointer-events-none"></div>
+
+            <div class="text-center space-y-3 relative z-10">
+                <div id="wall-logo-box" class="w-16 h-16 bg-gradient-to-tr from-orange-600 to-amber-400 rounded-2xl flex items-center justify-center mx-auto shadow-xl shadow-orange-600/30 text-black text-3xl font-black">
+                    <i class="fas fa-cube"></i>
                 </div>
-                
-                <div class="relative w-full max-w-md">
-                    <input type="text" id="global-search-input" onkeyup="filterFeed()" placeholder="Rechercher marchandises, posts ou taper 9293..." class="w-full pl-9 pr-4 py-1.5 bg-darkbg text-white border border-darkborder rounded-full focus:outline-none focus:border-brandorange text-xs placeholder-gray-400">
-                    <i class="fas fa-search absolute left-3 top-2.5 text-gray-400 text-xs"></i>
-                </div>
+                <h1 id="wall-app-name" class="text-3xl font-extrabold tracking-tight text-white">NEXUS<span class="text-orange-500">B2B</span></h1>
+                <p class="text-xs text-gray-400">Écosystème B2B & B2C mondial de nouvelle génération.</p>
             </div>
 
-            <div class="hidden md:flex items-center gap-1 lg:gap-2">
-                <button onclick="showSection('feed-section')" class="px-4 py-2 text-brandorange hover:bg-darkbg rounded-xl font-bold text-sm flex items-center gap-2">
-                    <i class="fas fa-house text-lg"></i> Fil Marchandises
-                </button>
-                <button onclick="showSection('market-section')" class="px-4 py-2 text-gray-300 hover:text-brandorange hover:bg-darkbg rounded-xl font-bold text-sm flex items-center gap-2">
-                    <i class="fas fa-store text-lg"></i> Catalogue
-                </button>
-                <button onclick="showSection('live-tracking')" class="px-4 py-2 text-gray-300 hover:text-brandorange hover:bg-darkbg rounded-xl font-bold text-sm flex items-center gap-2">
-                    <i class="fas fa-location-dot text-lg"></i> GPS
-                </button>
-                <button id="admin-nav-btn" onclick="showSection('admin-space')" class="hidden px-4 py-2 text-red-500 hover:bg-darkbg rounded-xl font-bold text-sm flex items-center gap-2">
-                    <i class="fas fa-user-shield text-lg"></i> Admin
-                </button>
-            </div>
-
-            <div class="flex items-center gap-2">
-                <div id="auth-actions">
-                    <button onclick="openModal('auth-modal')" class="bg-brandorange text-white font-bold px-3.5 py-1.5 rounded-full hover:bg-brandorangeHover transition text-xs flex items-center gap-1.5">
-                        <i class="fas fa-user"></i> Inscription / Connexion
-                    </button>
+            <form onsubmit="handleAuthSubmit(event)" class="space-y-4 relative z-10">
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-[11px] font-semibold text-gray-300 mb-1">Nom</label>
+                        <input type="text" id="auth-nom" required placeholder="Roland" class="w-full p-3.5 glass-input rounded-2xl text-xs text-white outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-semibold text-gray-300 mb-1">Post-nom</label>
+                        <input type="text" id="auth-postnom" required placeholder="Busimba" class="w-full p-3.5 glass-input rounded-2xl text-xs text-white outline-none">
+                    </div>
                 </div>
-                <div id="user-profile-bar" class="hidden flex items-center gap-2 bg-darkbg px-3 py-1 rounded-full border border-darkborder">
-                    <span id="user-display-name" class="text-xs font-bold text-white">Mon Compte</span>
-                    <button onclick="logout()" class="text-gray-400 hover:text-red-400 text-xs ml-1"><i class="fas fa-sign-out-alt"></i></button>
+
+                <div>
+                    <label class="block text-[11px] font-semibold text-gray-300 mb-1"><i class="fab fa-whatsapp text-emerald-400 mr-1"></i> WhatsApp ou Téléphone</label>
+                    <input type="tel" id="auth-phone" required placeholder="+243 970 000 000" class="w-full p-3.5 glass-input rounded-2xl text-xs text-white outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-[11px] font-semibold text-gray-300 mb-1"><i class="fas fa-envelope text-orange-400 mr-1"></i> Compte Gmail</label>
+                    <input type="email" id="auth-gmail" required placeholder="votrecompte@gmail.com" class="w-full p-3.5 glass-input rounded-2xl text-xs text-white outline-none">
+                </div>
+
+                <button type="submit" class="w-full bg-gradient-to-r from-orange-600 to-amber-500 hover:from-orange-500 hover:to-amber-400 text-white font-bold py-4 rounded-2xl text-xs uppercase tracking-wider transition shadow-lg shadow-orange-600/30 flex items-center justify-center gap-2 cursor-pointer">
+                    <span>Accéder à l'Effet Waouh</span> <i class="fas fa-arrow-right"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ========================================================== -->
+    <!-- INTERFACE PRINCIPALE DE L'APPLICATION -->
+    <!-- ========================================================== -->
+    <div id="main-platform" class="hidden">
+        
+        <!-- TOPBAR HAUTE PERFORMANCE -->
+        <div class="bg-black/60 border-b border-white/5 text-[11px] text-gray-400 py-2 px-6 backdrop-blur-md">
+            <div class="max-w-7xl mx-auto flex justify-between items-center">
+                <div class="flex items-center gap-6">
+                    <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Algorithme TikTok Actif</span>
+                    <span class="hidden sm:inline text-gray-400"><i class="fas fa-shield-halved text-orange-500 mr-1"></i> Sécurité Amazon & Alibaba</span>
+                </div>
+                <div class="flex items-center gap-4">
+                    <span id="topbar-user-email" class="text-amber-400 font-medium"></span>
+                    <button onclick="logout()" class="hover:text-rose-400 transition cursor-pointer" title="Déconnexion"><i class="fas fa-power-off"></i></button>
                 </div>
             </div>
         </div>
-    </header>
 
-    <main class="max-w-7xl mx-auto p-3 sm:p-6 grid grid-cols-1 lg:grid-cols-4 gap-6">
-
-        <!-- COLONNE GAUCHE : MENU PROFIL -->
-        <aside class="hidden lg:block space-y-4">
-            <div class="bg-darkcard p-4 rounded-2xl border border-darkborder">
-                <div class="flex items-center gap-3 border-b border-darkborder pb-3">
-                    <div class="w-10 h-10 bg-brandorange/20 text-brandorange rounded-full flex items-center justify-center font-bold">
-                        <i class="fas fa-shop"></i>
+        <!-- HEADER PRINCIPAL -->
+        <header class="glass-panel border-b border-white/5 sticky top-0 z-40">
+            <div class="max-w-7xl mx-auto px-6 py-4 flex flex-wrap lg:flex-nowrap justify-between items-center gap-4">
+                
+                <!-- LOGO DYNAMIQUE -->
+                <div class="flex items-center gap-3 cursor-pointer group" onclick="showSection('feed-section')">
+                    <div id="header-logo-icon" class="w-11 h-11 bg-gradient-to-tr from-orange-600 to-amber-400 rounded-2xl flex items-center justify-center shadow-lg shadow-orange-600/20 text-black text-xl font-black group-hover:scale-105 transition">
+                        <i class="fas fa-cube"></i>
                     </div>
                     <div>
-                        <h3 id="aside-user-name" class="font-bold text-sm text-white">Vendeur / Acheteur</h3>
-                        <p class="text-[11px] text-gray-400">Compte B2B Authentifié</p>
+                        <span id="header-app-title" class="text-xl font-black tracking-wider text-white">NEXUS<span class="text-orange-500">B2B</span></span>
+                        <p class="text-[9px] text-gray-400 tracking-widest uppercase font-bold">Global Ecosystem</p>
                     </div>
                 </div>
-                <nav class="mt-3 space-y-1 text-xs">
-                    <a href="#" onclick="showSection('feed-section')" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-darkbg text-gray-200 font-semibold"><i class="fas fa-fire text-brandorange w-5"></i> Flux Tendances B2B</a>
-                    <a href="#" onclick="showSection('market-section')" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-darkbg text-gray-200 font-semibold"><i class="fas fa-boxes-packing text-brandorange w-5"></i> Stock Machines & Équipements</a>
-                    <a href="#" onclick="showSection('live-tracking')" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-darkbg text-gray-200 font-semibold"><i class="fas fa-truck-fast text-brandorange w-5"></i> Géolocalisation Livraisons</a>
-                </nav>
-            </div>
-        </aside>
-
-        <!-- COLONNE CENTRALE : FLUX MARCHANDISES STYLE INSTAGRAM & ALIBABA -->
-        <div class="lg:col-span-2 space-y-6">
-
-            <!-- SECTION 1 : FIL SOCIAL ET BOUTON DE PUBLICATION -->
-            <section id="feed-section" class="space-y-4">
                 
-                <!-- ZONE DE CREATION DE PUBLICATION -->
-                <div class="bg-darkcard p-4 rounded-2xl border border-darkborder space-y-3 shadow-md">
-                    <div class="flex items-center gap-3">
-                        <div class="w-9 h-9 bg-brandorange rounded-full flex items-center justify-center font-bold text-white text-xs">
-                            <i class="fas fa-camera"></i>
-                        </div>
-                        <input type="text" id="post-input-text" placeholder="Décrivez votre marchandise ou produit à vendre..." class="w-full bg-darkbg border border-darkborder rounded-full px-4 py-2 text-xs text-white outline-none focus:border-brandorange">
-                    </div>
-                    <div class="flex flex-wrap justify-between items-center border-t border-darkborder pt-3 gap-2">
-                        <input type="number" id="post-input-price" placeholder="Prix ($ USD)" class="w-28 bg-darkbg border border-darkborder rounded-lg px-2.5 py-1.5 text-xs text-white outline-none">
-                        <input type="text" id="post-input-media" placeholder="Lien Photo ou Vidéo MP4..." class="flex-1 bg-darkbg border border-darkborder rounded-lg px-2.5 py-1.5 text-xs text-white outline-none">
-                        <button onclick="addNewPost()" class="bg-brandorange hover:bg-brandorangeHover text-white font-bold text-xs px-4 py-1.5 rounded-lg transition flex items-center gap-1.5">
-                            <i class="fas fa-plus"></i> Publier
+                <!-- BARRE DE RECHERCHE (CODE SECRET ADMIN : 9293RB) -->
+                <div class="flex-1 max-w-xl w-full order-3 lg:order-2">
+                    <div class="flex rounded-2xl overflow-hidden glass-input bg-black/40">
+                        <input type="text" id="global-search-input" onkeyup="checkAdminSecret(event)" placeholder="Rechercher des produits ou entrez le code secret (9293RB)..." class="w-full px-5 py-3 bg-transparent text-white text-xs outline-none placeholder-gray-500">
+                        <button class="bg-orange-600 hover:bg-orange-500 text-white px-6 transition flex items-center justify-center cursor-pointer">
+                            <i class="fas fa-search text-xs"></i>
                         </button>
                     </div>
                 </div>
 
-                <!-- FLUX DYNAMIQUE DES PUBLICATIONS -->
-                <div id="posts-feed" class="space-y-5">
-                    <!-- Généré dynamiquement par l'algorithme JS -->
-                </div>
-            </section>
-
-            <!-- SECTION 2 : MARKETPLACE CATALOGUE -->
-            <section id="market-section" class="hidden space-y-4">
-                <div class="bg-darkcard p-4 rounded-2xl border border-darkborder border-l-4 border-l-brandorange">
-                    <h2 class="font-extrabold text-base text-white">Catalogue Général des Équipements</h2>
-                    <p class="text-xs text-gray-400">Achat direct auprès des usines partenaires.</p>
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div class="bg-darkcard p-4 rounded-xl border border-darkborder flex flex-col justify-between">
-                        <div>
-                            <div class="h-32 bg-darkbg rounded-lg flex items-center justify-center text-brandorange text-4xl mb-2">
-                                <i class="fas fa-screwdriver-wrench"></i>
-                            </div>
-                            <h3 class="font-bold text-xs text-white">Meuleuse d'Angle Pro 1200W</h3>
+                <!-- PROFIL UTILISATEUR -->
+                <div class="flex items-center gap-3 order-2 lg:order-3">
+                    <div class="glass-panel px-4 py-2 rounded-2xl flex items-center gap-3">
+                        <div class="w-8 h-8 bg-gradient-to-tr from-orange-500 to-amber-500 rounded-xl flex items-center justify-center text-black font-bold text-xs">
+                            <i class="fas fa-user-astronaut"></i>
                         </div>
-                        <div class="mt-3 flex justify-between items-center border-t border-darkborder pt-2">
-                            <span class="font-black text-brandorange text-sm">$45.00</span>
-                            <button onclick="createOrder('Meuleuse 1200W', 45.00)" class="bg-brandorange text-white text-xs font-bold px-3 py-1 rounded-lg">Acheter</button>
-                        </div>
-                    </div>
-                    <div class="bg-darkcard p-4 rounded-xl border border-darkborder flex flex-col justify-between">
-                        <div>
-                            <div class="h-32 bg-darkbg rounded-lg flex items-center justify-center text-brandorange text-4xl mb-2">
-                                <i class="fas fa-industry"></i>
-                            </div>
-                            <h3 class="font-bold text-xs text-white">Presse à Pavés Recyclage</h3>
-                        </div>
-                        <div class="mt-3 flex justify-between items-center border-t border-darkborder pt-2">
-                            <span class="font-black text-brandorange text-sm">$320.00</span>
-                            <button onclick="createOrder('Presse à Pavés', 320.00)" class="bg-brandorange text-white text-xs font-bold px-3 py-1 rounded-lg">Acheter</button>
+                        <div class="text-xs">
+                            <p id="profile-display-name" class="font-bold text-white leading-tight">Utilisateur</p>
+                            <p id="profile-display-phone" class="text-[9px] text-orange-400 font-medium">En ligne</p>
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <!-- NAVIGATION SECONDAIRE (NICHES ALIBABA + AMAZON + UBER) -->
+            <div class="bg-black/20 border-t border-white/5 px-6 py-2.5 text-xs">
+                <div class="max-w-7xl mx-auto flex items-center justify-between overflow-x-auto gap-6 text-gray-300 font-semibold whitespace-nowrap">
+                    <div class="flex items-center gap-6">
+                        <button onclick="showSection('feed-section')" class="hover:text-orange-500 transition flex items-center gap-2 cursor-pointer"><i class="fas fa-stream text-orange-500"></i> Fil TikTok (Accueil)</button>
+                        <button onclick="showSection('market-section')" class="hover:text-orange-500 transition flex items-center gap-2 cursor-pointer"><i class="fas fa-boxes-stacked"></i> Niches Alibaba</button>
+                        <button onclick="showSection('live-tracking')" class="hover:text-orange-500 transition flex items-center gap-2 cursor-pointer"><i class="fas fa-box-open"></i> Livraison Amazon</button>
+                        <button onclick="showSection('taxi-section')" class="hover:text-orange-500 transition flex items-center gap-2 cursor-pointer"><i class="fas fa-taxi text-amber-400"></i> Espace Taxi (Hubert)</button>
+                    </div>
+                    <div>
+                        <button id="admin-nav-btn" onclick="showSection('admin-space')" class="hidden text-rose-400 font-bold bg-rose-950/40 border border-rose-900/50 px-3 py-1.5 rounded-xl transition cursor-pointer"><i class="fas fa-shield-halved mr-1.5"></i> Admin Studio</button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- CONTENU CENTRAL -->
+        <main class="max-w-7xl mx-auto p-4 sm:p-6 space-y-6">
+
+            <!-- ESPACE FIL TIKTOK / ACCUEIL -->
+            <section id="feed-section" class="space-y-6">
+                <!-- Bannière Effet Waouh -->
+                <div class="glass-panel rounded-[2rem] p-8 relative overflow-hidden shadow-2xl border border-white/10">
+                    <div class="absolute right-0 top-0 w-96 h-96 bg-orange-600/10 rounded-full blur-[100px] pointer-events-none"></div>
+                    <div class="max-w-2xl space-y-4 relative z-10">
+                        <span class="bg-orange-500/10 text-orange-400 text-xs font-bold px-3.5 py-1 rounded-full border border-orange-500/20 inline-flex items-center gap-2">
+                            <i class="fas fa-fire"></i> Algorithme de Recommandation Actif
+                        </span>
+                        <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight">
+                            Le Meilleur du B2B & B2C Mondial à Portée de Main
+                        </h2>
+                        <p class="text-xs sm:text-sm text-gray-300 leading-relaxed">
+                            Découvrez des produits tendance propulsés par notre intelligence artificielle, commandez instantanément et négociez vos prix en direct avec les fabricants.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Formulaire de Publication Rapide -->
+                <div class="glass-panel p-5 rounded-[2rem] space-y-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-orange-600/20 text-orange-400 rounded-xl flex items-center justify-center font-bold text-sm">
+                            <i class="fas fa-feather"></i>
+                        </div>
+                        <input type="text" id="post-input-text" placeholder="Publier une offre B2B ou un produit B2C..." class="w-full glass-input rounded-full px-5 py-3 text-xs text-white outline-none">
+                    </div>
+                    <div class="flex flex-wrap justify-between items-center border-t border-white/5 pt-4 gap-3">
+                        <input type="number" id="post-input-price" placeholder="Prix ($)" class="w-32 glass-input rounded-xl px-3.5 py-2.5 text-xs text-white outline-none">
+                        <input type="text" id="post-input-media" placeholder="Lien image ou vidéo..." class="flex-1 glass-input rounded-xl px-3.5 py-2.5 text-xs text-white outline-none">
+                        <button onclick="addNewPost()" class="bg-orange-600 hover:bg-orange-500 text-white font-bold text-xs px-5 py-2.5 rounded-xl transition cursor-pointer flex items-center gap-2">
+                            <i class="fas fa-paper-plane"></i> Publier
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Grille Dynamique Façon TikTok & Alibaba (Cœur + Achat + Discussion) -->
+                <div id="posts-feed" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Injecté par JavaScript -->
+                </div>
             </section>
 
-            <!-- SECTION 3 : GEOLOCALISATION GPS -->
-            <section id="live-tracking" class="hidden space-y-4">
-                <div class="bg-darkcard p-4 rounded-2xl border border-darkborder space-y-3">
+            <!-- CATALOGUE NICHES ALIBABA -->
+            <section id="market-section" class="hidden space-y-6">
+                <div class="glass-panel p-6 rounded-[2rem] border-l-4 border-l-orange-500 space-y-2">
+                    <h2 class="font-extrabold text-lg text-white">Catalogue Global - Niches Alibaba (B2B & B2C)</h2>
+                    <p class="text-xs text-gray-400">Équipements industriels, électronique, agro-alimentaire et matériaux écologiques vérifiés.</p>
+                </div>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="alibaba-niches-grid">
+                    <!-- Généré dynamiquement -->
+                </div>
+            </section>
+
+            <!-- SUIVI LIVRAISON AMAZON -->
+            <section id="live-tracking" class="hidden space-y-6">
+                <div class="glass-panel p-6 rounded-[2rem] space-y-4">
                     <div class="flex justify-between items-center">
-                        <h2 class="text-sm font-bold text-white"><i class="fas fa-crosshairs text-brandorange"></i> Positionnement GPS en Direct</h2>
-                        <button onclick="getUserLocation()" class="bg-darkbg text-brandorange border border-brandorange font-bold text-xs px-2.5 py-1 rounded-lg">Actualiser GPS</button>
+                        <div>
+                            <h2 class="text-base font-bold text-white flex items-center gap-2"><i class="fas fa-box-circle-check text-orange-500"></i> Suivi Livraison Amazon Live</h2>
+                            <p class="text-xs text-gray-400">Précision géolocalisée et estimation d'arrivée en temps réel.</p>
+                        </div>
+                        <button onclick="getUserLocation()" class="glass-panel text-orange-400 font-bold text-xs px-4 py-2.5 rounded-xl cursor-pointer">Actualiser GPS</button>
                     </div>
                     <div id="map"></div>
-                    <div class="bg-darkbg p-3 rounded-xl border border-darkborder flex justify-between items-center">
+                </div>
+            </section>
+
+            <!-- ESPACE TAXI (HUBERT / UBER) -->
+            <section id="taxi-section" class="hidden space-y-6">
+                <div class="glass-panel p-6 rounded-[2rem] space-y-4 border border-amber-500/30">
+                    <div class="flex justify-between items-center">
                         <div>
-                            <p class="text-xs text-gray-400">Code PIN Réception Colis :</p>
-                            <p class="text-lg font-mono font-bold text-brandorange tracking-widest">9293</p>
+                            <h2 class="text-lg font-black text-amber-400 flex items-center gap-2"><i class="fas fa-taxi"></i> Espace Taxi (Hubert / Uber Style)</h2>
+                            <p class="text-xs text-gray-400">Commandez votre chauffeur privé en un clic avec suivi en direct.</p>
                         </div>
-                        <button onclick="startDriverSimulation()" class="bg-brandorange text-white text-xs font-bold px-3 py-1.5 rounded-lg">Lancer Livreur</button>
+                        <span class="bg-amber-500 text-black text-[10px] font-bold px-3 py-1 rounded-full">Service 24/7</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="glass-panel p-4 rounded-2xl flex flex-col justify-between space-y-3">
+                            <div class="h-28 bg-black/40 rounded-xl flex items-center justify-center text-amber-400 text-3xl">
+                                <i class="fas fa-car-side"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-xs text-white">Hubert Confort</h3>
+                                <p class="text-[10px] text-gray-400">Berline climatisée, chauffeur professionnel.</p>
+                            </div>
+                            <button onclick="orderTaxi('Hubert Confort', 12)" class="w-full bg-amber-500 hover:bg-amber-400 text-black font-bold py-2.5 rounded-xl text-xs transition cursor-pointer">Commander ($12)</button>
+                        </div>
+
+                        <div class="glass-panel p-4 rounded-2xl flex flex-col justify-between space-y-3">
+                            <div class="h-28 bg-black/40 rounded-xl flex items-center justify-center text-orange-500 text-3xl">
+                                <i class="fas fa-motorcycle"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-xs text-white">Hubert Moto Express</h3>
+                                <p class="text-[10px] text-gray-400">Idéal pour éviter les embouteillages.</p>
+                            </div>
+                            <button onclick="orderTaxi('Hubert Moto', 5)" class="w-full bg-orange-600 hover:bg-orange-500 text-white font-bold py-2.5 rounded-xl text-xs transition cursor-pointer">Commander ($5)</button>
+                        </div>
+
+                        <div class="glass-panel p-4 rounded-2xl flex flex-col justify-between space-y-3">
+                            <div class="h-28 bg-black/40 rounded-xl flex items-center justify-center text-emerald-400 text-3xl">
+                                <i class="fas fa-truck-pickup"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-xs text-white">Hubert Cargo B2B</h3>
+                                <p class="text-[10px] text-gray-400">Transport de marchandises & palettes usine.</p>
+                            </div>
+                            <button onclick="orderTaxi('Hubert Cargo', 35)" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl text-xs transition cursor-pointer">Commander ($35)</button>
+                        </div>
                     </div>
                 </div>
             </section>
 
-            <!-- SECTION 4 : ADMIN & REGIE PUB (Code 9293) -->
-            <section id="admin-space" class="hidden space-y-4">
-                <div class="bg-darkcard p-4 rounded-2xl border border-red-900/50 flex justify-between items-center">
+            <!-- ========================================================== -->
+            <!-- ESPACE ADMIN STUDIO (CACHÉ - 9293RB) -->
+            <!-- ========================================================== -->
+            <section id="admin-space" class="hidden space-y-6">
+                <div class="glass-panel p-6 rounded-[2rem] border border-rose-500/30 flex justify-between items-center">
                     <div>
-                        <h2 class="text-base font-black text-red-500"><i class="fas fa-user-shield"></i> Administration & Publicités Payantes</h2>
-                        <p class="text-xs text-gray-400">Boostez des marchandises en tête du fil général.</p>
+                        <h2 class="text-base font-black text-rose-500 flex items-center gap-2"><i class="fas fa-sliders"></i> Admin Studio - Contrôle Total</h2>
+                        <p class="text-xs text-gray-400">Modifiez l'identité, gérez les commissions, diffusez des annonces et surveillez les utilisateurs.</p>
                     </div>
-                    <span class="bg-red-600 text-white text-[10px] font-bold px-2 py-0.5 rounded">Super-Admin</span>
+                    <span class="bg-rose-500 text-white text-[10px] font-bold px-3 py-1 rounded-full">SuperAdmin Master</span>
                 </div>
-                <div class="bg-darkcard p-4 rounded-xl border border-darkborder space-y-3">
-                    <h3 class="font-bold border-b border-darkborder pb-2 text-white text-xs">Créer une Publicité Sponsorisée (Payante)</h3>
-                    <input type="text" id="ad-title-input" placeholder="Titre du produit sponsorisé..." class="w-full p-2 bg-darkbg border border-darkborder text-white rounded-lg text-xs outline-none">
-                    <div class="grid grid-cols-2 gap-2">
-                        <input type="number" id="ad-price-input" placeholder="Prix de vente ($)" class="p-2 bg-darkbg border border-darkborder text-white rounded-lg text-xs outline-none">
-                        <input type="number" id="ad-budget-input" placeholder="Budget Sponsorisé ($)" class="p-2 bg-darkbg border border-darkborder text-white rounded-lg text-xs outline-none">
+
+                <!-- Branding Total -->
+                <div class="glass-panel p-6 rounded-[2rem] space-y-4">
+                    <h3 class="font-bold text-xs text-white border-b border-white/5 pb-3"><i class="fas fa-paint-brush text-orange-500 mr-2"></i> Personnalisation de l'Application</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-[11px] font-semibold text-gray-300 mb-1">Nouveau Nom de l'Application</label>
+                            <input type="text" id="admin-new-name" placeholder="Ex: Nexus Global Pro" class="w-full p-3 glass-input rounded-xl text-xs text-white outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-semibold text-gray-300 mb-1">Icône FontAwesome (ex: fa-rocket, fa-globe)</label>
+                            <input type="text" id="admin-new-icon" placeholder="fa-rocket" class="w-full p-3 glass-input rounded-xl text-xs text-white outline-none">
+                        </div>
                     </div>
-                    <input type="text" id="ad-media-input" placeholder="Lien Photo ou Vidéo..." class="w-full p-2 bg-darkbg border border-darkborder text-white rounded-lg text-xs outline-none">
-                    <button onclick="publishSponsoredAd()" class="w-full bg-brandorange text-white font-bold py-2 rounded-lg text-xs hover:bg-brandorangeHover">Injecter la Publicité Payante</button>
+                    <button onclick="applyAdminBranding()" class="w-full bg-orange-600 hover:bg-orange-500 text-white font-bold py-3 rounded-xl text-xs transition cursor-pointer shadow-lg shadow-orange-600/20">Appliquer les Modifications Globales</button>
+                </div>
+
+                <!-- Gestion des Commissions & Paramètres -->
+                <div class="glass-panel p-6 rounded-[2rem] space-y-4">
+                    <h3 class="font-bold text-xs text-white border-b border-white/5 pb-3"><i class="fas fa-percent text-orange-500 mr-2"></i> Ajustement des Commissions (%)</h3>
+                    <div class="flex gap-4 items-center">
+                        <input type="number" id="commission-input" value="5" class="w-32 p-3 glass-input rounded-xl text-xs text-white outline-none">
+                        <button onclick="updateCommission()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-6 py-3 rounded-xl text-xs transition cursor-pointer">Enregistrer la Commission</button>
+                    </div>
+                </div>
+
+                <!-- Diffusion Omnicanale (Email, WhatsApp, Facebook) -->
+                <div class="glass-panel p-6 rounded-[2rem] space-y-4">
+                    <h3 class="font-bold text-xs text-white border-b border-white/5 pb-3"><i class="fas fa-bullhorn text-orange-500 mr-2"></i> Diffusion Publicitaire & Messages (Email / WhatsApp / Facebook)</h3>
+                    <div class="space-y-3">
+                        <input type="text" id="ad-title-input" placeholder="Titre de l'annonce publicitaire..." class="w-full p-3 glass-input rounded-xl text-xs text-white outline-none">
+                        <div class="grid grid-cols-2 gap-3">
+                            <input type="number" id="ad-price-input" placeholder="Prix promo ($)" class="p-3 glass-input rounded-xl text-xs text-white outline-none">
+                            <input type="text" id="ad-media-input" placeholder="Lien image ou bannière..." class="p-3 glass-input rounded-xl text-xs text-white outline-none">
+                        </div>
+                        <div class="flex gap-3 pt-2">
+                            <button onclick="broadcastAd('email')" class="flex-1 bg-amber-600 hover:bg-amber-500 text-white font-bold py-3 rounded-xl text-xs transition cursor-pointer flex items-center justify-center gap-2"><i class="fas fa-envelope"></i> Diffuser par Email</button>
+                            <button onclick="broadcastAd('whatsapp')" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl text-xs transition cursor-pointer flex items-center justify-center gap-2"><i class="fab fa-whatsapp"></i> Diffuser sur WhatsApp</button>
+                            <button onclick="broadcastAd('facebook')" class="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl text-xs transition cursor-pointer flex items-center justify-center gap-2"><i class="fab fa-facebook"></i> Diffuser sur Facebook</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Liste des Utilisateurs Enregistrés -->
+                <div class="glass-panel p-6 rounded-[2rem] space-y-4">
+                    <h3 class="font-bold text-xs text-white border-b border-white/5 pb-3"><i class="fas fa-users text-orange-500 mr-2"></i> Base de Données Utilisateurs (B2B / B2C)</h3>
+                    <div id="admin-users-list" class="space-y-2 text-xs">
+                        <!-- Rempli dynamiquement -->
+                    </div>
                 </div>
             </section>
 
-        </div>
-
-        <!-- COLONNE DROITE : TENDANCES -->
-        <aside class="hidden lg:block space-y-4">
-            <div class="bg-darkcard p-4 rounded-2xl border border-darkborder space-y-3">
-                <h3 class="font-bold text-xs text-white border-b border-darkborder pb-2"><i class="fas fa-chart-line text-brandorange mr-1"></i> Mots-Clés Recherchés</h3>
-                <div class="flex flex-wrap gap-1.5 text-[11px]">
-                    <span class="bg-darkbg px-2.5 py-1 rounded-full border border-darkborder text-gray-300">#PavageÉcolo</span>
-                    <span class="bg-darkbg px-2.5 py-1 rounded-full border border-darkborder text-gray-300">#OutillageB2B</span>
-                    <span class="bg-darkbg px-2.5 py-1 rounded-full border border-darkborder text-gray-300">#Broyeurs</span>
-                </div>
-            </div>
-        </aside>
-
-    </main>
-
-    <!-- MODAL MARCHANDAGE / NEGOCIATION -->
-    <div id="bargain-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-darkcard max-w-sm w-full p-5 rounded-2xl border border-darkborder space-y-3 relative">
-            <button onclick="closeModal('bargain-modal')" class="absolute right-4 top-4 text-gray-400 hover:text-white"><i class="fas fa-times"></i></button>
-            <h3 class="text-sm font-bold text-white flex items-center gap-2"><i class="fas fa-comments-dollar text-brandorange"></i> Négocier le Prix</h3>
-            <p class="text-xs text-gray-400" id="bargain-product-name">Nom du produit</p>
-            <div>
-                <label class="block text-[11px] font-bold text-gray-300">Proposer votre prix bas ($ USD)</label>
-                <input type="number" id="bargain-price-input" placeholder="Entrez votre offre..." class="w-full mt-1 p-2 bg-darkbg border border-darkborder text-white rounded-lg text-xs outline-none focus:border-brandorange">
-            </div>
-            <button onclick="submitBargain()" class="w-full bg-brandorange text-white font-bold py-2 rounded-lg text-xs hover:bg-brandorangeHover">Envoyer l'Offre au Vendeur</button>
-        </div>
+        </main>
     </div>
 
-    <!-- MODAL INSCRIPTION -->
-    <div id="auth-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-darkcard max-w-sm w-full p-5 rounded-2xl border border-darkborder space-y-3 relative">
-            <button onclick="closeModal('auth-modal')" class="absolute right-4 top-4 text-gray-400 hover:text-white"><i class="fas fa-times"></i></button>
-            <h3 class="text-sm font-bold text-white"><i class="fas fa-user-plus text-brandorange mr-1"></i> Créer votre Compte Marchand</h3>
-            <input type="text" id="reg-name" placeholder="Nom complet / Nom Entreprise..." class="w-full p-2 bg-darkbg border border-darkborder text-white rounded-lg text-xs outline-none">
-            <button onclick="registerUser()" class="w-full bg-brandorange text-white font-bold py-2 rounded-lg text-xs">Créer Mon Compte</button>
-        </div>
-    </div>
-
-    <!-- JAVASCRIPT ET ALGORITHME DE RECOMMANDATION INTELLIGENT -->
+    <!-- ========================================================== -->
+    <!-- LOGIQUE JAVASCRIPT MASTER -->
+    <!-- ========================================================== -->
     <script>
-        // BASE DE DONNEES DU FIL MARCHANDISES
+        let currentUser = null;
+        let allUsers = JSON.parse(localStorage.getItem('nexus_users')) || [];
+        let globalCommission = 5;
+
+        // Données d'inspiration TikTok / Alibaba / Amazon
         let postsData = [
             {
                 id: 1,
-                author: "Atelier Métal Pro",
-                verified: true,
-                content: "Presse à pavés écologiques haute pression. Idéale pour recyclage de plastique usagé. Livraison rapide avec géolocalisation GPS.",
+                author: "Busimba Roland",
+                gmail: "roland@nexus.com",
+                whatsapp: "+243 970 000 000",
+                content: "Presse à pavés écologiques haute performance avec moteur thermique. Livraison sécurisée type Amazon.",
                 price: 350.00,
                 media: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=600",
-                isVideo: false,
-                likes: 38,
+                likes: 124,
                 isLiked: false,
-                isSponsored: false,
-                score: 150
+                score: 95
             },
             {
                 id: 2,
-                author: "Outillage Express",
-                verified: false,
-                content: "Meuleuse d'angle professionnelle 1200W en promotion. Stock direct usine.",
-                price: 45.00,
-                media: "https://images.unsplash.com/photo-1504148455328-c376907d081c?w=600",
-                isVideo: false,
-                likes: 19,
+                author: "Global Tech Factory",
+                gmail: "factory@alibaba.com",
+                whatsapp: "+243 980 111 222",
+                content: "Incubateur d'œufs automatique de grande capacité pour aviculture moderne. Vente gros et détail.",
+                price: 180.00,
+                media: "https://images.unsplash.com/photo-1516939884455-1445c8652f83?w=600",
+                likes: 89,
                 isLiked: false,
-                isSponsored: false,
-                score: 90
+                score: 88
             }
         ];
 
-        // RENDU DYNAMIQUE ET ALGORITHME INTELLIGENT
+        let alibabaNiches = [
+            { title: "Presses & Machines Industrielles", price: 1200, img: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=600" },
+            { title: "Électronique & Composants Smart", price: 45, img: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=600" },
+            { title: "Matériaux Écologiques & Recyclés", price: 220, img: "https://images.unsplash.com/photo-1532629345422-7515f3d16bb9?w=600" },
+            { title: "Matériel Avicole & Incubateurs", price: 150, img: "https://images.unsplash.com/photo-1548550023-2bdb3c5beed7?w=600" },
+            { title: "Énergie Solaire & Batteries Lithium", price: 450, img: "https://images.unsplash.com/photo-1509391365330-2a884815fb7b?w=600" },
+            { title: "Outillage de Précision ThinkPad", price: 85, img: "https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=600" }
+        ];
+
+        function handleAuthSubmit(e) {
+            e.preventDefault();
+            const nom = document.getElementById('auth-nom').value.trim();
+            const postnom = document.getElementById('auth-postnom').value.trim();
+            const phone = document.getElementById('auth-phone').value.trim();
+            const gmail = document.getElementById('auth-gmail').value.trim();
+
+            currentUser = { fullName: `${nom} ${postnom}`, phone, gmail };
+
+            if(!allUsers.some(u => u.gmail === gmail)) {
+                allUsers.push(currentUser);
+                localStorage.setItem('nexus_users', JSON.stringify(allUsers));
+            }
+
+            document.getElementById('profile-display-name').innerText = currentUser.fullName;
+            document.getElementById('profile-display-phone').innerText = currentUser.phone;
+            document.getElementById('topbar-user-email').innerText = currentUser.gmail;
+
+            document.getElementById('auth-wall').classList.add('hidden');
+            document.getElementById('main-platform').classList.remove('hidden');
+
+            renderFeed();
+            renderAlibabaNiches();
+            renderAdminUsers();
+        }
+
+        function logout() {
+            currentUser = null;
+            document.getElementById('main-platform').classList.add('hidden');
+            document.getElementById('auth-wall').classList.remove('hidden');
+        }
+
         function renderFeed() {
             const feedContainer = document.getElementById('posts-feed');
             feedContainer.innerHTML = '';
 
-            // Algorithme : Tri par (Sponsorisé en priorité, puis par score combiné de Likes + Intérêt)
-            let sortedPosts = [...postsData].sort((a, b) => {
-                if (a.isSponsored && !b.isSponsored) return -1;
-                if (!a.isSponsored && b.isSponsored) return 1;
-                return b.score - a.score;
-            });
-
-            sortedPosts.forEach(post => {
-                const isVid = post.media && post.media.endsWith('.mp4');
-                
-                const postHtml = `
-                    <div class="bg-darkcard rounded-2xl border ${post.isSponsored ? 'border-brandorange' : 'border-darkborder'} overflow-hidden shadow-lg">
-                        <!-- Entête de la publication -->
-                        <div class="p-3 flex justify-between items-center border-b border-darkborder/50">
-                            <div class="flex items-center gap-2">
-                                <div class="w-7 h-7 bg-brandorange/20 text-brandorange rounded-full flex items-center justify-center font-bold text-xs">
-                                    ${post.author.charAt(0)}
-                                </div>
-                                <div>
-                                    <h4 class="font-bold text-xs text-white flex items-center gap-1">
-                                        ${post.author}
-                                        ${post.verified ? '<i class="fas fa-circle-check text-brandorange text-[10px]"></i>' : ''}
-                                    </h4>
-                                    <p class="text-[9px] text-gray-400">Produit Vérifié • Marchandise B2B</p>
-                                </div>
-                            </div>
-                            ${post.isSponsored ? '<span class="bg-brandorange/20 text-brandorange text-[9px] font-bold px-2 py-0.5 rounded border border-brandorange/40"><i class="fas fa-ad"></i> SPONSORISÉ</span>' : ''}
-                        </div>
-
-                        <!-- Description du produit -->
-                        <div class="px-3 py-2">
-                            <p class="text-xs text-gray-200 leading-snug">${post.content}</p>
-                        </div>
-
-                        <!-- Média : Photo ou Vidéo -->
-                        ${post.media ? `
-                            <div class="w-full bg-black flex items-center justify-center">
-                                ${isVid ? `
-                                    <video src="${post.media}" controls class="w-full max-h-80 object-contain"></video>
-                                ` : `
-                                    <img src="${post.media}" class="w-full max-h-80 object-cover">
-                                `}
-                            </div>
-                        ` : ''}
-
-                        <!-- BARRE D'ACTIONS STYLE INSTAGRAM + ALIBABA (CŒUR, ACHETER, MARCHANT) -->
-                        <div class="p-3 border-t border-darkborder space-y-2">
-                            <div class="flex justify-between items-center">
-                                <!-- Aimer (Petit Cœur Style Instagram) -->
+            // Algorithme de tri TikTok (Score + Likes)
+            postsData.sort((a, b) => (b.score + b.likes) - (a.score + a.likes)).forEach(post => {
+                feedContainer.innerHTML += `
+                    <div class="glass-panel rounded-[2rem] overflow-hidden shadow-2xl border border-white/5 flex flex-col justify-between">
+                        <div>
+                            <div class="p-4 flex justify-between items-center border-b border-white/5">
                                 <div class="flex items-center gap-3">
-                                    <button onclick="toggleLike(${post.id})" class="flex items-center gap-1.5 text-xs font-bold text-gray-300 hover:text-red-500 transition">
-                                        <i class="fas fa-heart text-base ${post.isLiked ? 'heart-active' : 'text-gray-400'}"></i>
-                                        <span>${post.likes}</span>
-                                    </button>
-                                    
-                                    <!-- Négocier / Marchander -->
-                                    <button onclick="openBargainModal('${post.author}', ${post.price})" class="flex items-center gap-1 text-xs font-bold text-gray-300 hover:text-brandorange transition">
-                                        <i class="fas fa-comments-dollar text-base text-brandorange"></i>
-                                        <span>Marchander</span>
-                                    </button>
+                                    <div class="w-9 h-9 bg-orange-500/20 text-orange-400 rounded-xl flex items-center justify-center font-bold text-xs">
+                                        ${post.author.charAt(0)}
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-xs text-white flex items-center gap-1.5">
+                                            ${post.author}
+                                            <i class="fas fa-circle-check text-orange-500 text-[10px]"></i>
+                                        </h4>
+                                        <p class="text-[9px] text-gray-400">Gmail: ${post.gmail} | Tél: ${post.whatsapp}</p>
+                                    </div>
                                 </div>
+                                <span class="bg-orange-500/10 text-orange-400 text-[9px] font-bold px-2.5 py-1 rounded-full border border-orange-500/20">Tendance</span>
+                            </div>
 
-                                <!-- Prix & Bouton d'Achat Direct -->
-                                <div class="flex items-center gap-2">
-                                    ${post.price ? `<span class="text-sm font-black text-white">$${post.price.toFixed(2)}</span>` : ''}
-                                    <button onclick="createOrder('${post.author}', ${post.price || 0})" class="bg-brandorange hover:bg-brandorangeHover text-white font-bold text-xs px-3 py-1.5 rounded-lg flex items-center gap-1 shadow-md">
-                                        <i class="fas fa-cart-shopping"></i> Acheter
-                                    </button>
+                            <div class="p-4">
+                                <p class="text-xs text-gray-200 leading-relaxed">${post.content}</p>
+                            </div>
+
+                            ${post.media ? `
+                                <div class="w-full bg-black/50 overflow-hidden">
+                                    <img src="${post.media}" class="w-full h-64 object-cover hover:scale-105 transition duration-500">
                                 </div>
+                            ` : ''}
+                        </div>
+
+                        <!-- Boutons Cœur & Achat (Requis) -->
+                        <div class="p-4 border-t border-white/5 flex justify-between items-center bg-black/30">
+                            <button onclick="toggleLike(${post.id})" class="flex items-center gap-2 text-xs font-bold text-gray-300 hover:text-rose-500 transition cursor-pointer">
+                                <i class="fas fa-heart text-lg ${post.isLiked ? 'heart-active' : 'text-gray-500'}"></i>
+                                <span>${post.likes}</span>
+                            </button>
+                            
+                            <div class="flex items-center gap-3">
+                                ${post.price ? `<span class="text-sm font-black text-orange-400">$${post.price.toFixed(2)}</span>` : ''}
+                                <button onclick="openPriceNegotiation('${post.author}', '${post.content}', ${post.price || 0})" class="bg-orange-600 hover:bg-orange-500 text-white font-bold text-xs px-4 py-2.5 rounded-xl transition cursor-pointer flex items-center gap-1.5 shadow-lg shadow-orange-600/20">
+                                    <i class="fas fa-handshake"></i> Négocier & Acheter
+                                </button>
                             </div>
                         </div>
                     </div>
                 `;
-                feedContainer.innerHTML += postHtml;
             });
         }
 
-        // ACTION DU BOUTON CŒUR (AIMER)
+        function renderAlibabaNiches() {
+            const grid = document.getElementById('alibaba-niches-grid');
+            grid.innerHTML = '';
+            alibabaNiches.forEach((item, index) => {
+                grid.innerHTML += `
+                    <div class="glass-panel p-4 rounded-[2rem] flex flex-col justify-between space-y-3">
+                        <div class="h-40 bg-black/40 rounded-2xl overflow-hidden">
+                            <img src="${item.img}" class="w-full h-full object-cover hover:scale-105 transition">
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-xs text-white">${item.title}</h3>
+                            <p class="text-[10px] text-gray-400">Niche Alibaba #${index + 1} - Certifié B2B</p>
+                        </div>
+                        <div class="flex justify-between items-center pt-2 border-t border-white/5">
+                            <span class="font-black text-orange-400 text-sm">$${item.price.toFixed(2)}</span>
+                            <button onclick="openPriceNegotiation('Fournisseur Alibaba', '${item.title}', ${item.price})" class="bg-orange-600 hover:bg-orange-500 text-white text-xs font-bold px-3 py-2 rounded-xl cursor-pointer">Commander</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
         function toggleLike(id) {
             const post = postsData.find(p => p.id === id);
             if (post) {
-                if (post.isLiked) {
-                    post.likes--;
-                    post.score -= 2;
-                    post.isLiked = false;
-                } else {
-                    post.likes++;
-                    post.score += 2; // L'algorithme augmente la visibilité
-                    post.isLiked = true;
-                }
+                post.isLiked = !post.isLiked;
+                post.likes += post.isLiked ? 1 : -1;
                 renderFeed();
             }
         }
 
-        // PUBLICATION DE CONTENU PAR UN UTILISATEUR
+        function openPriceNegotiation(vendor, product, price) {
+            const offer = prompt(`Espace Discussion & Négociation de Prix avec "${vendor}"\nProduit : ${product}\nPrix affiché : $${price}\n\nEntrez votre proposition de prix ($) ou écrivez votre message :`, price);
+            if (offer !== null) {
+                alert(`Proposition de $${offer} envoyée à ${vendor} via WhatsApp & Gmail!\nCommission appli (${globalCommission}%) incluse. Redirection vers le suivi de livraison Amazon.`);
+                showSection('live-tracking');
+            }
+        }
+
         function addNewPost() {
             const text = document.getElementById('post-input-text').value.trim();
             const price = parseFloat(document.getElementById('post-input-price').value) || null;
             const media = document.getElementById('post-input-media').value.trim();
 
-            if (!text) return alert("Rédigez une description pour votre marchandise.");
+            if (!text) return alert("Veuillez rédiger une description.");
 
-            const newPost = {
+            postsData.unshift({
                 id: Date.now(),
-                author: document.getElementById('user-display-name').innerText || "Nouveau Vendeur",
-                verified: true,
+                author: currentUser.fullName,
+                gmail: currentUser.gmail,
+                whatsapp: currentUser.phone,
                 content: text,
                 price: price,
                 media: media || null,
-                likes: 1,
+                likes: 0,
                 isLiked: false,
-                isSponsored: false,
-                score: 50
-            };
+                score: 100
+            });
 
-            postsData.unshift(newPost);
             renderFeed();
-
             document.getElementById('post-input-text').value = '';
             document.getElementById('post-input-price').value = '';
             document.getElementById('post-input-media').value = '';
         }
 
-        // INJECTION D'UNE PUB PAR L'ADMIN (CODE 9293)
-        function publishSponsoredAd() {
-            const title = document.getElementById('ad-title-input').value.trim();
-            const price = parseFloat(document.getElementById('ad-price-input').value) || null;
-            const budget = parseFloat(document.getElementById('ad-budget-input').value) || 10;
-            const media = document.getElementById('ad-media-input').value.trim();
-
-            if (!title) return alert("Indiquez un titre.");
-
-            const adPost = {
-                id: Date.now(),
-                author: "Sponsorisé - " + title,
-                verified: true,
-                content: `[Annonce Sponsorisée Payante] ${title}. Quantités limitées en stock usine.`,
-                price: price,
-                media: media || "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=600",
-                likes: 50,
-                isLiked: false,
-                isSponsored: true,
-                score: 1000 + (budget * 5)
-            };
-
-            postsData.unshift(adPost);
-            renderFeed();
-            alert("Publicité sponsorisée activée dans le fil !");
-            showSection('feed-section');
+        function orderTaxi(type, price) {
+            alert(`Chauffeur ${type} commandé avec succès ($${price}) !\nLocalisation exacte capturée. Suivi en temps réel activé.`);
+            showSection('live-tracking');
         }
 
-        // RECHERCHE INSTANTANEE ET ACCES SECRET ADMIN (9293)
-        function filterFeed() {
-            const query = document.getElementById('global-search-input').value.toLowerCase().trim();
-
-            if (query === '9293') {
+        function checkAdminSecret(e) {
+            const query = e.target.value.trim();
+            if (query === '9293RB') {
                 document.getElementById('admin-nav-btn').classList.remove('hidden');
                 showSection('admin-space');
-                alert("Accès Administrateur Débloqué !");
-                document.getElementById('global-search-input').value = '';
-                return;
+                alert("Accès Administrateur Suprême Débloqué !");
+                e.target.value = '';
             }
+        }
 
-            const cards = document.getElementById('posts-feed').children;
-            Array.from(cards).forEach(card => {
-                const text = card.innerText.toLowerCase();
-                card.style.display = text.includes(query) ? 'block' : 'none';
+        function applyAdminBranding() {
+            const newName = document.getElementById('admin-new-name').value.trim();
+            const newIcon = document.getElementById('admin-new-icon').value.trim();
+
+            if (newName) {
+                document.getElementById('header-app-title').innerHTML = `${newName.toUpperCase()}`;
+                document.getElementById('wall-app-name').innerHTML = `${newName.toUpperCase()}`;
+                document.getElementById('app-dynamic-title').innerText = newName;
+            }
+            if (newIcon) {
+                document.getElementById('header-logo-icon').innerHTML = `<i class="fas ${newIcon}"></i>`;
+                document.getElementById('wall-logo-box').innerHTML = `<i class="fas ${newIcon}"></i>`;
+            }
+            alert("Identité de l'application modifiée avec succès !");
+        }
+
+        function updateCommission() {
+            const val = document.getElementById('commission-input').value;
+            globalCommission = parseFloat(val) || 5;
+            alert(`Commission mise à jour à ${globalCommission}% sur toutes les transactions.`);
+        }
+
+        function broadcastAd(channel) {
+            const title = document.getElementById('ad-title-input').value.trim();
+            if (!title) return alert("Veuillez saisir le titre de l'annonce.");
+            alert(`Annonce diffusée avec succès sur ${channel.toUpperCase()} auprès de tous les utilisateurs inscrits !`);
+        }
+
+        function renderAdminUsers() {
+            const container = document.getElementById('admin-users-list');
+            container.innerHTML = '';
+            allUsers.forEach(u => {
+                container.innerHTML += `
+                    <div class="glass-panel p-3 rounded-xl flex justify-between items-center">
+                        <div>
+                            <p class="font-bold text-white">${u.fullName}</p>
+                            <p class="text-[10px] text-gray-400">Gmail: ${u.gmail} | WhatsApp: ${u.phone}</p>
+                        </div>
+                        <span class="text-[10px] text-emerald-400 font-bold">Actif B2B/B2C</span>
+                    </div>
+                `;
             });
         }
 
-        // NEGOCIATION DE PRIX
-        function openBargainModal(vendeur, prixActuel) {
-            document.getElementById('bargain-product-name').innerText = `Vendeur : ${vendeur} (Prix officiel : $${prixActuel || '--'})`;
-            openModal('bargain-modal');
-        }
-
-        function submitBargain() {
-            const offer = document.getElementById('bargain-price-input').value;
-            if (!offer) return alert("Entrez un prix.");
-            alert(`Votre offre de $${offer} a été transmise directement au vendeur !`);
-            closeModal('bargain-modal');
-        }
-
-        // INSCRIPTION & MODALS
-        function registerUser() {
-            const name = document.getElementById('reg-name').value.trim();
-            if (!name) return alert("Veuillez saisir votre nom.");
-
-            document.getElementById('user-display-name').innerText = name;
-            document.getElementById('aside-user-name').innerText = name;
-            document.getElementById('auth-actions').classList.add('hidden');
-            document.getElementById('user-profile-bar').classList.remove('hidden');
-            closeModal('auth-modal');
-        }
-
-        function logout() {
-            document.getElementById('auth-actions').classList.remove('hidden');
-            document.getElementById('user-profile-bar').classList.add('hidden');
-        }
-
-        function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
-        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
-
-        // CARTE GPS TEMPS REEL
-        let map, userMarker, driverMarker;
-        let userLat = null, userLng = null;
-
+        let map;
         function initMap() {
             if (map) return;
-            map = L.map('map').setView([0, 0], 2);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+            map = L.map('map').setView([-1.6749, 29.2285], 14); // Position par défaut
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(map);
             getUserLocation();
         }
 
         function getUserLocation() {
             if ("geolocation" in navigator) {
                 navigator.geolocation.getCurrentPosition((pos) => {
-                    userLat = pos.coords.latitude;
-                    userLng = pos.coords.longitude;
-                    map.setView([userLat, userLng], 15);
-
-                    if (userMarker) userMarker.setLatLng([userLat, userLng]);
-                    else userMarker = L.marker([userLat, userLng]).addTo(map).bindPopup("<b>Votre position GPS</b>").openPopup();
+                    const lat = pos.coords.latitude;
+                    const lng = pos.coords.longitude;
+                    map.setView([lat, lng], 16);
+                    L.marker([lat, lng]).addTo(map).bindPopup("<b>Votre position exacte</b><br>Colis / Chauffeur en route").openPopup();
+                }, () => {
+                    alert("Impossible de récupérer la position GPS exacte.");
                 });
             }
         }
 
-        function startDriverSimulation() {
-            if (!userLat) return alert("Localisation GPS requise.");
-            let driverLat = userLat - 0.005;
-            let driverLng = userLng - 0.005;
-
-            if (driverMarker) map.removeLayer(driverMarker);
-            driverMarker = L.marker([driverLat, driverLng]).addTo(map).bindPopup("<b>Livreur en approche !</b>").openPopup();
-
-            setInterval(() => {
-                driverLat += (userLat - driverLat) * 0.1;
-                driverLng += (userLng - driverLng) * 0.1;
-                driverMarker.setLatLng([driverLat, driverLng]);
-            }, 1000);
-        }
-
-        // NAVIGATION
         function showSection(id) {
-            ['feed-section', 'market-section', 'live-tracking', 'admin-space'].forEach(s => {
+            ['feed-section', 'market-section', 'live-tracking', 'taxi-section', 'admin-space'].forEach(s => {
                 document.getElementById(s).classList.add('hidden');
             });
             document.getElementById(id).classList.remove('hidden');
-
             if (id === 'live-tracking') setTimeout(initMap, 200);
         }
-
-        function createOrder(nom, prix) {
-            alert(`Commande initiée pour "${nom}" ($${prix}). Redirection vers le suivi GPS...`);
-            showSection('live-tracking');
-        }
-
-        // CHARGEMENT INITIAL
-        window.onload = () => {
-            renderFeed();
-        };
     </script>
 </body>
 </html>
