@@ -26,13 +26,13 @@
 </head>
 <body class="bg-gray-100 text-gray-800 font-sans antialiased">
 
-    <!-- Barre supérieure : Multi-devises & Langues -->
+    <!-- Barre supérieure : Multi-devises & Accès Discret Admin/Livreur -->
     <div class="bg-gray-900 text-gray-300 text-xs py-1.5 px-4">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <div class="flex items-center space-x-4">
                 <span><i class="fa-solid fa-globe text-alibaba-orange mr-1"></i> Global Sourcing Alibaba-Style</span>
                 <span class="hidden md:inline">|</span>
-                <span class="hidden md:inline text-gray-400">Prêt pour l'expédition internationale & locale</span>
+                <span class="hidden md:inline text-gray-400">Plateforme B2B & B2C interactive</span>
             </div>
             <div class="flex items-center space-x-4">
                 <!-- Sélecteur de Devises -->
@@ -45,8 +45,8 @@
                     </select>
                 </div>
                 <span>|</span>
-                <button onclick="openAuthModal('admin')" class="hover:text-alibaba-orange transition"><i class="fa-solid fa-lock mr-1"></i> Admin</button>
-                <button onclick="openAuthModal('delivery')" class="hover:text-alibaba-orange transition"><i class="fa-solid fa-motorcycle mr-1"></i> Livreur</button>
+                <!-- Accès Admin Discret (Code 9293RB) -->
+                <button onclick="promptAdminAccess()" class="hover:text-alibaba-orange transition text-gray-500 hover:text-white" title="Espace Réservé"><i class="fa-solid fa-key"></i></button>
             </div>
         </div>
     </div>
@@ -55,7 +55,7 @@
     <header class="bg-white shadow-sm sticky top-0 z-40">
         <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
             <!-- Logo -->
-            <div class="flex items-center space-x-2 cursor-pointer" onclick="switchView('store')">
+            <div class="flex items-center space-x-2 cursor-pointer" onclick="filterCategory('all')">
                 <div class="bg-alibaba-orange text-white font-black text-2xl px-3 py-1 rounded tracking-wider shadow">G</div>
                 <div>
                     <span class="text-2xl font-black text-alibaba-orange tracking-tight">GLOBAL</span>
@@ -73,8 +73,13 @@
                 </div>
             </div>
 
-            <!-- Actions (Panier & Messages) -->
+            <!-- Actions (Panier, Suivi Client & Messages) -->
             <div class="flex items-center space-x-6">
+                <button onclick="openClientTrackingModal()" class="relative flex items-center space-x-1 text-gray-700 hover:text-alibaba-orange transition">
+                    <i class="fa-solid fa-box-open text-xl"></i>
+                    <span class="hidden md:inline text-sm font-medium">Mes Colis</span>
+                    <span id="clientOrdersBadge" class="absolute -top-2 -right-2 bg-blue-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">0</span>
+                </button>
                 <button onclick="openCartModal()" class="relative flex items-center space-x-1 text-gray-700 hover:text-alibaba-orange transition">
                     <i class="fa-solid fa-cart-shopping text-xl"></i>
                     <span class="hidden md:inline text-sm font-medium">Panier</span>
@@ -83,13 +88,12 @@
                 <button onclick="openChatDrawer()" class="relative flex items-center space-x-1 text-gray-700 hover:text-alibaba-orange transition">
                     <i class="fa-solid fa-comments text-xl"></i>
                     <span class="hidden md:inline text-sm font-medium">Messages</span>
-                    <span class="absolute -top-1 -right-1 bg-green-500 text-white text-[10px] font-bold rounded-full h-3 w-3 flex items-center justify-center"></span>
                 </button>
             </div>
         </div>
     </header>
 
-    <!-- Navigation secondaire : Catégories & Mini-Photos style Alibaba (Gauche) + Flèche Droite -->
+    <!-- Navigation secondaire : Catégories -->
     <nav class="bg-white border-b shadow-xs">
         <div class="max-w-7xl mx-auto px-4 flex items-center justify-between overflow-x-auto py-2 text-sm">
             <div class="flex items-center space-x-6 whitespace-nowrap">
@@ -106,90 +110,50 @@
         </div>
     </nav>
 
-    <!-- Corps Principal : Structure avec Mini-Photos à Gauche et Flèche vers la Droite -->
+    <!-- Corps Principal -->
     <main class="max-w-7xl mx-auto px-4 py-6 grid grid-cols-1 lg:grid-cols-4 gap-6">
         
-        <!-- Colonne de gauche : Navigation par Catégories & Mini-Photos / Éléments en vedette -->
+        <!-- Colonne de gauche : Annuaire des Fournisseurs (Mélange Vérifiés et Non Vérifiés + Filtre) -->
         <aside class="hidden lg:block lg:col-span-1 space-y-4">
             <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-                <h3 class="font-bold text-gray-900 border-b pb-2 mb-3 flex items-center justify-between">
-                    <span>Fournisseurs VÉRIFIÉS</span>
-                    <i class="fa-solid fa-certificate text-blue-500"></i>
-                </h3>
-                <!-- Mini photos à gauche + Flèche vers la droite (style Alibaba) -->
-                <div class="space-y-3">
-                    <div onclick="filterSupplier('EcoPave')" class="flex items-center justify-between p-2 rounded hover:bg-orange-50 cursor-pointer transition group">
-                        <div class="flex items-center space-x-3">
-                            <img src="https://images.unsplash.com/photo-1581094288338-2314dddb7ece?w=100&h=100&fit=crop" alt="EcoPave" class="w-10 h-10 rounded object-cover border">
-                            <div>
-                                <h4 class="text-xs font-bold text-gray-800 group-hover:text-alibaba-orange">EcoPave Industries</h4>
-                                <span class="text-[10px] text-green-600 font-semibold"><i class="fa-solid fa-check-circle"></i> Vérifié B2B</span>
-                            </div>
-                        </div>
-                        <i class="fa-solid fa-chevron-right text-xs text-gray-400 group-hover:text-alibaba-orange transition"></i>
-                    </div>
-
-                    <div onclick="filterSupplier('AgroTech')" class="flex items-center justify-between p-2 rounded hover:bg-orange-50 cursor-pointer transition group">
-                        <div class="flex items-center space-x-3">
-                            <img src="https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=100&h=100&fit=crop" alt="AgroTech" class="w-10 h-10 rounded object-cover border">
-                            <div>
-                                <h4 class="text-xs font-bold text-gray-800 group-hover:text-alibaba-orange">AgroTech Global</h4>
-                                <span class="text-[10px] text-green-600 font-semibold"><i class="fa-solid fa-check-circle"></i> Fournisseur Or</span>
-                            </div>
-                        </div>
-                        <i class="fa-solid fa-chevron-right text-xs text-gray-400 group-hover:text-alibaba-orange transition"></i>
-                    </div>
-
-                    <div onclick="filterSupplier('TechDirect')" class="flex items-center justify-between p-2 rounded hover:bg-orange-50 cursor-pointer transition group">
-                        <div class="flex items-center space-x-3">
-                            <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=100&h=100&fit=crop" alt="TechDirect" class="w-10 h-10 rounded object-cover border">
-                            <div>
-                                <h4 class="text-xs font-bold text-gray-800 group-hover:text-alibaba-orange">TechDirect Ltd</h4>
-                                <span class="text-[10px] text-green-600 font-semibold"><i class="fa-solid fa-check-circle"></i> Évaluation 4.9</span>
-                            </div>
-                        </div>
-                        <i class="fa-solid fa-chevron-right text-xs text-gray-400 group-hover:text-alibaba-orange transition"></i>
-                    </div>
+                <div class="flex justify-between items-center border-b pb-2 mb-3">
+                    <h3 class="font-bold text-gray-900 text-sm">Répertoire Fournisseurs</h3>
+                    <button onclick="toggleVerifiedFilter()" id="filterToggleBtn" class="text-[10px] bg-gray-100 hover:bg-orange-100 text-gray-700 px-2 py-1 rounded font-semibold transition">Tous / Vérifiés</button>
                 </div>
-            </div>
-
-            <!-- Espace Logistique & Suivi Rapide -->
-            <div class="bg-gradient-to-br from-gray-900 to-gray-800 text-white p-4 rounded-lg shadow-sm">
-                <h3 class="font-bold text-sm mb-2 flex items-center text-alibaba-orange">
-                    <i class="fa-solid fa-truck-fast mr-2"></i> Suivi Colis & Fret
-                </h3>
-                <p class="text-xs text-gray-300 mb-3">Entrez votre code de suivi logistique pour localiser votre commande en temps réel.</p>
-                <div class="flex space-x-1">
-                    <input type="text" id="quickTrackingInput" placeholder="Ex: COLIS-9821" class="w-full px-2 py-1.5 text-xs text-gray-900 rounded focus:outline-none">
-                    <button onclick="trackQuickPackage()" class="bg-alibaba-orange hover:bg-alibaba-darkOrange px-3 py-1.5 text-xs font-bold rounded transition">OK</button>
-                </div>
-                <div id="quickTrackingResult" class="mt-3 text-xs text-green-400 font-medium"></div>
+                <!-- Liste mixte injectée dynamiquement -->
+                <div id="suppliersDirectory" class="space-y-3"></div>
             </div>
         </aside>
 
-        <!-- Colonne Centrale : Catalogue des Produits & Flux Dynamique -->
+        <!-- Colonne Centrale : Bannière Animée B2B & Catalogue Général -->
         <section class="col-span-1 lg:col-span-3 space-y-6">
             
-            <!-- Bannière promotionnelle style Alibaba B2B -->
-            <div class="bg-gradient-to-r from-orange-600 to-alibaba-orange text-white p-6 rounded-lg shadow-md flex flex-col md:flex-row justify-between items-center">
-                <div>
-                    <span class="bg-white text-alibaba-orange text-xs font-black uppercase px-2.5 py-1 rounded-full">Foire Commerciale B2B</span>
-                    <h2 class="text-2xl font-black mt-2">Équipez vos chantiers et entreprises au meilleur prix direct usine</h2>
-                    <p class="text-xs text-orange-100 mt-1">Paiement sécurisé par séquestre (Escrow), garanties fournisseurs et livraison express par nos livreurs agréés.</p>
+            <!-- Bannière Animée B2B / Foire Commerciale (Support Vidéo & Visuels) -->
+            <div id="animatedBanner" class="relative bg-gradient-to-r from-orange-600 to-alibaba-orange text-white p-6 rounded-lg shadow-md overflow-hidden transition-all duration-500">
+                <div class="absolute right-4 bottom-2 opacity-15 text-8xl"><i class="fa-solid fa-store"></i></div>
+                <div class="relative z-10">
+                    <span id="bannerTag" class="bg-white text-alibaba-orange text-xs font-black uppercase px-2.5 py-1 rounded-full">Foire Commerciale B2B Live</span>
+                    <h2 id="bannerTitle" class="text-2xl font-black mt-2">Équipez vos projets industriels au meilleur tarif direct usine</h2>
+                    <p id="bannerDesc" class="text-xs text-orange-100 mt-1">Sélectionnez vos fabricants, négociez vos devis et suivez vos livraisons en temps réel.</p>
                 </div>
-                <button onclick="openRfqModal()" class="mt-4 md:mt-0 bg-white text-alibaba-orange font-bold text-sm px-6 py-3 rounded-md shadow hover:bg-gray-100 transition whitespace-nowrap">
-                    <i class="fa-solid fa-file-invoice-dollar mr-2"></i> Soumettre une RFQ (Devis)
-                </button>
+                <div class="mt-4 flex items-center space-x-3">
+                    <button onclick="openRfqModal()" class="bg-white text-alibaba-orange font-bold text-sm px-5 py-2.5 rounded shadow hover:bg-gray-100 transition">
+                        <i class="fa-solid fa-file-invoice-dollar mr-2"></i> Soumettre une RFQ (Devis)
+                    </button>
+                    <button onclick="rotateBannerContent()" class="bg-black/30 hover:bg-black/50 text-white text-xs px-3 py-2.5 rounded transition">
+                        <i class="fa-solid fa-rotate"></i> Suivant
+                    </button>
+                </div>
             </div>
 
-            <!-- Filtres actifs & En-tête de catalogue -->
+            <!-- Filtres & En-tête de catalogue -->
             <div class="flex justify-between items-center bg-white p-4 rounded-lg shadow-sm border border-gray-200">
                 <div>
-                    <h3 id="catalogTitle" class="font-bold text-gray-900">Produits Disponibles (Marché Global)</h3>
-                    <p id="catalogSubtitle" class="text-xs text-gray-500">Tarifs dégressifs pour professionnels et particuliers</p>
+                    <h3 id="catalogTitle" class="font-bold text-gray-900">Catalogue Global & Ventes en Direct</h3>
+                    <p class="text-xs text-gray-500">Tous les produits disponibles sur la marketplace</p>
                 </div>
                 <div class="flex items-center space-x-2 text-xs">
-                    <span class="text-gray-500">Trier par :</span>
+                    <span class="text-gray-500">Trier :</span>
                     <select id="sortSelect" onchange="sortProducts()" class="border rounded px-2 py-1 bg-white focus:outline-none">
                         <option value="popular">Popularité</option>
                         <option value="priceAsc">Prix croissant</option>
@@ -199,43 +163,29 @@
             </div>
 
             <!-- Grille des produits -->
-            <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                <!-- Injection dynamique des produits par JavaScript -->
-            </div>
+            <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"></div>
         </section>
     </main>
 
-    <!-- Modal d'Authentification Sécurisée (Admin / Livreur) -->
-    <div id="authModal" class="fixed inset-0 bg-black/60 hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-lg max-w-md w-full p-6 shadow-2xl relative">
-            <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-lg"><i class="fa-solid fa-xmark"></i></button>
-            <h3 id="authModalTitle" class="text-xl font-bold text-gray-900 mb-4">Connexion Sécurisée</h3>
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Identifiant / Matricule</label>
-                    <input type="text" id="authId" class="w-full border rounded px-3 py-2 text-sm focus:outline-none focus:border-alibaba-orange" placeholder="Entrez votre identifiant">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Clé d'accès Secrète</label>
-                    <input type="password" id="authPassword" class="w-full border rounded px-3 py-2 text-sm focus:outline-none focus:border-alibaba-orange" placeholder="••••••••">
-                </div>
-                <button onclick="executeAuth()" class="w-full bg-alibaba-orange hover:bg-alibaba-darkOrange text-white font-bold py-2.5 rounded text-sm transition">Se connecter au système</button>
-                <div id="authError" class="text-xs text-red-500 font-medium text-center"></div>
-            </div>
+    <!-- Modal Espace Client : Suivi de Colis Personnel -->
+    <div id="clientTrackingModal" class="fixed inset-0 bg-black/60 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg max-w-lg w-full p-6 shadow-2xl relative">
+            <button onclick="closeClientTrackingModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-lg"><i class="fa-solid fa-xmark"></i></button>
+            <h3 class="text-lg font-bold text-gray-900 mb-2"><i class="fa-solid fa-box-open text-alibaba-orange mr-2"></i> Espace de Suivi de Vos Colis</h3>
+            <p class="text-xs text-gray-500 mb-4">Retrouvez l'historique et l'état d'acheminement de vos commandes en temps réel.</p>
+            <div id="clientOrdersList" class="space-y-3 max-h-64 overflow-y-auto pr-1"></div>
         </div>
     </div>
 
-    <!-- Panier & Validation de Commande / Paiement Sécurisé -->
+    <!-- Panier & Validation de Commande -->
     <div id="cartModal" class="fixed inset-0 bg-black/60 hidden z-50 flex justify-end">
         <div class="bg-white w-full max-w-md h-full shadow-2xl flex flex-col justify-between p-6 overflow-y-auto">
             <div>
                 <div class="flex justify-between items-center border-b pb-4 mb-4">
-                    <h3 class="text-lg font-bold text-gray-900"><i class="fa-solid fa-cart-shopping text-alibaba-orange mr-2"></i> Votre Panier Global</h3>
+                    <h3 class="text-lg font-bold text-gray-900"><i class="fa-solid fa-cart-shopping text-alibaba-orange mr-2"></i> Votre Panier</h3>
                     <button onclick="closeCartModal()" class="text-gray-400 hover:text-gray-600 text-lg"><i class="fa-solid fa-xmark"></i></button>
                 </div>
-                <div id="cartItemsList" class="space-y-4">
-                    <!-- Articles du panier -->
-                </div>
+                <div id="cartItemsList" class="space-y-4"></div>
             </div>
             <div class="border-t pt-4 mt-4 space-y-3">
                 <div class="flex justify-between text-sm">
@@ -243,7 +193,7 @@
                     <span id="cartSubtotal" class="font-bold">0.00</span>
                 </div>
                 <div class="flex justify-between text-sm">
-                    <span class="text-gray-600">Frais de Fret / Logistique estimés :</span>
+                    <span class="text-gray-600">Frais logistiques :</span>
                     <span id="cartShipping" class="font-bold">15.00</span>
                 </div>
                 <div class="flex justify-between text-base font-black border-t pt-2">
@@ -251,46 +201,26 @@
                     <span id="cartTotal" class="text-alibaba-orange">0.00</span>
                 </div>
                 <button onclick="checkoutOrder()" class="w-full bg-alibaba-orange hover:bg-alibaba-darkOrange text-white font-bold py-3 rounded text-sm transition shadow">
-                    Valider et Sécuriser la Commande (Escrow)
+                    Valider et Commander (Paiement Sécurisé)
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Espace Dashboard Administrateur (Sécurisé) -->
+    <!-- Dashboard Administrateur Sécurisé (Accessible par code 9293RB) -->
     <div id="adminDashboard" class="hidden fixed inset-0 bg-gray-100 z-50 overflow-y-auto p-6">
         <div class="max-w-7xl mx-auto space-y-6">
             <div class="bg-white p-4 rounded-lg shadow-sm flex justify-between items-center">
                 <div>
-                    <h2 class="text-xl font-black text-gray-900"><i class="fa-solid fa-gauge-high text-alibaba-orange mr-2"></i> Tableau de Bord Administrateur Pro</h2>
-                    <p class="text-xs text-gray-500">Gestion globale des stocks, des fournisseurs vérifiés et des flux financiers.</p>
+                    <h2 class="text-xl font-black text-gray-900"><i class="fa-solid fa-gauge-high text-alibaba-orange mr-2"></i> Espace Administrateur Pro</h2>
+                    <p class="text-xs text-gray-500">Gestion complète de la plateforme, publication de produits et contrôle logistique des livreurs.</p>
                 </div>
-                <button onclick="closeAdminDashboard()" class="bg-gray-800 text-white px-4 py-2 text-xs font-bold rounded hover:bg-gray-700 transition">Fermer le Dashboard</button>
+                <button onclick="closeAdminDashboard()" class="bg-gray-800 text-white px-4 py-2 text-xs font-bold rounded hover:bg-gray-700 transition">Fermer Dashboard</button>
             </div>
 
-            <!-- Statistiques Rapides -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div class="bg-white p-4 rounded-lg shadow-sm border-l-4 border-alibaba-orange">
-                    <span class="text-xs text-gray-500 uppercase font-bold">Chiffre d'Affaires Global</span>
-                    <h3 id="adminRevenue" class="text-2xl font-black text-gray-900 mt-1">0.00</h3>
-                </div>
-                <div class="bg-white p-4 rounded-lg shadow-sm border-l-4 border-blue-500">
-                    <span class="text-xs text-gray-500 uppercase font-bold">Commandes Actives</span>
-                    <h3 id="adminOrdersCount" class="text-2xl font-black text-gray-900 mt-1">0</h3>
-                </div>
-                <div class="bg-white p-4 rounded-lg shadow-sm border-l-4 border-green-500">
-                    <span class="text-xs text-gray-500 uppercase font-bold">Fournisseurs Vérifiés</span>
-                    <h3 class="text-2xl font-black text-gray-900 mt-1">12</h3>
-                </div>
-                <div class="bg-white p-4 rounded-lg shadow-sm border-l-4 border-purple-500">
-                    <span class="text-xs text-gray-500 uppercase font-bold">Livreurs Actifs</span>
-                    <h3 class="text-2xl font-black text-gray-900 mt-1">5</h3>
-                </div>
-            </div>
-
-            <!-- Gestion des Produits & Publications Vendeurs -->
+            <!-- Publication de Produits -->
             <div class="bg-white p-6 rounded-lg shadow-sm space-y-4">
-                <h3 class="font-bold text-gray-900 border-b pb-2">Ajouter / Publier un Produit sur la Marketplace</h3>
+                <h3 class="font-bold text-gray-900 border-b pb-2">Publier un Produit sur la Marketplace</h3>
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <input type="text" id="newProdName" placeholder="Nom du produit" class="border rounded px-3 py-2 text-sm focus:outline-none">
                     <input type="number" id="newProdPrice" placeholder="Prix (USD)" class="border rounded px-3 py-2 text-sm focus:outline-none">
@@ -298,36 +228,22 @@
                     <select id="newProdCategory" class="border rounded px-3 py-2 text-sm focus:outline-none bg-white">
                         <option value="Materiaux">Matériaux & Construction</option>
                         <option value="Tech">Électronique & Tech</option>
-                        <option value="Agriculture">Agroalimentaire</option>
+                        <option value="Agriculture">Agroalimentaire & Élevage</option>
                     </select>
                 </div>
                 <input type="text" id="newProdImage" placeholder="URL de l'image (ex: https://...)" class="w-full border rounded px-3 py-2 text-sm focus:outline-none">
                 <button onclick="adminAddProduct()" class="bg-alibaba-orange hover:bg-alibaba-darkOrange text-white font-bold px-6 py-2 rounded text-sm transition">Publier le produit</button>
             </div>
-        </div>
-    </div>
 
-    <!-- Espace Dashboard Livreur Moto (Suivi Logistique en direct) -->
-    <div id="deliveryDashboard" class="hidden fixed inset-0 bg-gray-100 z-50 overflow-y-auto p-6">
-        <div class="max-w-7xl mx-auto space-y-6">
-            <div class="bg-white p-4 rounded-lg shadow-sm flex justify-between items-center">
-                <div>
-                    <h2 class="text-xl font-black text-gray-900"><i class="fa-solid fa-motorcycle text-alibaba-orange mr-2"></i> Espace Livreur Moto & Logistique</h2>
-                    <p class="text-xs text-gray-500">Mise à jour des statuts de livraison et déplacement des colis en temps réel.</p>
-                </div>
-                <button onclick="closeDeliveryDashboard()" class="bg-gray-800 text-white px-4 py-2 text-xs font-bold rounded hover:bg-gray-700 transition">Fermer l'Espace</button>
-            </div>
-
+            <!-- Gestion des Commandes / Livreurs -->
             <div class="bg-white p-6 rounded-lg shadow-sm space-y-4">
-                <h3 class="font-bold text-gray-900 border-b pb-2">Colis en attente de prise en charge</h3>
-                <div id="deliveryOrdersList" class="space-y-3">
-                    <!-- Liste des commandes à livrer -->
-                </div>
+                <h3 class="font-bold text-gray-900 border-b pb-2">Suivi et Contrôle Logistique (Livreurs & Commandes)</h3>
+                <div id="adminOrdersList" class="space-y-3"></div>
             </div>
         </div>
     </div>
 
-    <!-- Module de Discussion Instantanée (Chat Vivant) -->
+    <!-- Module de Discussion Instantanée (Chat) -->
     <div id="chatDrawer" class="fixed inset-0 bg-black/40 hidden z-50 flex justify-end">
         <div class="bg-white w-full max-w-sm h-full shadow-2xl flex flex-col justify-between">
             <div class="bg-gray-900 text-white p-4 flex justify-between items-center">
@@ -337,19 +253,18 @@
             <div id="chatMessages" class="flex-1 p-4 overflow-y-auto space-y-3 text-xs">
                 <div class="bg-gray-100 p-2.5 rounded-lg max-w-[80%]">
                     <span class="font-bold text-gray-800 block">EcoPave Industries:</span>
-                    Bonjour ! Comment pouvons-nous vous aider pour votre commande de pavés écologiques en gros ?
+                    Bonjour ! Comment pouvons-nous vous accompagner sur vos commandes en gros ?
                 </div>
             </div>
             <div class="p-3 border-t bg-white flex space-x-2">
-                <input type="text" id="chatInput" placeholder="Écrire un message au vendeur..." class="flex-1 border rounded px-3 py-2 text-xs focus:outline-none">
+                <input type="text" id="chatInput" placeholder="Écrire un message..." class="flex-1 border rounded px-3 py-2 text-xs focus:outline-none">
                 <button onclick="sendChatMessage()" class="bg-alibaba-orange text-white px-4 py-2 rounded text-xs font-bold">Envoyer</button>
             </div>
         </div>
     </div>
 
-    <!-- Script JavaScript complet & structuré (Persistance localStorage, Multi-devises, Sécurité) -->
+    <!-- Script JavaScript -->
     <script>
-        // --- DONNÉES GLOBALES & DEVISES ---
         let currentCurrency = 'USD';
         let exchangeRates = { USD: 1, EUR: 0.92, CDF: 2850 };
         let currencySymbols = { USD: '$', EUR: '€', CDF: 'FC' };
@@ -358,12 +273,22 @@
             { id: 1, name: "Pavés Écologiques en Plastique Recyclé (Pack 1000 pcs)", price: 1200, supplier: "EcoPave Industries", category: "Materiaux", image: "https://images.unsplash.com/photo-1581094288338-2314dddb7ece?w=300&h=300&fit=crop", rating: 4.8 },
             { id: 2, name: "Incubateur Automatique pour Œufs 500 pcs", price: 450, supplier: "AgroTech Global", category: "Agriculture", image: "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=300&h=300&fit=crop", rating: 4.9 },
             { id: 3, name: "ThinkPad X1 Carbon Developer Edition - Core i7", price: 850, supplier: "TechDirect Ltd", category: "Tech", image: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=300&h=300&fit=crop", rating: 4.7 },
-            { id: 4, name: "Kit de Culture de Champignons (Substrat enrichi)", price: 75, supplier: "AgroTech Global", category: "Agriculture", image: "https://images.unsplash.com/photo-1535591273668-578e31182c4f?w=300&h=300&fit=crop", rating: 4.6 }
+            { id: 4, name: "Kit de Culture de Champignons (Substrat enrichi)", price: 75, supplier: "AgroTech Local", category: "Agriculture", image: "https://images.unsplash.com/photo-1535591273668-578e31182c4f?w=300&h=300&fit=crop", rating: 4.2 }
         ];
 
+        // Liste mixte des fournisseurs (Vérifiés et Non Vérifiés)
+        let suppliersList = [
+            { name: "EcoPave Industries", verified: true, badge: "Vérifié B2B", image: "https://images.unsplash.com/photo-1581094288338-2314dddb7ece?w=100&h=100&fit=crop" },
+            { name: "AgroTech Global", verified: true, badge: "Fournisseur Or", image: "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=100&h=100&fit=crop" },
+            { name: "TechDirect Ltd", verified: true, badge: "Évaluation 4.9", image: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=100&h=100&fit=crop" },
+            { name: "AgroTech Local", verified: false, badge: "Nouveau Vendeur", image: "https://images.unsplash.com/photo-1535591273668-578e31182c4f?w=100&h=100&fit=crop" },
+            { name: "BTP Express SARL", verified: false, badge: "Standard", image: "https://images.unsplash.com/photo-1541888946425-d0fbb18f86f3?w=100&h=100&fit=crop" }
+        ];
+
+        let showOnlyVerified = false;
         let cart = JSON.parse(localStorage.getItem('global_cart')) || [];
-        let deliveryOrders = JSON.parse(localStorage.getItem('global_delivery_orders')) || [
-            { id: 'COLIS-9821', client: 'Busimba Roland', item: 'Pavés Écologiques x1000', status: 'En attente de ramassage moto' }
+        let clientOrders = JSON.parse(localStorage.getItem('global_client_orders')) || [
+            { id: 'COLIS-9821', item: 'Pavés Écologiques x1000', status: 'En cours de livraison par le livreur moto' }
         ];
 
         // --- GESTION DES DEVISES ---
@@ -378,7 +303,7 @@
             return `${converted.toFixed(2)} ${currencySymbols[currentCurrency]}`;
         }
 
-        // --- AFFICHAGE DES PRODUITS ---
+        // --- AFFICHAGE PRODUITS & FOURNISSEURS ---
         function renderProducts(filteredList = productsData) {
             const grid = document.getElementById('productsGrid');
             grid.innerHTML = '';
@@ -410,19 +335,66 @@
             });
         }
 
-        // --- PANIER & COMMANDE ---
+        function renderSuppliersDirectory() {
+            const container = document.getElementById('suppliersDirectory');
+            container.innerHTML = '';
+
+            let list = showOnlyVerified ? suppliersList.filter(s => s.verified) : suppliersList;
+
+            list.forEach(sup => {
+                let badgeColor = sup.verified ? 'text-green-600' : 'text-gray-500';
+                let icon = sup.verified ? 'fa-check-circle' : 'fa-clock';
+                container.innerHTML += `
+                    <div onclick="filterSupplier('${sup.name}')" class="flex items-center justify-between p-2 rounded hover:bg-orange-50 cursor-pointer transition group">
+                        <div class="flex items-center space-x-3">
+                            <img src="${sup.image}" alt="${sup.name}" class="w-10 h-10 rounded object-cover border">
+                            <div>
+                                <h4 class="text-xs font-bold text-gray-800 group-hover:text-alibaba-orange">${sup.name}</h4>
+                                <span class="text-[10px] ${badgeColor} font-semibold"><i class="fa-solid ${icon}"></i> ${sup.badge}</span>
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-xs text-gray-400 group-hover:text-alibaba-orange transition"></i>
+                    </div>
+                `;
+            });
+        }
+
+        function toggleVerifiedFilter() {
+            showOnlyVerified = !showOnlyVerified;
+            document.getElementById('filterToggleBtn').innerText = showOnlyVerified ? 'Afficher Tous' : 'Filtrer Vérifiés';
+            renderSuppliersDirectory();
+        }
+
+        // --- BANNIÈRE ANIMÉE B2B ---
+        let bannerIndex = 0;
+        const bannerContent = [
+            { tag: "Foire Commerciale B2B Live", title: "Équipez vos projets industriels au meilleur tarif direct usine", desc: "Sélectionnez vos fabricants, négociez vos devis et suivez vos livraisons en temps réel." },
+            { tag: "Nouveau : Éco-Construction", title: "Matériaux durables et pavés écologiques certifiés", desc: "Réduisez l'empreinte carbone de vos chantiers avec nos fournisseurs partenaires vérifiés." },
+            { tag: "Logistique Intégrée", title: "Expédition rapide et sécurisée par nos livreurs moto agréés", desc: "Suivi en direct de chaque colis directement depuis votre espace client personnel." }
+        ];
+
+        function rotateBannerContent() {
+            bannerIndex = (bannerIndex + 1) % bannerContent.length;
+            let item = bannerContent[bannerIndex];
+            document.getElementById('bannerTag').innerText = item.tag;
+            document.getElementById('bannerTitle').innerText = item.title;
+            document.getElementById('bannerDesc').innerText = item.desc;
+        }
+
+        // --- PANIER & ESPACE CLIENT ---
         function addToCart(id) {
             const prod = productsData.find(p => p.id === id);
             if(prod) {
                 cart.push(prod);
                 localStorage.setItem('global_cart', JSON.stringify(cart));
-                updateCartBadge();
-                alert(`Produit ajouté au panier avec succès !`);
+                updateBadges();
+                alert(`Produit ajouté au panier !`);
             }
         }
 
-        function updateCartBadge() {
+        function updateBadges() {
             document.getElementById('cartBadge').innerText = cart.length;
+            document.getElementById('clientOrdersBadge').innerText = clientOrders.length;
         }
 
         function openCartModal() {
@@ -430,9 +402,7 @@
             renderCart();
         }
 
-        function closeCartModal() {
-            document.getElementById('cartModal').classList.add('hidden');
-        }
+        function closeCartModal() { document.getElementById('cartModal').classList.add('hidden'); }
 
         function renderCart() {
             const list = document.getElementById('cartItemsList');
@@ -465,62 +435,61 @@
         function removeFromCart(index) {
             cart.splice(index, 1);
             localStorage.setItem('global_cart', JSON.stringify(cart));
-            updateCartBadge();
+            updateBadges();
             renderCart();
         }
 
         function checkoutOrder() {
             if(cart.length === 0) return alert('Votre panier est vide !');
             let trackingCode = 'COLIS-' + Math.floor(1000 + Math.random() * 9000);
-            deliveryOrders.push({ id: trackingCode, client: 'Client Global', item: cart.length + ' article(s)', status: 'Pris en charge par le livreur moto' });
-            localStorage.setItem('global_delivery_orders', JSON.stringify(deliveryOrders));
+            clientOrders.push({ id: trackingCode, item: cart.length + ' article(s)', status: 'Pris en charge - En route' });
+            localStorage.setItem('global_client_orders', JSON.stringify(clientOrders));
             
-            alert(`Commande validée ! Code de suivi logistique attribué : ${trackingCode}`);
+            alert(`Commande validée avec succès ! Votre code de suivi personnel est ${trackingCode}`);
             cart = [];
             localStorage.removeItem('global_cart');
-            updateCartBadge();
+            updateBadges();
             closeCartModal();
         }
 
-        // --- AUTHENTIFICATION & DASHBOARDS PRO ---
-        let currentAuthType = '';
-        function openAuthModal(type) {
-            currentAuthType = type;
-            document.getElementById('authModal').classList.remove('hidden');
-            document.getElementById('authModalTitle').innerText = type === 'admin' ? 'Accès Administrateur Pro' : 'Accès Livreur Moto';
+        function openClientTrackingModal() {
+            document.getElementById('clientTrackingModal').classList.remove('hidden');
+            renderClientOrders();
+        }
+        function closeClientTrackingModal() { document.getElementById('clientTrackingModal').classList.add('hidden'); }
+
+        function renderClientOrders() {
+            const list = document.getElementById('clientOrdersList');
+            list.innerHTML = '';
+            if(clientOrders.length === 0) {
+                list.innerHTML = `<p class="text-xs text-gray-500 text-center py-4">Aucun colis en cours de suivi.</p>`;
+                return;
+            }
+            clientOrders.forEach(order => {
+                list.innerHTML += `
+                    <div class="bg-gray-50 p-3 rounded border text-xs">
+                        <div class="flex justify-between font-bold text-gray-900">
+                            <span><i class="fa-solid fa-barcode text-alibaba-orange mr-1"></i> ${order.id}</span>
+                            <span class="text-green-600">${order.status}</span>
+                        </div>
+                        <p class="text-gray-600 mt-1">Contenu : ${order.item}</p>
+                    </div>
+                `;
+            });
         }
 
-        function closeAuthModal() {
-            document.getElementById('authModal').classList.add('hidden');
-            document.getElementById('authId').value = '';
-            document.getElementById('authPassword').value = '';
-            document.getElementById('authError').innerText = '';
-        }
-
-        function executeAuth() {
-            const id = document.getElementById('authId').value;
-            const pwd = document.getElementById('authPassword').value;
-
-            if(currentAuthType === 'admin' && id === 'root' && pwd === 'admin2026') {
-                closeAuthModal();
+        // --- SÉCURITÉ ADMIN (Code 9293RB) ---
+        function promptAdminAccess() {
+            let code = prompt("Entrez le code d'accès administrateur :");
+            if(code === "9293RB") {
                 document.getElementById('adminDashboard').classList.remove('hidden');
-                updateAdminStats();
-            } else if(currentAuthType === 'delivery' && id === 'livreur' && pwd === 'colis2026') {
-                closeAuthModal();
-                document.getElementById('deliveryDashboard').classList.remove('hidden');
-                renderDeliveryOrders();
-            } else {
-                document.getElementById('authError').innerText = 'Identifiant ou mot de passe incorrect.';
+                renderAdminOrders();
+            } else if(code !== null) {
+                alert("Code d'accès incorrect.");
             }
         }
 
         function closeAdminDashboard() { document.getElementById('adminDashboard').classList.add('hidden'); }
-        function closeDeliveryDashboard() { document.getElementById('deliveryDashboard').classList.add('hidden'); }
-
-        function updateAdminStats() {
-            document.getElementById('adminRevenue').innerText = formatPrice(4250);
-            document.getElementById('adminOrdersCount').innerText = deliveryOrders.length;
-        }
 
         function adminAddProduct() {
             const name = document.getElementById('newProdName').value;
@@ -534,47 +503,35 @@
             productsData.push({ id: Date.now(), name, price, supplier, category, image, rating: 5.0 });
             localStorage.setItem('global_products', JSON.stringify(productsData));
             renderProducts();
-            alert('Produit publié avec succès sur la marketplace !');
+            alert('Produit publié avec succès !');
             document.getElementById('newProdName').value = '';
             document.getElementById('newProdPrice').value = '';
             document.getElementById('newProdSupplier').value = '';
         }
 
-        // --- LIVRAISON MOTO & SUIVI ---
-        function renderDeliveryOrders() {
-            const list = document.getElementById('deliveryOrdersList');
+        function renderAdminOrders() {
+            const list = document.getElementById('adminOrdersList');
             list.innerHTML = '';
-            deliveryOrders.forEach(order => {
+            clientOrders.forEach((order, idx) => {
                 list.innerHTML += `
-                    <div class="bg-gray-50 p-4 rounded border flex justify-between items-center text-xs">
+                    <div class="bg-gray-50 p-3 rounded border flex justify-between items-center text-xs">
                         <div>
-                            <span class="font-bold text-alibaba-orange">${order.id}</span> - ${order.item} (${order.client})
-                            <span class="block text-gray-500 mt-1">Statut: <b>${order.status}</b></span>
+                            <b>${order.id}</b> - ${order.item} | Statut : <i>${order.status}</i>
                         </div>
-                        <button onclick="advanceDelivery('${order.id}')" class="bg-green-600 text-white font-bold px-3 py-1.5 rounded">Avancer étape</button>
+                        <button onclick="advanceAdminOrder(${idx})" class="bg-blue-600 text-white px-3 py-1.5 rounded font-bold">Avancer étape</button>
                     </div>
                 `;
             });
         }
 
-        function advanceDelivery(id) {
-            let order = deliveryOrders.find(o => o.id === id);
-            if(order) {
-                order.status = order.status.includes('ramassage') ? 'En cours de route par le livreur' : 'Livré avec succès';
-                localStorage.setItem('global_delivery_orders', JSON.stringify(deliveryOrders));
-                renderDeliveryOrders();
-            }
-        }
-
-        function trackQuickPackage() {
-            const code = document.getElementById('quickTrackingInput').value.trim();
-            const order = deliveryOrders.find(o => o.id === code);
-            const res = document.getElementById('quickTrackingResult');
-            if(order) {
-                res.innerHTML = `Statut: ${order.status}`;
+        function advanceAdminOrder(idx) {
+            if(clientOrders[idx].status.includes('Pris en charge')) {
+                clientOrders[idx].status = 'Livré avec succès';
             } else {
-                res.innerHTML = `<span class="text-red-400">Aucun colis trouvé pour ce code.</span>`;
+                clientOrders[idx].status = 'Pris en charge - En route';
             }
+            localStorage.setItem('global_client_orders', JSON.stringify(clientOrders));
+            renderAdminOrders();
         }
 
         // --- FILTRES & RECHERCHE ---
@@ -612,14 +569,13 @@
             chat.scrollTop = chat.scrollHeight;
         }
 
-        function openRfqModal() {
-            alert('Formulaire de Demande de Devis (RFQ) ouvert. Nos fournisseurs vous répondront sous 24h avec des tarifs dégressifs.');
-        }
+        function openRfqModal() { alert('Module RFQ (Demande de devis) ouvert. Les fabricants partenaires vous répondront sous 24h.'); }
 
-        // Initialisation au chargement
+        // Initialisation
         window.onload = function() {
             renderProducts();
-            updateCartBadge();
+            renderSuppliersDirectory();
+            updateBadges();
         };
     </script>
 </body>
