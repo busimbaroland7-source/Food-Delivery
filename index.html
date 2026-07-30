@@ -3,294 +3,634 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Marketplace, Espace Vendeur & Suivi Colis</title>
+    <title>Marketplace Pro - Application Complète</title>
     <style>
-        body { font-family: Arial, sans-serif; background: #f0f2f5; margin: 0; padding: 20px; color: #333; }
-        .container { max-width: 700px; margin: 0 auto; }
-        
-        /* Espace Vendeur / Client (Style Charlie Baba) */
-        .client-dashboard {
-            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+        :root {
+            --primary: #1877f2;
+            --primary-dark: #166fe5;
+            --success: #22c55e;
+            --bg-color: #f0f2f5;
+            --card-bg: #ffffff;
+            --text-main: #050505;
+            --text-secondary: #65676b;
+            --border: #ced0d4;
+        }
+
+        body {
+            font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+        }
+
+        /* En-tête / Profil / Navigation principale */
+        header {
+            background: var(--card-bg);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .user-profile-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            background: #e4e6eb;
+            padding: 6px 12px;
+            border-radius: 20px;
+        }
+
+        .user-profile-badge img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-profile-badge .name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        /* Structure de l'application */
+        .app-container {
+            max-width: 1200px;
+            margin: 20px auto;
+            display: grid;
+            grid-template-columns: 280px 1fr 320px;
+            gap: 20px;
+            padding: 0 15px;
+        }
+
+        @media (max-width: 900px) {
+            .app-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Panneau de gauche : Catégories & Livreur moto */
+        .sidebar-left {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .card h3 {
+            margin-top: 0;
+            font-size: 16px;
+            color: var(--primary);
+            border-bottom: 2px solid #f0f2f5;
+            padding-bottom: 8px;
+        }
+
+        /* Catégories (200+ scrollable) */
+        .categories-list {
+            max-height: 250px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .category-item {
+            padding: 8px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            color: #333;
+            transition: background 0.2s;
+        }
+
+        .category-item:hover {
+            background: #e4e6eb;
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        /* Widget Moto Livreur */
+        .delivery-widget {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
             color: white;
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        .client-dashboard h2 { margin: 0 0 15px 0; font-size: 18px; border: none; padding: 0; color: white; }
-        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; text-align: center; }
-        .stat-card { background: rgba(255, 255, 255, 0.15); padding: 12px; border-radius: 8px; backdrop-filter: blur(5px); }
-        .stat-card .label { font-size: 11px; opacity: 0.9; text-transform: uppercase; }
-        .stat-card .value { font-size: 16px; font-weight: bold; margin-top: 5px; }
-
-        /* Section Gestion des Colis & Expéditions */
-        .delivery-section {
-            background: white;
+            border-radius: 10px;
             padding: 15px;
-            border-radius: 12px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
         }
-        .delivery-section h3 { margin-top: 0; font-size: 16px; color: #1e3a8a; display: flex; align-items: center; gap: 8px; }
-        .delivery-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
-        .delivery-table th, .delivery-table td { padding: 8px 10px; border: 1px solid #e2e8f0; text-align: left; }
-        .delivery-table th { background: #f8fafc; font-weight: bold; }
-        .btn-status { background: #3182ce; color: white; border: none; padding: 5px 10px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: bold; }
-        .btn-status:hover { background: #2b6cb0; }
 
-        /* Boîte de publication type Facebook */
-        .post-creation-box {
+        .delivery-widget h4 { margin: 0 0 8px 0; font-size: 15px; }
+        .delivery-widget p { font-size: 12px; margin: 0 0 10px 0; opacity: 0.9; }
+        .btn-moto {
             background: white;
-            padding: 15px;
-            border-radius: 12px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
+            color: #d97706;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 12px;
         }
-        .post-creation-box textarea {
+
+        /* Centre : Flux central, Publication avec Prix, et Annonces */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .post-box {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .post-box textarea {
             width: 100%;
             border: none;
             resize: none;
-            font-size: 14px;
             outline: none;
-            min-height: 60px;
+            font-size: 15px;
+            min-height: 70px;
             font-family: inherit;
         }
+
+        .post-box-inputs {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .post-box-inputs input[type="number"], .post-box-inputs select {
+            padding: 8px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 13px;
+            outline: none;
+        }
+
         #imagePreviewContainer {
             position: relative;
             margin-top: 10px;
             display: none;
         }
+
         #imagePreview {
             width: 100%;
-            max-height: 300px;
+            max-height: 250px;
             object-fit: cover;
             border-radius: 8px;
         }
-        .remove-img-btn {
+
+        .remove-img {
             position: absolute;
-            top: 10px;
-            right: 10px;
+            top: 8px;
+            right: 8px;
             background: rgba(0,0,0,0.7);
             color: white;
             border: none;
-            padding: 5px 10px;
             border-radius: 50%;
+            width: 25px;
+            height: 25px;
             cursor: pointer;
         }
-        .post-actions {
+
+        .post-actions-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-top: 1px solid #eee;
+            border-top: 1px solid #f0f2f5;
             padding-top: 10px;
             margin-top: 10px;
         }
-        .btn-photo {
-            background: #e4e6eb;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 13px;
-            color: #4b4f56;
-        }
-        .btn-publish {
-            background: #1877f2;
+
+        .btn {
+            background: var(--primary);
             color: white;
             border: none;
-            padding: 8px 20px;
+            padding: 8px 16px;
             border-radius: 6px;
             cursor: pointer;
             font-weight: bold;
             font-size: 13px;
         }
-        .btn-publish:hover { background: #166fe5; }
-        
-        /* Fil d'actualité */
-        .feed-container { display: flex; flex-direction: column; gap: 15px; }
-        .post-card { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .post-author { font-weight: bold; margin-bottom: 8px; color: #050505; }
-        .post-text { margin-bottom: 10px; font-size: 14px; }
-        .post-image { width: 100%; border-radius: 8px; max-height: 400px; object-fit: cover; }
+
+        .btn:hover { background: var(--primary-dark); }
+        .btn-gray { background: #e4e6eb; color: #4b4f56; }
+        .btn-gray:hover { background: #d8dadf; }
+
+        /* Publication style carte */
+        .feed-post {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+        }
+
+        .feed-post-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .feed-post-author {
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .feed-post-price {
+            background: #dcfce7;
+            color: #166534;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        .feed-post-text {
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .feed-post-img {
+            width: 100%;
+            max-height: 350px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .feed-post-footer {
+            display: flex;
+            gap: 10px;
+            border-top: 1px solid #f0f2f5;
+            padding-top: 10px;
+        }
+
+        /* Panneau de droite : Espace Vendeur & Admin Contrôle */
+        .sidebar-right {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .vendor-stats {
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+            color: white;
+            border-radius: 10px;
+            padding: 15px;
+        }
+
+        .vendor-stats h3 { margin: 0 0 12px 0; font-size: 16px; border: none; padding: 0; color: white; }
+        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .stat-box { background: rgba(255,255,255,0.15); padding: 10px; border-radius: 6px; text-align: center; }
+        .stat-box .lbl { font-size: 10px; text-transform: uppercase; opacity: 0.9; }
+        .stat-box .val { font-size: 14px; font-weight: bold; margin-top: 4px; }
+
+        /* Admin Superviseur */
+        .admin-box {
+            background: #0f172a;
+            color: #e2e8f0;
+            border-radius: 10px;
+            padding: 15px;
+        }
+        .admin-box h3 { color: #f8fafc; font-size: 14px; margin-top: 0; border-bottom: 1px solid #334155; padding-bottom: 6px; }
+        .admin-metric { font-size: 12px; margin: 6px 0; display: flex; justify-content: space-between; }
+        .admin-metric span { color: #38bdf8; font-weight: bold; }
+
+        /* Espace de discussion / Chat modal simple */
+        .chat-section {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+        .chat-box {
+            height: 150px;
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 8px;
+            overflow-y: auto;
+            font-size: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 8px;
+        }
+        .chat-input-area {
+            display: flex;
+            gap: 6px;
+        }
+        .chat-input-area input {
+            flex: 1;
+            padding: 6px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 12px;
+        }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <!-- Espace Vendeur / Client (Style Charlie Baba) -->
-    <div class="client-dashboard">
-        <h2>Mon Espace Vendeur & Finances</h2>
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="label">Solde Actuel</div>
-                <div class="value" id="currentBalance">145 000 FC</div>
-            </div>
-            <div class="stat-card">
-                <div class="label">Revenus Totaux</div>
-                <div class="value" id="totalEarnings">480 000 FC</div>
-            </div>
-            <div class="stat-card">
-                <div class="label">Commandes</div>
-                <div class="value" id="totalOrders">34</div>
+    <!-- En-tête Profil Pro -->
+    <header>
+        <div class="header-logo">MarketplaceHub Pro</div>
+        <div class="user-profile-badge" onclick="alert('Profil de Busimba Roland - Construction Engineer & Entrepreneur')">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100" alt="Profil">
+            <div>
+                <div class="name">Busimba Roland</div>
+                <div style="font-size: 11px; color: var(--text-secondary);">Compte Vendeur Pro</div>
             </div>
         </div>
-    </div>
+    </header>
 
-    <!-- Section Suivi et Expédition des Colis -->
-    <div class="delivery-section">
-        <h3>🚚 Suivi des Colis & Expéditions</h3>
-        <p style="font-size: 12px; color: #666;">Gérez l'acheminement des commandes vers vos clients en temps réel.</p>
-        <div style="overflow-x: auto;">
-            <table class="delivery-table">
-                <thead>
-                    <tr>
-                        <th>N° Colis</th>
-                        <th>Client Destinataire</th>
-                        <th>Article</th>
-                        <th>Statut d'Expédition</th>
-                        <th>Action Livreur</th>
-                    </tr>
-                </thead>
-                <tbody id="deliveryTableBody">
-                    <!-- Rempli dynamiquement -->
-                </tbody>
-            </table>
-        </div>
-        <button onclick="simulateNewOrder()" style="margin-top: 10px; background: #22c55e; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold;">+ Simuler une nouvelle commande de colis</button>
-    </div>
-
-    <!-- Boîte de Publication Type Facebook -->
-    <div class="post-creation-box">
-        <textarea id="postText" placeholder="À quoi pensez-vous, ou quel produit vendez-vous ?"></textarea>
+    <div class="app-container">
         
-        <div id="imagePreviewContainer">
-            <img id="imagePreview" src="" alt="Aperçu">
-            <button class="remove-img-btn" onclick="removeImage()">✕</button>
+        <!-- COLONNE GAUCHE : Catégories & Moto Livreur -->
+        <div class="sidebar-left">
+            <div class="card">
+                <h3>📂 Catégories (200+)</h3>
+                <div class="categories-list" id="categoriesList">
+                    <!-- Injectées dynamiquement par JS -->
+                </div>
+            </div>
+
+            <div class="delivery-widget">
+                <h4>🛵 Espace Moto Livreur</h4>
+                <p>Assignation rapide des courses et prise en charge des colis.</p>
+                <button class="btn-moto" onclick="openDeliveryManager()">Gérer les courses</button>
+            </div>
         </div>
 
-        <div class="post-actions">
-            <input type="file" id="photoInput" accept="image/*" style="display: none;" onchange="previewPhoto(event)">
-            <button class="btn-photo" onclick="document.getElementById('photoInput').click()">📷 Photo</button>
-            <button class="btn-publish" onclick="publishPost()">Publier</button>
-        </div>
-    </div>
+        <!-- COLONNE CENTRALE : Publication (Montant + Photo) & Fil d'actualité -->
+        <div class="main-content">
+            
+            <!-- Boîte de Publication Pro -->
+            <div class="post-box">
+                <textarea id="postText" placeholder="Que vendez-vous aujourd'hui, Busimba ?"></textarea>
+                
+                <div id="imagePreviewContainer">
+                    <img id="imagePreview" src="" alt="Aperçu">
+                    <button class="remove-img" onclick="removeImage()">✕</button>
+                </div>
 
-    <!-- Fil d'actualité (Posts) -->
-    <div class="feed-container" id="feedContainer">
-        <!-- Les publications s'ajouteront ici dynamiquement -->
+                <div class="post-box-inputs">
+                    <input type="number" id="postPrice" placeholder="Montant (FC)" style="width: 130px;">
+                    <select id="postCategory">
+                        <option value="Général">Sélectionner catégorie</option>
+                        <option value="Matériaux éco">Matériaux éco</option>
+                        <option value="Agriculture & Élevage">Agriculture & Élevage</option>
+                        <option value="High-Tech & Dev">High-Tech & Dev</option>
+                    </select>
+                </div>
+
+                <div class="post-actions-bar">
+                    <input type="file" id="photoInput" accept="image/*" style="display: none;" onchange="previewPhoto(event)">
+                    <button class="btn btn-gray" onclick="document.getElementById('photoInput').click()">📷 Ajouter Photo</button>
+                    <button class="btn" onclick="publishPost()">Publier l'Article</button>
+                </div>
+            </div>
+
+            <!-- Fil d'actualité central -->
+            <div id="feedContainer">
+                <!-- Les annonces apparaîtront ici -->
+            </div>
+        </div>
+
+        <!-- COLONNE DROITE : Espace Vendeur, Admin & Chat Acheteur -->
+        <div class="sidebar-right">
+            
+            <!-- Tableau de bord Vendeur (Style Charlie Baba) -->
+            <div class="vendor-stats">
+                <h3>💼 Mon Compte Vendeur</h3>
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="lbl">Solde Actuel</div>
+                        <div class="val" id="currentBalance">145 000 FC</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="lbl">Revenus Totaux</div>
+                        <div class="val" id="totalEarnings">480 000 FC</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="lbl">Commandes</div>
+                        <div class="val" id="totalOrders">34</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="lbl">Colis en Route</div>
+                        <div class="val" id="activeDeliveries">2</div>
+                    </div>
+                </div>
+                <button onclick="payDeliveryman()" style="width:100%; margin-top:12px; background: #22c55e; color:white; border:none; padding:8px; border-radius:6px; font-weight:bold; cursor:pointer; font-size:12px;">💸 Payer le Livreur (Frais)</button>
+            </div>
+
+            <!-- Espace Discussion / Chat avec l'acheteur -->
+            <div class="chat-section">
+                <h3 style="margin-top:0; font-size:14px; color:var(--primary);">💬 Discussion Acheteur</h3>
+                <div class="chat-box" id="chatBox">
+                    <div><b>Client:</b> Bonjour, est-ce disponible ?</div>
+                    <div><b>Vendeur:</b> Oui, prêt pour la livraison.</div>
+                </div>
+                <div class="chat-input-area">
+                    <input type="text" id="chatInput" placeholder="Écrire un message...">
+                    <button class="btn" style="padding: 6px 10px; font-size:11px;" onclick="sendMessage()">Envoyer</button>
+                </div>
+            </div>
+
+            <!-- Admin Superviseur (Contrôle total) -->
+            <div class="admin-box">
+                <h3>🛡️ Panneau Admin (Supervision)</h3>
+                <div class="admin-metric">Commission Admin (5%): <span id="adminCommission">24 000 FC</span></div>
+                <div class="admin-metric">Transactions Globales: <span id="adminGlobalTx">1 250 000 FC</span></div>
+                <div class="admin-metric">Statut Réseau: <span style="color:#22c55e;">Actif & Sécurisé</span></div>
+            </div>
+
+        </div>
+
     </div>
-</div>
 
 <script>
-let selectedFile = null;
+    let selectedFile = null;
 
-// Données simulées des livraisons de colis
-let deliveryOrders = [
-    { id: "COL-001", client: "Jean Paul (Goma)", item: "Kit Solaire 3kVA", status: "En cours de route" },
-    { id: "COL-002", client: "Marie Claire", item: "Pave écologique plastique", status: "En attente de ramassage" }
-];
+    // Simulation de 200+ catégories pour l'application
+    const categoriesData = [
+        "Matériaux de construction & Écologiques",
+        "Agriculture & Élevage (Volaille, Champignons)",
+        "Informatique, Laptops & Développement",
+        "Immobilier & Terrains",
+        "Véhicules & Pièces détachées",
+        "Mode, Vêtements & Chaussures",
+        "Alimentation & Produits frais",
+        "Énergie Solaire & Électricité",
+        "Services professionnels & Ingénierie"
+    ];
 
-document.addEventListener("DOMContentLoaded", () => {
-    renderDeliveryTable();
-});
-
-function renderDeliveryTable() {
-    const tbody = document.getElementById("deliveryTableBody");
-    tbody.innerHTML = "";
-    deliveryOrders.forEach((order, index) => {
-        tbody.innerHTML += `
-            <tr>
-                <td><strong>#${order.id}</strong></td>
-                <td>${order.client}</td>
-                <td>${order.item}</td>
-                <td><span style="color: #2b6cb0; font-weight: bold;">${order.status}</span></td>
-                <td>
-                    <button class="btn-status" onclick="advanceDeliveryStatus(${index})">Avancer statut</button>
-                </td>
-            </tr>
-        `;
-    });
-}
-
-function advanceDeliveryStatus(index) {
-    if (deliveryOrders[index].status === "En attente de ramassage") {
-        deliveryOrders[index].status = "En cours de route";
-    } else if (deliveryOrders[index].status === "En cours de route") {
-        deliveryOrders[index].status = "Livré avec succès ✅";
-    } else {
-        deliveryOrders[index].status = "Archivé";
+    // Génération automatique pour atteindre l'esprit de plus de 200 catégories
+    for (let i = 10; i <= 200; i++) {
+        categoriesData.push(`Catégorie spécialisée #${i}`);
     }
-    renderDeliveryTable();
-}
 
-function simulateNewOrder() {
-    const newId = "COL-00" + (deliveryOrders.length + 1);
-    deliveryOrders.push({
-        id: newId,
-        client: "Client Anonyme",
-        item: "Produit Marketplace Hub",
-        status: "En attente de ramassage"
+    // Initialisation des catégories au chargement
+    document.addEventListener("DOMContentLoaded", () => {
+        const catList = document.getElementById("categoriesList");
+        categoriesData.forEach(cat => {
+            const div = document.createElement("div");
+            div.className = "category-item";
+            div.innerText = cat;
+            div.onclick = () => filterByCategory(cat);
+            catList.appendChild(div);
+        });
+
+        loadInitialPosts();
     });
-    renderDeliveryTable();
-    
-    // Mettre à jour les statistiques de commande
-    let totalOrdersEl = document.getElementById('totalOrders');
-    totalOrdersEl.innerText = parseInt(totalOrdersEl.innerText) + 1;
-}
 
-// Gestion de la sélection et aperçu de la photo
-function previewPhoto(event) {
-    const file = event.target.files[0];
-    if (file) {
-        selectedFile = file;
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            document.getElementById('imagePreview').src = e.target.result;
-            document.getElementById('imagePreviewContainer').style.display = 'block';
+    let posts = [
+        {
+            author: "Busimba Roland",
+            text: "Pavés écologiques fabriqués à base de plastique recyclé. Haute résistance pour vos chantiers !",
+            price: "15 000 FC",
+            category: "Matériaux de construction & Écologiques",
+            image: "https://images.unsplash.com/photo-1590381105924-c72589b9ef3f?w=600"
         }
-        reader.readAsDataURL(file);
+    ];
+
+    function renderFeed(filteredCat = null) {
+        const feedContainer = document.getElementById("feedContainer");
+        feedContainer.innerHTML = "";
+        
+        let targetPosts = posts;
+        if (filteredCat) {
+            targetPosts = posts.filter(p => p.category === filteredCat || filteredCat === null);
+        }
+
+        targetPosts.forEach((post, index) => {
+            feedContainer.innerHTML += `
+                <div class="feed-post">
+                    <div class="feed-post-header">
+                        <div class="feed-post-author">${post.author} <span style="font-size:11px; color:gray; font-weight:normal;">(${post.category})</span></div>
+                        <div class="feed-post-price">${post.price}</div>
+                    </div>
+                    <div class="feed-post-text">${post.text}</div>
+                    ${post.image ? `<img src="${post.image}" class="feed-post-img">` : ''}
+                    <div class="feed-post-footer">
+                        <button class="btn btn-gray" style="flex:1;" onclick="alert('Ouverture de la discussion avec l acheteur pour cet article.')">💬 Discuter</button>
+                        <button class="btn" style="flex:1; background:#22c55e;" onclick="triggerDeliveryForPost('${post.price}')">🚚 Assigner Livreur</button>
+                    </div>
+                </div>
+            `;
+        });
     }
-}
 
-// Suppression de l'aperçu photo
-function removeImage() {
-    selectedFile = null;
-    document.getElementById('photoInput').value = '';
-    document.getElementById('imagePreviewContainer').style.display = 'none';
-}
-
-// Publication d'un post (texte + image)
-function publishPost() {
-    const text = document.getElementById('postText').value.trim();
-    if (!text && !selectedFile) {
-        alert("Veuillez écrire un texte ou ajouter une photo !");
-        return;
+    function loadInitialPosts() {
+        renderFeed();
     }
 
-    const feedContainer = document.getElementById('feedContainer');
-    const postCard = document.createElement('div');
-    postCard.className = 'post-card';
-
-    let imageHtml = '';
-    if (selectedFile) {
-        const imageUrl = document.getElementById('imagePreview').src;
-        imageHtml = `<img src="${imageUrl}" class="post-image" alt="Publication photo">`;
+    function filterByCategory(categoryName) {
+        renderFeed(categoryName);
     }
 
-    postCard.innerHTML = `
-        <div class="post-author">Busimba Roland (Vendeur)</div>
-        <div class="post-text">${text}</div>
-        ${imageHtml}
-    `;
+    function previewPhoto(event) {
+        const file = event.target.files[0];
+        if (file) {
+            selectedFile = file;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('imagePreview').src = e.target.result;
+                document.getElementById('imagePreviewContainer').style.display = 'block';
+            }
+            reader.readAsDataURL(file);
+        }
+    }
 
-    // Insérer en haut du fil d'actualité
-    feedContainer.prepend(postCard);
+    function removeImage() {
+        selectedFile = null;
+        document.getElementById('photoInput').value = '';
+        document.getElementById('imagePreviewContainer').style.display = 'none';
+    }
 
-    // Réinitialiser le formulaire
-    document.getElementById('postText').value = '';
-    removeImage();
-}
+    function publishPost() {
+        const text = document.getElementById('postText').value.trim();
+        const price = document.getElementById('postPrice').value.trim();
+        const category = document.getElementById('postCategory').value;
+
+        if (!text && !selectedFile) {
+            alert("Veuillez écrire une description ou ajouter une photo !");
+            return;
+        }
+
+        if (!price) {
+            alert("Veuillez préciser le montant de l'article !");
+            return;
+        }
+
+        let imageUrl = selectedFile ? document.getElementById('imagePreview').src : null;
+
+        posts.unshift({
+            author: "Busimba Roland",
+            text: text,
+            price: price + " FC",
+            category: category,
+            image: imageUrl
+        });
+
+        // Réinitialisation
+        document.getElementById('postText').value = '';
+        document.getElementById('postPrice').value = '';
+        removeImage();
+        renderFeed();
+        alert("Publication effectuée avec succès sur le réseau !");
+    }
+
+    function sendMessage() {
+        const input = document.getElementById('chatInput');
+        const chatBox = document.getElementById('chatBox');
+        if(input.value.trim() !== "") {
+            chatBox.innerHTML += `<div><b>Moi (Vendeur):</b> ${input.value}</div>`;
+            input.value = "";
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+    }
+
+    function triggerDeliveryForPost(priceStr) {
+        let amount = parseInt(priceStr) || 5000;
+        let deliveryFee = Math.round(amount * 0.1); // 10% pour le livreur
+        let adminCut = Math.round(amount * 0.05); // 5% pour l'admin
+
+        alert(`Livreur assigné !\n- Montant course livreur : ${deliveryFee} FC\n- Commission Admin prélevée : ${adminCut} FC\nLe colis est acheminé vers l'expéditeur/acheteur.`);
+        
+        // Mise à jour des stats
+        let currentBalance = document.getElementById('currentBalance');
+        let currentVal = parseInt(currentBalance.innerText.replace(/[^0-9]/g, '')) + amount - deliveryFee - adminCut;
+        currentBalance.innerText = currentVal.toLocaleString() + " FC";
+    }
+
+    function payDeliveryman() {
+        alert("Paiement des frais de course validé et envoyé au livreur moto via l'application. L'admin a enregistré sa commission.");
+    }
+
+    function openDeliveryManager() {
+        alert("Module de gestion logistique des motos livreuses : Suivi GPS des colis en temps réel.");
+    }
 </script>
 
 </body>
