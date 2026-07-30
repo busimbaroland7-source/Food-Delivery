@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
     <title>Marketplace Pro - Hub Commercial</title>
-    <!-- FontAwesome pour les icônes pro -->
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
@@ -14,6 +15,7 @@
             --bg-light: #f8f9fa;
             --border-color: #dee2e6;
             --text-color: #333;
+            --admin-danger: #dc3545;
         }
 
         * {
@@ -73,6 +75,12 @@
             cursor: pointer;
         }
 
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
         .cart-btn {
             background: none;
             border: none;
@@ -102,10 +110,11 @@
             padding: 0 1rem;
         }
 
+        /* Sidebar Style Alibaba */
         .sidebar {
-            width: 250px;
+            width: 280px;
             background: #fff;
-            padding: 1.5rem;
+            padding: 1.2rem;
             border-radius: 8px;
             border: 1px solid var(--border-color);
             height: fit-content;
@@ -113,24 +122,46 @@
 
         .sidebar h3 {
             margin-bottom: 1rem;
-            font-size: 1.1rem;
+            font-size: 1rem;
+            text-transform: uppercase;
+            color: var(--secondary-color);
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 0.5rem;
         }
 
         .sidebar ul {
             list-style: none;
+            max-height: 600px;
+            overflow-y: auto;
         }
 
         .sidebar li {
-            padding: 0.6rem 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0.7rem 0.8rem;
             cursor: pointer;
+            border-radius: 6px;
+            margin-bottom: 0.3rem;
+            transition: background 0.2s;
+        }
+
+        .sidebar li img {
+            width: 32px;
+            height: 32px;
+            object-fit: cover;
             border-radius: 4px;
-            margin-bottom: 0.4rem;
+            background: #e9ecef;
+        }
+
+        .sidebar li span {
+            font-size: 0.9rem;
+            font-weight: 500;
         }
 
         .sidebar li:hover, .sidebar li.active {
             background: rgba(255, 87, 34, 0.1);
             color: var(--primary-color);
-            font-weight: 600;
         }
 
         .catalog {
@@ -141,7 +172,6 @@
             margin-bottom: 1.5rem;
         }
 
-        /* Grille de Produits */
         .product-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
@@ -207,7 +237,7 @@
             background: var(--primary-color);
         }
 
-        /* Panier Latéral (Drawer) */
+        /* Panier Drawer */
         .cart-drawer {
             position: fixed;
             top: 0;
@@ -280,16 +310,82 @@
             font-weight: bold;
             cursor: pointer;
         }
+
+        /* Modal Admin */
+        .admin-modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(4px);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .admin-modal-overlay.active {
+            display: flex;
+        }
+
+        .admin-modal-box {
+            background: #fff;
+            width: 90%;
+            max-width: 420px;
+            padding: 2rem;
+            border-radius: 8px;
+            border-top: 5px solid var(--admin-danger);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        .admin-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .admin-form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .admin-form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-bottom: 0.4rem;
+        }
+
+        .admin-form-group input {
+            width: 100%;
+            padding: 0.7rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            outline: none;
+        }
+
+        .btn-admin-login {
+            width: 100%;
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 0.8rem;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
 
-    <!-- HEADER / NAVIGATION -->
     <header class="navbar">
         <div class="logo">
             <i class="fa-solid fa-boxes-stacked"></i> <span>MarketPro</span>
         </div>
         <div class="search-bar">
+            <!-- Taper "9293 RB" ici ouvrira l'administration -->
             <input type="text" id="searchInput" placeholder="Rechercher des produits, des catégories...">
             <button id="searchBtn"><i class="fa-solid fa-magnifying-glass"></i></button>
         </div>
@@ -301,35 +397,53 @@
         </div>
     </header>
 
-    <!-- SECTION PRINCIPALE / CATALOGUE -->
     <main class="main-container">
         <aside class="sidebar">
-            <h3>Catégories</h3>
+            <h3>Toutes les Catégories</h3>
             <ul id="categoryList">
-                <li class="active" data-category="all">Tous les produits</li>
-                <li data-category="electronics">Électronique & High-Tech</li>
-                <li data-category="industrial">Matériel Industriel</li>
-                <li data-category="fashion">Mode & Textile</li>
+                <li class="active" data-category="all">
+                    <img src="https://images.unsplash.com/photo-1557804506-669a67965ba0?w=100" alt="Tous">
+                    <span>Tous les produits</span>
+                </li>
+                <li data-category="eco-materials">
+                    <img src="https://images.unsplash.com/photo-1590523277543-a94d2e4eb00b?w=100" alt="Eco">
+                    <span>Matériaux Éco & Pavés</span>
+                </li>
+                <li data-category="industrial">
+                    <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=100" alt="Ind">
+                    <span>Machines & Outillage</span>
+                </li>
+                <li data-category="agriculture">
+                    <img src="https://images.unsplash.com/photo-1586771107445-d3ca888129ff?w=100" alt="Agri">
+                    <span>Agriculture & Élevage</span>
+                </li>
+                <li data-category="electronics">
+                    <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=100" alt="IoT">
+                    <span>Électronique & IoT</span>
+                </li>
+                <li data-category="fashion">
+                    <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=100" alt="Textile">
+                    <span>Mode & Textile</span>
+                </li>
+                <li data-category="packaging">
+                    <img src="https://images.unsplash.com/photo-1607344645866-009c320c5ab8?w=100" alt="Recyl">
+                    <span>Recyclage & Emballage</span>
+                </li>
             </ul>
         </aside>
 
         <section class="catalog">
             <h2>Catalogue Produits</h2>
-            <div id="productGrid" class="product-grid">
-                <!-- Injection dynamique -->
-            </div>
+            <div id="productGrid" class="product-grid"></div>
         </section>
     </main>
 
-    <!-- PANIER LATÉRAL (DRAWER) -->
     <div id="cartDrawer" class="cart-drawer">
         <div class="cart-header">
             <h3>Votre Panier</h3>
             <button id="closeCartBtn"><i class="fa-solid fa-xmark"></i></button>
         </div>
-        <div id="cartItemsContainer" class="cart-items">
-            <!-- Articles injectés -->
-        </div>
+        <div id="cartItemsContainer" class="cart-items"></div>
         <div class="cart-footer">
             <div class="cart-total">
                 <span>Total :</span>
@@ -339,14 +453,35 @@
         </div>
     </div>
 
-    <!-- LOGIQUE JAVASCRIPT -->
+    <!-- Modal d'administration secrète -->
+    <div id="adminModalOverlay" class="admin-modal-overlay">
+        <div class="admin-modal-box">
+            <div class="admin-modal-header">
+                <h3><i class="fa-solid fa-lock"></i> Accès Restreint (Admin)</h3>
+                <button style="background:none; border:none; font-size:1.2rem; cursor:pointer;" onclick="closeAdminModal()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="adminLoginForm" onsubmit="handleAdminLogin(event)">
+                <div class="admin-form-group">
+                    <label>Identifiant Super-Admin</label>
+                    <input type="text" id="adminKey" required placeholder="Clé d'accès">
+                </div>
+                <div class="admin-form-group">
+                    <label>Mot de passe</label>
+                    <input type="password" id="adminPass" required placeholder="••••••••••••">
+                </div>
+                <button type="submit" class="btn-admin-login">Authentification</button>
+            </form>
+        </div>
+    </div>
+
     <script>
         const productsData = [
-            { id: 1, title: "Lot de 1000 Pavés Éco-Plastique", category: "industrial", price: 450.00, icon: "fa-industry" },
+            { id: 1, title: "Lot de 1000 Pavés Éco-Plastique", category: "eco-materials", price: 450.00, icon: "fa-industry" },
             { id: 2, title: "Microcontrôleur Industriel IoT", category: "electronics", price: 35.50, icon: "fa-microchip" },
-            { id: 3, title: "Tissu Technique Haute Résistance", category: "fashion", price: 120.00, icon: "fa-shirt" },
+            { id: 3, title: "Incouveuse Automatique pour Aviculture", category: "agriculture", price: 320.00, icon: "fa-egg" },
             { id: 4, title: "Kit Solaire de Puissance 5kVA", category: "electronics", price: 890.00, icon: "fa-solar-panel" },
-            { id: 5, title: "Moule Industriel pour Pavés", category: "industrial", price: 210.00, icon: "fa-cube" }
+            { id: 5, title: "Moule Industriel pour Pavés", category: "industrial", price: 210.00, icon: "fa-cube" },
+            { id: 6, title: "Substrat et Matériel pour Champignons", category: "agriculture", price: 75.00, icon: "fa-seedling" }
         ];
 
         let cart = [];
@@ -372,27 +507,46 @@
             closeCartBtn.addEventListener('click', () => cartDrawer.classList.remove('open'));
 
             categoryList.addEventListener('click', (e) => {
-                if (e.target.tagName === 'LI') {
+                const li = e.target.closest('li');
+                if (li) {
                     document.querySelectorAll('.sidebar li').forEach(el => el.classList.remove('active'));
-                    e.target.classList.add('active');
-                    currentCategory = e.target.getAttribute('data-category');
+                    li.classList.add('active');
+                    currentCategory = li.getAttribute('data-category');
                     filterAndRenderProducts();
                 }
             });
 
+            // Détection secrète dans la barre de recherche : si on tape "9293 RB"
             searchInput.addEventListener('input', () => {
+                const val = searchInput.value.trim();
+                if (val === "9293 RB") {
+                    searchInput.value = ""; // Nettoie la barre
+                    openAdminModal();       // Ouvre la boîte admin
+                    return;
+                }
                 filterAndRenderProducts();
             });
         }
 
+        function openAdminModal() { document.getElementById('adminModalOverlay').classList.add('active'); }
+        function closeAdminModal() { document.getElementById('adminModalOverlay').classList.remove('active'); }
+
+        function handleAdminLogin(event) {
+            event.preventDefault();
+            if (document.getElementById('adminKey').value === "admin" && document.getElementById('adminPass').value === "root1234") {
+                alert("Authentification réussie.");
+                closeAdminModal();
+            } else {
+                alert("Accès refusé.");
+            }
+        }
+
         function renderProducts(products) {
             productGrid.innerHTML = '';
-            
             if (products.length === 0) {
                 productGrid.innerHTML = `<p style="grid-column: 1/-1; text-align:center; color:#6c757d;">Aucun produit trouvé.</p>`;
                 return;
             }
-
             products.forEach(product => {
                 const card = document.createElement('div');
                 card.className = 'product-card';
@@ -410,52 +564,35 @@
 
         function filterAndRenderProducts() {
             const searchTerm = searchInput.value.toLowerCase();
-            
             const filtered = productsData.filter(product => {
                 const matchesCategory = currentCategory === 'all' || product.category === currentCategory;
                 const matchesSearch = product.title.toLowerCase().includes(searchTerm);
                 return matchesCategory && matchesSearch;
             });
-
             renderProducts(filtered);
         }
 
         window.addToCart = function(productId) {
             const product = productsData.find(p => p.id === productId);
             if (!product) return;
-
             const existingItem = cart.find(item => item.id === productId);
-            if (existingItem) {
-                existingItem.quantity += 1;
-            } else {
-                cart.push({ ...product, quantity: 1 });
-            }
-
+            if (existingItem) { existingItem.quantity += 1; } 
+            else { cart.push({ ...product, quantity: 1 }); }
             updateCartUI();
             cartDrawer.classList.add('open');
         }
 
         function updateCartUI() {
             cartItemsContainer.innerHTML = '';
-            let totalItems = 0;
-            let totalPrice = 0;
-
+            let totalItems = 0, totalPrice = 0;
             cart.forEach(item => {
                 totalItems += item.quantity;
                 totalPrice += item.price * item.quantity;
-
                 const row = document.createElement('div');
                 row.className = 'cart-item-row';
-                row.innerHTML = `
-                    <div>
-                        <strong>${item.title}</strong><br>
-                        <small>${item.price} $ x ${item.quantity}</small>
-                    </div>
-                    <span><strong>${(item.price * item.quantity).toFixed(2)} $</strong></span>
-                `;
+                row.innerHTML = `<div><strong>${item.title}</strong><br><small>${item.price} $ x ${item.quantity}</small></div><span><strong>${(item.price * item.quantity).toFixed(2)} $</strong></span>`;
                 cartItemsContainer.appendChild(row);
             });
-
             cartCount.innerText = totalItems;
             cartTotalPrice.innerText = `${totalPrice.toFixed(2)} $`;
         }
