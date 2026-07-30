@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
-    <title>MarketPlace Pro - Hub Commercial</title>
+    <title>MarketPlace Pro - Hub Commercial Global</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -50,14 +50,27 @@
             display: flex;
             gap: 10px;
             align-items: center;
+            cursor: pointer;
+        }
+
+        .logo img {
+            height: 35px;
+            object-fit: contain;
+            display: none;
+        }
+
+        /* Barre de recherche avec autocomplétion */
+        .search-container {
+            position: relative;
+            width: 40%;
         }
 
         .search-bar {
             display: flex;
-            width: 40%;
             border: 2px solid var(--primary-color);
             border-radius: 4px;
             overflow: hidden;
+            background: #fff;
         }
 
         .search-bar input {
@@ -75,10 +88,56 @@
             cursor: pointer;
         }
 
+        .suggestions-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid var(--border-color);
+            border-top: none;
+            list-style: none;
+            max-height: 250px;
+            overflow-y: auto;
+            z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .suggestions-dropdown li {
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            border-bottom: 1px solid var(--bg-light);
+        }
+
+        .suggestions-dropdown li:hover {
+            background-color: rgba(255, 87, 34, 0.08);
+            color: var(--primary-color);
+        }
+
         .nav-actions {
             display: flex;
             align-items: center;
             gap: 15px;
+        }
+
+        .btn-vendor-post {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.6rem 1rem;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+
+        .btn-vendor-post:hover {
+            opacity: 0.9;
         }
 
         .cart-btn {
@@ -112,12 +171,13 @@
 
         /* Sidebar Style Alibaba Pro */
         .sidebar {
-            width: 300px;
+            width: 320px;
             background: #fff;
             padding: 1rem;
             border-radius: 8px;
             border: 1px solid var(--border-color);
-            height: fit-content;
+            height: 75vh;
+            overflow-y: auto;
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         }
 
@@ -129,6 +189,10 @@
             letter-spacing: 0.5px;
             padding-bottom: 0.4rem;
             border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            background: #fff;
+            z-index: 5;
         }
 
         .sidebar ul {
@@ -139,7 +203,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0.75rem 0.6rem;
+            padding: 0.65rem 0.6rem;
             cursor: pointer;
             border-radius: 6px;
             margin-bottom: 0.2rem;
@@ -161,14 +225,13 @@
         }
 
         .sidebar li span {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 500;
         }
 
         .sidebar li i.icon-arrow {
             font-size: 0.75rem;
             color: #adb5bd;
-            transition: transform 0.2s;
         }
 
         .sidebar li:hover, .sidebar li.active {
@@ -176,8 +239,7 @@
             color: var(--primary-color);
         }
 
-        .sidebar li:hover .icon-left, .sidebar li.active .icon-left,
-        .sidebar li:hover .icon-arrow, .sidebar li.active .icon-arrow {
+        .sidebar li:hover .icon-left, .sidebar li.active .icon-left {
             color: var(--primary-color);
         }
 
@@ -201,6 +263,7 @@
             color: var(--secondary-color);
         }
 
+        /* Grille de Produits style Alibaba avec support Médias (Image / Vidéo) */
         .product-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
@@ -222,7 +285,7 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
 
-        .product-img {
+        .product-media-container {
             height: 180px;
             background: #e9ecef;
             display: flex;
@@ -230,6 +293,27 @@
             justify-content: center;
             color: #6c757d;
             font-size: 2.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-media-container img, 
+        .product-media-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .media-badge {
+            position: absolute;
+            bottom: 8px;
+            left: 8px;
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            backdrop-filter: blur(2px);
         }
 
         .product-info {
@@ -340,8 +424,8 @@
             cursor: pointer;
         }
 
-        /* Modal Admin */
-        .admin-modal-overlay {
+        /* Modals Communs (Admin & Vendeur) */
+        .modal-overlay {
             display: none;
             position: fixed;
             top: 0;
@@ -355,39 +439,43 @@
             align-items: center;
         }
 
-        .admin-modal-overlay.active {
+        .modal-overlay.active {
             display: flex;
         }
 
-        .admin-modal-box {
+        .modal-box {
             background: #fff;
             width: 90%;
-            max-width: 420px;
+            max-width: 500px;
             padding: 2rem;
             border-radius: 8px;
-            border-top: 5px solid var(--admin-danger);
             box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
-        .admin-modal-header {
+        .admin-box { border-top: 5px solid var(--admin-danger); }
+        .vendor-box { border-top: 5px solid var(--primary-color); }
+
+        .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 1.5rem;
         }
 
-        .admin-form-group {
+        .form-group {
             margin-bottom: 1.2rem;
         }
 
-        .admin-form-group label {
+        .form-group label {
             display: block;
             font-size: 0.85rem;
             font-weight: bold;
             margin-bottom: 0.4rem;
         }
 
-        .admin-form-group input {
+        .form-group input, .form-group select, .form-group textarea {
             width: 100%;
             padding: 0.7rem;
             border: 1px solid var(--border-color);
@@ -395,7 +483,13 @@
             outline: none;
         }
 
-        .btn-admin-login {
+        .form-hint {
+            font-size: 0.75rem;
+            color: #6c757d;
+            margin-top: 0.25rem;
+        }
+
+        .btn-submit {
             width: 100%;
             background: var(--secondary-color);
             color: white;
@@ -404,21 +498,37 @@
             border-radius: 4px;
             font-weight: bold;
             cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-submit:hover {
+            opacity: 0.9;
         }
     </style>
 </head>
 <body>
 
     <header class="navbar">
-        <div class="logo">
-            <i class="fa-solid fa-boxes-stacked"></i> <span>MarketPro</span>
+        <div class="logo" id="logoContainer">
+            <i class="fa-solid fa-boxes-stacked" id="logoIcon"></i>
+            <img id="customLogoImg" alt="Logo Plateforme"> 
+            <span id="logoText">MarketPro</span>
         </div>
-        <div class="search-bar">
-            <!-- Taper "9293 RB" ici ouvre l'administration -->
-            <input type="text" id="searchInput" placeholder="Rechercher des produits, des catégories...">
-            <button id="searchBtn"><i class="fa-solid fa-magnifying-glass"></i></button>
+        
+        <!-- Barre de recherche avec autocomplétion intelligente -->
+        <div class="search-container">
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Rechercher une catégorie ou un produit (Taper 9293 RB pour l'admin)..." autocomplete="off">
+                <button id="searchBtn"><i class="fa-solid fa-magnifying-glass"></i></button>
+            </div>
+            <ul id="suggestionsDropdown" class="suggestions-dropdown"></ul>
         </div>
+
         <div class="nav-actions">
+            <!-- Espace User / Vendeur pour publier images et courtes vidéos -->
+            <button class="btn-vendor-post" onclick="openVendorModal()">
+                <i class="fa-solid fa-cloud-arrow-up"></i> Publier (Produit / Vidéo)
+            </button>
             <button id="cartToggleBtn" class="cart-btn">
                 <i class="fa-solid fa-cart-shopping"></i>
                 <span id="cartCount" class="badge">0</span>
@@ -427,66 +537,85 @@
     </header>
 
     <main class="main-container">
-        <!-- SIDEBAR STYLE ALIBABA -->
+        <!-- SIDEBAR AVEC LES 60 CATEGORIES -->
         <aside class="sidebar">
             <h3>Toutes les Catégories</h3>
             <ul id="categoryList">
                 <li class="active" data-category="all" data-title="Tous les produits">
-                    <div class="menu-left">
-                        <i class="fa-solid fa-border-all icon-left"></i>
-                        <span>Tous les produits</span>
-                    </div>
+                    <div class="menu-left"><i class="fa-solid fa-border-all icon-left"></i><span>Tous les produits</span></div>
                     <i class="fa-solid fa-chevron-right icon-arrow"></i>
                 </li>
-                <li data-category="eco-materials" data-title="Matériaux Éco & Pavés">
-                    <div class="menu-left">
-                        <i class="fa-solid fa-recycle icon-left"></i>
-                        <span>Matériaux Éco & Pavés</span>
-                    </div>
-                    <i class="fa-solid fa-chevron-right icon-arrow"></i>
-                </li>
-                <li data-category="fast-food" data-title="Fast Food & Restauration">
-                    <div class="menu-left">
-                        <i class="fa-solid fa-burger icon-left"></i>
-                        <span>Fast Food</span>
-                    </div>
-                    <i class="fa-solid fa-chevron-right icon-arrow"></i>
-                </li>
-                <li data-category="pharmacies" data-title="Pharmacies & Santé">
-                    <div class="menu-left">
-                        <i class="fa-solid fa-pills icon-left"></i>
-                        <span>Pharmacies</span>
-                    </div>
-                    <i class="fa-solid fa-chevron-right icon-arrow"></i>
-                </li>
-                <li data-category="menagerie" data-title="Ménagerie & Animaux">
-                    <div class="menu-left">
-                        <i class="fa-solid fa-paw icon-left"></i>
-                        <span>Ménagerie</span>
-                    </div>
-                    <i class="fa-solid fa-chevron-right icon-arrow"></i>
-                </li>
-                <li data-category="industrial" data-title="Machines & Outillage">
-                    <div class="menu-left">
-                        <i class="fa-solid fa-screwdriver-wrench icon-left"></i>
-                        <span>Machines & Outillage</span>
-                    </div>
-                    <i class="fa-solid fa-chevron-right icon-arrow"></i>
-                </li>
-                <li data-category="agriculture" data-title="Agriculture & Élevage">
-                    <div class="menu-left">
-                        <i class="fa-solid fa-seedling icon-left"></i>
-                        <span>Agriculture & Élevage</span>
-                    </div>
-                    <i class="fa-solid fa-chevron-right icon-arrow"></i>
-                </li>
-                <li data-category="electronics" data-title="Composants électroniques & IoT">
-                    <div class="menu-left">
-                        <i class="fa-solid fa-microchip icon-left"></i>
-                        <span>Composants électroniques</span>
-                    </div>
-                    <i class="fa-solid fa-chevron-right icon-arrow"></i>
-                </li>
+                <!-- 1 à 10 -->
+                <li data-category="machinerie" data-title="Machines industrielles & Équipements"><div class="menu-left"><i class="fa-solid fa-industry icon-left"></i><span>Machines industrielles</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+                <li data-category="btp" data-title="Machines de construction & BTP"><div class="menu-left"><i class="fa-solid fa-person-digging icon-left"></i><span>Machines de construction & BTP</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+                <li data-category="metaux" data-title="Métaux, Alliages & Minéraux"><div class="menu-left"><i class="fa-solid fa-gem icon-left"></i><span>Métaux, Alliages & Minéraux</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+                <li data-category="textiles-bruts" data-title="Matières premières & Textiles bruts"><div class="menu-left"><i class="fa-solid fa-scroll icon-left"></i><span>Matières premières & Textiles bruts</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+                <li data-category="chimie" data-title="Produits chimiques & Dérivés"><div class="menu-left"><i class="fa-solid fa-flask icon-left"></i><span>Produits chimiques & Dérivés</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+                <li data-category="plastique" data-title="Caoutchouc & Plastiques"><div class="menu-left"><i class="fa-solid fa-circle-dot icon-left"></i><span>Caoutchouc & Plastiques</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+                <li data-category="electrique" data-title="Équipements électriques & Fournitures"><div class="menu-left"><i class="fa-solid fa-bolt icon-left"></i><span>Équipements électriques & Fournitures</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+                <li data-category="hydraulique" data-title="Transmission de puissance & Hydraulique"><div class="menu-left"><i class="fa-solid fa-gears icon-left"></i><span>Transmission de puissance & Hydraulique</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+                <li data-category="logistique" data-title="Manutention, Stockage & Logistique"><div class="menu-left"><i class="fa-solid fa-warehouse icon-left"></i><span>Manutention, Stockage & Logistique</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+                <li data-category="emballage" data-title="Emballage, Impression & Conditionnement"><div class="menu-left"><i class="fa-solid fa-box-open icon-left"></i><span>Emballage, Impression & Conditionnement</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+                
+                <!-- 11 à 18 -->
+                <li data-category="electronique-grand-public" data-title="Électronique grand public"><div class="menu-left"><i class="fa-solid fa-tv icon-left"></i><span>Électronique grand public</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+                <li data-category="composants" data-title="Composants électroniques, Accessoires & Télécoms"><div class="menu-left"><i class="fa-solid fa-microchip icon-left"></i><span>Composants électroniques & Télécoms</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+                <li data-category="solaire" data-title="Énergies renouvelables & Solaire"><div class="menu-left"><i class="fa-solid fa-solar-panel icon-left"></i><span>Énergies renouvelables & Solaire</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+                <li data-category="mesure" data-title="Instruments de test, mesure & Analyse"><div class="menu-left"><i class="fa-solid fa-scale-balanced icon-left"></i><span>Instruments de test, mesure & Analyse</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+                <li data-category="securite" data-title="Sécurité, Protection & Surveillance"><div class="menu-left"><i class="fa-solid fa-shield-halved icon-left"></i><span>Sécurité, Protection & Surveillance</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+                <li data-category="eclairage" data-title="Éclairage & Luminaires"><div class="menu-left"><i class="fa-solid fa-lightbulb icon-left"></i><span>Éclairage & Luminaires</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+                <li data-category="iot" data-title="Objets connectés & IoT industriel"><div class="menu-left"><i class="fa-solid fa-wifi icon-left"></i><span>Objets connectés & IoT industriel</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+                <li data-category="services-it" data-title="Services informatiques & Solutions numériques"><div class="menu-left"><i class="fa-solid fa-network-wired icon-left"></i><span>Services informatiques & Solutions numériques</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+
+                <!-- 19 à 24 -->
+                <li data-category="vehicules" data-title="Véhicules et Transports"><div class="menu-left"><i class="fa-solid fa-car icon-left"></i><span>Véhicules et Transports</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+                <li data-category="pieces-auto" data-title="Pièces détachées et Accessoires auto/moto"><div class="menu-left"><i class="fa-solid fa-gears icon-left"></i><span>Pièces détachées auto/moto</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+                <li data-category="outils" data-title="Outils à main, Électroportatif & Quincaillerie"><div class="menu-left"><i class="fa-solid fa-screwdriver-wrench icon-left"></i><span>Outils à main & Quincaillerie</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+                <li data-category="signalisation" data-title="Équipements de sécurité routière & Signalisation"><div class="menu-left"><i class="fa-solid fa-triangle-exclamation icon-left"></i><span>Sécurité routière & Signalisation</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+                <li data-category="sur-mesure" data-title="Services de fabrication sur mesure (OEM/ODM)"><div class="menu-left"><i class="fa-solid fa-industry icon-left"></i><span>Fabrication sur mesure (OEM/ODM)</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+                <li data-category="commercial" data-title="Équipements commerciaux (Magasins, Hôtels)"><div class="menu-left"><i class="fa-solid fa-store icon-left"></i><span>Équipements commerciaux</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+
+                <!-- 25 à 32 -->
+                <li data-category="agriculture" data-title="Agriculture, Élevage & Matériel avicole"><div class="menu-left"><i class="fa-solid fa-seedling icon-left"></i><span>Agriculture, Élevage & Aviculture</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+                <li data-category="alimentation" data-title="Alimentation, Boissons & Produits frais"><div class="menu-left"><i class="fa-solid fa-utensils icon-left"></i><span>Alimentation & Boissons</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+                <li data-category="fast-food" data-title="Restauration rapide, Fast-food & Équipements"><div class="menu-left"><i class="fa-solid fa-burger icon-left"></i><span>Fast Food & Restauration</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+                <li data-category="menagerie" data-title="Ménagerie, Animaux de compagnie & Accessoires"><div class="menu-left"><i class="fa-solid fa-paw icon-left"></i><span>Ménagerie & Animaux</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+                <li data-category="pharmacies" data-title="Pharmacies, Santé, Dispositifs & Fournitures"><div class="menu-left"><i class="fa-solid fa-pills icon-left"></i><span>Pharmacies & Santé</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+                <li data-category="cosmetiques" data-title="Soins de beauté, Cosmétiques & Hygiène"><div class="menu-left"><i class="fa-solid fa-spray-can-sparkles icon-left"></i><span>Cosmétiques & Hygiène</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+                <li data-category="hygiene-pro" data-title="Produits d'hygiène professionnelle & MRO"><div class="menu-left"><i class="fa-solid fa-broom icon-left"></i><span>Hygiène professionnelle & MRO</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+                <li data-category="bien-etre" data-title="Produits de bien-être & Compléments alimentaires"><div class="menu-left"><i class="fa-solid fa-heart-pulse icon-left"></i><span>Bien-être & Compléments</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+
+                <!-- 33 à 40 -->
+                <li data-category="fashion" data-title="Mode, Vêtement & Textile confectionné"><div class="menu-left"><i class="fa-solid fa-shirt icon-left"></i><span>Mode & Vêtement confectionné</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+                <li data-category="chaussures" data-title="Chaussures, Maroquinerie, Bagages & Sacs"><div class="menu-left"><i class="fa-solid fa-shoe-prints icon-left"></i><span>Chaussures, Bagages & Sacs</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+                <li data-category="bijoux" data-title="Bijoux, Montres, Lunettes & Accessoires"><div class="menu-left"><i class="fa-solid fa-ring icon-left"></i><span>Bijoux, Montres & Lunettes</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+                <li data-category="maison" data-title="Maison, Jardin, Décoration & Ameublement"><div class="menu-left"><i class="fa-solid fa-couch icon-left"></i><span>Maison, Jardin & Décoration</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+                <li data-category="electromenager" data-title="Électroménager & Cuisine"><div class="menu-left"><i class="fa-solid fa-blender icon-left"></i><span>Électroménager & Cuisine</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+                <li data-category="enfants" data-title="Mère, Enfants, Jouets & Puériculture"><div class="menu-left"><i class="fa-solid fa-child-reaching icon-left"></i><span>Enfants, Jouets & Puériculture</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+                <li data-category="sports" data-title="Sports, Loisirs, Divertissement & Plein air"><div class="menu-left"><i class="fa-solid fa-futbol icon-left"></i><span>Sports, Loisirs & Plein air</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+                <li data-category="cadeaux" data-title="Cadeaux, Artisanat, Fournitures scolaires & de bureau"><div class="menu-left"><i class="fa-solid fa-gift icon-left"></i><span>Cadeaux, Artisanat & Papeterie</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+
+                <!-- 41 à 60 -->
+                <li data-category="labo" data-title="Équipements de laboratoire, Scientifique & Biotechnologie"><div class="menu-left"><i class="fa-solid fa-microscope icon-left"></i><span>Laboratoire & Biotechnologie</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+                <li data-category="ia-robotique" data-title="Technologies et Matériel pour l'Intelligence Artificielle & Robotique"><div class="menu-left"><i class="fa-solid fa-robot icon-left"></i><span>IA & Robotique</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+                <li data-category="bureau-mobilier" data-title="Matériel de bureau, Mobilier d'entreprise & Papeterie professionnelle"><div class="menu-left"><i class="fa-solid fa-chair icon-left"></i><span>Mobilier de bureau & Papeterie</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+                <li data-category="fetes" data-title="Articles de fête, Événementiel, Décorations de mariage & Fêtes"><div class="menu-left"><i class="fa-solid fa-champagne-glasses icon-left"></i><span>Articles de fête & Événementiel</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+                <li data-category="musique" data-title="Instruments de musique, Sonorisation & Équipements de studio"><div class="menu-left"><i class="fa-solid fa-music icon-left"></i><span>Musique & Sonorisation</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+                <li data-category="eco-materiaux" data-title="Produits écologiques, Éco-matériaux de construction & Recyclage"><div class="menu-left"><i class="fa-solid fa-recycle icon-left"></i><span>Éco-matériaux & Recyclage</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+                <li data-category="peche-maritime" data-title="Matériel de pêche, Aquaculture & Équipements maritimes"><div class="menu-left"><i class="fa-solid fa-fish icon-left"></i><span>Pêche & Aquaculture</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+                <li data-category="camping" data-title="Articles de sport nautique, Camping & Randonnée en plein air"><div class="menu-left"><i class="fa-solid fa-campground icon-left"></i><span>Camping & Randonnée</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+                <li data-category="fitness" data-title="Équipements pour salles de sport, Fitness & Musculation"><div class="menu-left"><i class="fa-solid fa-dumbbell icon-left"></i><span>Fitness & Musculation</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+                <li data-category="vetements-pro" data-title="Vêtements de travail, EPI & Tenues professionnelles spécialisées"><div class="menu-left"><i class="fa-solid fa-vest icon-left"></i><span>Vêtements de travail & EPI</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+                <li data-category="irrigation" data-title="Techniques et Équipements d'irrigation & Serres agricoles"><div class="menu-left"><i class="fa-solid fa-water icon-left"></i><span>Irrigation & Serres agricoles</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+                <li data-category="bétail" data-title="Aliments pour bétail, Compléments vétérinaires & Soins animaux"><div class="menu-left"><i class="fa-solid fa-cow icon-left"></i><span>Aliments bétail & Vétérinaire</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+                <li data-category="boulangerie" data-title="Matériel de boulangerie, Pâtisserie & Équipements de chocolaterie"><div class="menu-left"><i class="fa-solid fa-bread-slice icon-left"></i><span>Boulangerie & Pâtisserie</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+                <li data-category="nettoyage-industriel" data-title="Produits de nettoyage industriel, Hygiène des surfaces & Désinfection"><div class="menu-left"><i class="fa-solid fa-soap icon-left"></i><span>Nettoyage industriel</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+                <li data-category="coiffure-spa" data-title="Fournitures pour salons de coiffure, Esthétique & Spa"><div class="menu-left"><i class="fa-solid fa-spa icon-left"></i><span>Coiffure, Esthétique & Spa</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+                <li data-category="horlogerie" data-title="Équipements de bijouterie, Outils d'horlogerie & Gemmologie"><div class="menu-left"><i class="fa-solid fa-clock icon-left"></i><span>Bijouterie & Horlogerie</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+                <li data-category="arcade-vr" data-title="Technologies de réalité virtuelle, Jeux d'arcade & Divertissement"><div class="menu-left"><i class="fa-solid fa-vr-cardboard icon-left"></i><span>Réalité virtuelle & Arcade</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+                <li data-category="traitement-eau" data-title="Systèmes de traitement, Filtration & Purification de l'eau"><div class="menu-left"><i class="fa-solid fa-droplet icon-left"></i><span>Traitement & Filtration d'eau</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+                <li data-category="imprimerie" data-title="Matériel d'imprimerie grand format, Sérigraphie & Signalétique"><div class="menu-left"><i class="fa-solid fa-print icon-left"></i><span>Imprimerie & Sérigraphie</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
+                <li data-category="secours" data-title="Matériel de secours d'urgence, Protection civile & Sécurité incendie"><div class="menu-left"><i class="fa-solid fa-fire-extinguisher icon-left"></i><span>Secours & Sécurité incendie</span></div><i class="fa-solid fa-chevron-right icon-arrow"></i></li>
             </ul>
         </aside>
 
@@ -515,43 +644,99 @@
         </div>
     </div>
 
-    <!-- MODAL ADMIN SECRETE -->
-    <div id="adminModalOverlay" class="admin-modal-overlay">
-        <div class="admin-modal-box">
-            <div class="admin-modal-header">
-                <h3><i class="fa-solid fa-lock"></i> Accès Restreint (Admin)</h3>
+    <!-- MODAL ADMIN SECRETE (Gestion du Logo & Paramètres) -->
+    <div id="adminModalOverlay" class="modal-overlay">
+        <div class="modal-box admin-box">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-lock"></i> Panneau Super-Admin (Logo)</h3>
                 <button style="background:none; border:none; font-size:1.2rem; cursor:pointer;" onclick="closeAdminModal()"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <form id="adminLoginForm" onsubmit="handleAdminLogin(event)">
-                <div class="admin-form-group">
-                    <label>Identifiant Super-Admin</label>
-                    <input type="text" id="adminKey" required placeholder="Clé d'accès">
+            <form id="adminLoginForm" onsubmit="handleAdminAction(event)">
+                <div id="adminLoginFields">
+                    <div class="form-group">
+                        <label>Identifiant Super-Admin</label>
+                        <input type="text" id="adminKey" required placeholder="Clé d'accès">
+                    </div>
+                    <div class="form-group">
+                        <label>Mot de passe</label>
+                        <input type="password" id="adminPass" required placeholder="••••••••••••">
+                    </div>
+                    <button type="submit" class="btn-submit">S'authentifier</button>
                 </div>
-                <div class="admin-form-group">
-                    <label>Mot de passe</label>
-                    <input type="password" id="adminPass" required placeholder="••••••••••••">
+                
+                <div id="adminDashboardFields" style="display:none;">
+                    <div class="form-group">
+                        <label>URL du Logo de la Plateforme (Image)</label>
+                        <input type="url" id="adminLogoUrlInput" placeholder="https://exemple.com/mon-logo.png">
+                        <div class="form-hint">Collez le lien direct d'une image pour remplacer le logo de la navbar.</div>
+                    </div>
+                    <button type="submit" class="btn-submit">Mettre à jour le Logo</button>
                 </div>
-                <button type="submit" class="btn-admin-login">Authentification</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL UTILISATEUR / VENDEUR (Ajout d'images et de courtes vidéos) -->
+    <div id="vendorModalOverlay" class="modal-overlay">
+        <div class="modal-box vendor-box">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-video"></i> Publier un Produit (Image / Vidéo)</h3>
+                <button style="background:none; border:none; font-size:1.2rem; cursor:pointer;" onclick="closeVendorModal()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="vendorPostForm" onsubmit="handleVendorPost(event)">
+                <div class="form-group">
+                    <label>Titre du produit / Offre</label>
+                    <input type="text" id="postTitle" required placeholder="Ex: Machine de découpe high-tech">
+                </div>
+                <div class="form-group">
+                    <label>Catégorie</label>
+                    <select id="postCategory" required>
+                        <option value="eco-materiaux">Éco-matériaux & Recyclage</option>
+                        <option value="machinerie">Machines industrielles</option>
+                        <option value="fashion">Mode & Vêtement confectionné</option>
+                        <option value="fast-food">Fast Food & Restauration</option>
+                        <option value="electronique-grand-public">Électronique grand public</option>
+                        <option value="solaire">Énergies renouvelables & Solaire</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Prix ($)</label>
+                    <input type="number" step="0.01" id="postPrice" required placeholder="150.00">
+                </div>
+                <div class="form-group">
+                    <label>Lien Média (URL Image ou Courte Vidéo MP4)</label>
+                    <input type="url" id="postMediaUrl" required placeholder="https://... (image.jpg ou video.mp4)">
+                    <div class="form-hint">Supporte les images directes ou les formats vidéo (type démo Alibaba).</div>
+                </div>
+                <div class="form-group">
+                    <label>Type de média</label>
+                    <select id="postMediaType">
+                        <option value="image">Image Fixe</option>
+                        <option value="video">Courte Vidéo</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-submit">Publier sur la Marketplace</button>
             </form>
         </div>
     </div>
 
     <script>
-        const productsData = [
-            { id: 1, title: "Lot de 1000 Pavés Éco-Plastique", category: "eco-materials", price: 450.00, icon: "fa-industry" },
-            { id: 2, title: "Menu Maxi Burger & Boisson", category: "fast-food", price: 12.50, icon: "fa-burger" },
-            { id: 3, title: "Kit de Premiers Secours & Pharmacie", category: "pharmacies", price: 45.00, icon: "fa-kit-medical" },
-            { id: 4, title: "Nourriture Premium pour Animaux de Compagnie", category: "menagerie", price: 28.00, icon: "fa-bone" },
-            { id: 5, title: "Microcontrôleur Industriel IoT", category: "electronics", price: 35.50, icon: "fa-microchip" },
-            { id: 6, title: "Incouveuse Automatique pour Aviculture", category: "agriculture", price: 320.00, icon: "fa-egg" },
-            { id: 7, title: "Pizza Familiale Mega Cheese", category: "fast-food", price: 18.00, icon: "fa-pizza-slice" },
-            { id: 8, title: "Boîte de Vitamines & Compléments", category: "pharmacies", price: 22.00, icon: "fa-tablets" },
-            { id: 9, title: "Cage & Accessoires pour Ménagerie", category: "menagerie", price: 65.00, icon: "fa-house-chimney" },
-            { id: 10, title: "Moule Industriel pour Pavés", category: "industrial", price: 210.00, icon: "fa-cube" }
+        // Catalogue initial de démonstration
+        let productsData = [
+            { id: 1, title: "Lot de 1000 Pavés Éco-Matériaux", category: "eco-materiaux", price: 450.00, mediaUrl: "", mediaType: "image", icon: "fa-recycle" },
+            { id: 2, title: "Menu Maxi Burger & Boisson", category: "fast-food", price: 12.50, mediaUrl: "", mediaType: "image", icon: "fa-burger" },
+            { id: 3, title: "Kit de Premiers Secours & Pharmacie", category: "pharmacies", price: 45.00, mediaUrl: "", mediaType: "image", icon: "fa-pills" },
+            { id: 4, title: "Nourriture Premium pour Animaux", category: "menagerie", price: 28.00, mediaUrl: "", mediaType: "image", icon: "fa-paw" },
+            { id: 5, title: "Microcontrôleur IoT Industriel", category: "composants", price: 35.50, mediaUrl: "", mediaType: "image", icon: "fa-microchip" },
+            { id: 6, title: "Veste de Travail Haute Visibilité EPI", category: "vetements-pro", price: 55.00, mediaUrl: "", mediaType: "image", icon: "fa-vest" },
+            { id: 7, title: "Machine Industrielle de Découpe Laser", category: "machinerie", price: 3400.00, mediaUrl: "", mediaType: "image", icon: "fa-industry" },
+            { id: 8, title: "Kit Solaire Résidentiel 5kVA", category: "solaire", price: 890.00, mediaUrl: "", mediaType: "image", icon: "fa-solar-panel" },
+            { id: 9, title: "Ensemble Vêtement Tendance Mode", category: "fashion", price: 75.00, mediaUrl: "", mediaType: "image", icon: "fa-shirt" }
         ];
 
         let cart = [];
         let currentCategory = 'all';
+        let isAdminAuthenticated = false;
 
         const productGrid = document.getElementById('productGrid');
         const categoryTitle = document.getElementById('categoryTitle');
@@ -563,6 +748,7 @@
         const cartTotalPrice = document.getElementById('cartTotalPrice');
         const categoryList = document.getElementById('categoryList');
         const searchInput = document.getElementById('searchInput');
+        const suggestionsDropdown = document.getElementById('suggestionsDropdown');
 
         document.addEventListener('DOMContentLoaded', () => {
             renderProducts(productsData);
@@ -573,6 +759,7 @@
             cartToggleBtn.addEventListener('click', () => cartDrawer.classList.add('open'));
             closeCartBtn.addEventListener('click', () => cartDrawer.classList.remove('open'));
 
+            // Gestion de la sélection d'une catégorie dans la sidebar
             categoryList.addEventListener('click', (e) => {
                 const li = e.target.closest('li');
                 if (li) {
@@ -584,41 +771,164 @@
                 }
             });
 
+            // Algorithme de Recherche et Autocomplétion (avec commande admin "9293 RB")
             searchInput.addEventListener('input', () => {
                 const val = searchInput.value.trim();
+
                 if (val === "9293 RB") {
-                    searchInput.value = ""; 
-                    openAdminModal();       
+                    searchInput.value = "";
+                    suggestionsDropdown.style.display = 'none';
+                    openAdminModal();
                     return;
                 }
+
+                const query = val.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                suggestionsDropdown.innerHTML = '';
+
+                if (query.length === 0) {
+                    suggestionsDropdown.style.display = 'none';
+                    currentCategory = 'all';
+                    categoryTitle.innerText = "Tous les produits";
+                    filterAndRenderProducts();
+                    return;
+                }
+
+                const items = categoryList.querySelectorAll('li');
+                let matchCount = 0;
+
+                items.forEach(li => {
+                    const titleText = li.getAttribute('data-title');
+                    const normalizedTitle = titleText.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+                    if (normalizedTitle.includes(query)) {
+                        matchCount++;
+                        const suggestionItem = document.createElement('li');
+                        suggestionItem.innerHTML = `<i class="fa-solid fa-magnifying-glass" style="margin-right:8px; color:#adb5bd;"></i> ${titleText}`;
+                        
+                        suggestionItem.addEventListener('click', () => {
+                            searchInput.value = titleText;
+                            suggestionsDropdown.style.display = 'none';
+                            document.querySelectorAll('.sidebar li').forEach(el => el.classList.remove('active'));
+                            li.classList.add('active');
+                            currentCategory = li.getAttribute('data-category');
+                            categoryTitle.innerText = titleText;
+                            li.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            filterAndRenderProducts();
+                        });
+
+                        suggestionsDropdown.appendChild(suggestionItem);
+                    }
+                });
+
+                if (matchCount > 0) {
+                    suggestionsDropdown.style.display = 'block';
+                } else {
+                    suggestionsDropdown.style.display = 'none';
+                }
+
                 filterAndRenderProducts();
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.search-container')) {
+                    suggestionsDropdown.style.display = 'none';
+                }
             });
         }
 
+        // --- GESTION ADMIN (LOGOS) ---
         function openAdminModal() { document.getElementById('adminModalOverlay').classList.add('active'); }
         function closeAdminModal() { document.getElementById('adminModalOverlay').classList.remove('active'); }
 
-        function handleAdminLogin(event) {
+        function handleAdminAction(event) {
             event.preventDefault();
-            if (document.getElementById('adminKey').value === "admin" && document.getElementById('adminPass').value === "root1234") {
-                alert("Authentification réussie.");
-                closeAdminModal();
+            if (!isAdminAuthenticated) {
+                if (document.getElementById('adminKey').value === "admin" && document.getElementById('adminPass').value === "root1234") {
+                    isAdminAuthenticated = true;
+                    document.getElementById('adminLoginFields').style.display = 'none';
+                    document.getElementById('adminDashboardFields').style.display = 'block';
+                    alert("Authentification Administrateur réussie. Vous pouvez configurer le logo.");
+                } else {
+                    alert("Identifiants incorrects.");
+                }
             } else {
-                alert("Accès refusé.");
+                const logoUrl = document.getElementById('adminLogoUrlInput').value.trim();
+                const imgTag = document.getElementById('customLogoImg');
+                const iconTag = document.getElementById('logoIcon');
+                const textTag = document.getElementById('logoText');
+
+                if (logoUrl) {
+                    imgTag.src = logoUrl;
+                    imgTag.style.display = 'inline-block';
+                    iconTag.style.display = 'none';
+                    alert("Logo mis à jour avec succès !");
+                } else {
+                    imgTag.style.display = 'none';
+                    iconTag.style.display = 'inline-block';
+                    alert("Logo réinitialisé par défaut.");
+                }
+                closeAdminModal();
             }
         }
 
+        // --- GESTION VENDEUR / UTILISATEUR (IMAGES & VIDÉOS) ---
+        function openVendorModal() { document.getElementById('vendorModalOverlay').classList.add('active'); }
+        function closeVendorModal() { document.getElementById('vendorModalOverlay').classList.remove('active'); }
+
+        function handleVendorPost(event) {
+            event.preventDefault();
+            const title = document.getElementById('postTitle').value;
+            const category = document.getElementById('postCategory').value;
+            const price = parseFloat(document.getElementById('postPrice').value);
+            const mediaUrl = document.getElementById('postMediaUrl').value;
+            const mediaType = document.getElementById('postMediaType').value;
+
+            const newProduct = {
+                id: productsData.length + 1,
+                title,
+                category,
+                price,
+                mediaUrl,
+                mediaType,
+                icon: "fa-box"
+            };
+
+            productsData.unshift(newProduct);
+            filterAndRenderProducts();
+            closeVendorModal();
+            document.getElementById('vendorPostForm').reset();
+            alert("Votre produit avec média a été publié avec succès sur la marketplace !");
+        }
+
+        // --- RENDU PRODUITS ---
         function renderProducts(products) {
             productGrid.innerHTML = '';
             if (products.length === 0) {
-                productGrid.innerHTML = `<p style="grid-column: 1/-1; text-align:center; color:#6c757d; padding: 2rem;">Aucun produit trouvé dans cette catégorie.</p>`;
+                productGrid.innerHTML = `<p style="grid-column: 1/-1; text-align:center; color:#6c757d; padding: 2rem;">Aucun produit trouvé.</p>`;
                 return;
             }
             products.forEach(product => {
                 const card = document.createElement('div');
                 card.className = 'product-card';
+                
+                let mediaContent = `<i class="fa-solid ${product.icon}"></i>`;
+                let badgeContent = "";
+
+                if (product.mediaUrl) {
+                    if (product.mediaType === 'video') {
+                        mediaContent = `<video src="${product.mediaUrl}" autoplay muted loop playsinline></video>`;
+                        badgeContent = `<span class="media-badge"><i class="fa-solid fa-video"></i> Vidéo Démo</span>`;
+                    } else {
+                        mediaContent = `<img src="${product.mediaUrl}" alt="${product.title}">`;
+                        badgeContent = `<span class="media-badge"><i class="fa-solid fa-image"></i> Photo HD</span>`;
+                    }
+                }
+
                 card.innerHTML = `
-                    <div class="product-img"><i class="fa-solid ${product.icon}"></i></div>
+                    <div class="product-media-container">
+                        ${mediaContent}
+                        ${badgeContent}
+                    </div>
                     <div class="product-info">
                         <div class="product-title">${product.title}</div>
                         <div class="product-price">${product.price.toFixed(2)} $</div>
@@ -630,11 +940,11 @@
         }
 
         function filterAndRenderProducts() {
-            const searchTerm = searchInput.value.toLowerCase();
+            const searchTerm = searchInput.value.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
             const filtered = productsData.filter(product => {
                 const matchesCategory = currentCategory === 'all' || product.category === currentCategory;
-                const matchesSearch = product.title.toLowerCase().includes(searchTerm);
-                return matchesCategory && matchesSearch;
+                const matchesSearch = product.title.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").includes(searchTerm);
+                return matchesCategory || matchesSearch;
             });
             renderProducts(filtered);
         }
