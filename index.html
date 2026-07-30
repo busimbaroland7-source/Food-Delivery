@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GlobalB2B - Plateforme Mondiale d'E-commerce & Logistique</title>
-    <!-- Tailwind CSS pour un design pro, moderne et épuré style Alibaba -->
+    <title>GlobalB2B - Marketplace Mondiale & Vente Simplifiée</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
@@ -24,18 +24,15 @@
         }
     </script>
 </head>
-<body class="bg-gray-100 text-gray-800 font-sans antialiased">
+<body class="bg-gray-100 text-gray-800 font-sans antialiased" onkeydown="handleSecretKeys(event)">
 
-    <!-- Barre supérieure : Multi-devises & Accès Discret Admin/Livreur -->
+    <!-- Barre supérieure : Multi-devises (Zéro bouton admin visible) -->
     <div class="bg-gray-900 text-gray-300 text-xs py-1.5 px-4">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <div class="flex items-center space-x-4">
-                <span><i class="fa-solid fa-globe text-alibaba-orange mr-1"></i> Global Sourcing Alibaba-Style</span>
-                <span class="hidden md:inline">|</span>
-                <span class="hidden md:inline text-gray-400">Plateforme B2B & B2C interactive</span>
+                <span><i class="fa-solid fa-globe text-alibaba-orange mr-1"></i> Global Sourcing & Marketplace B2B/B2C</span>
             </div>
             <div class="flex items-center space-x-4">
-                <!-- Sélecteur de Devises -->
                 <div class="flex items-center space-x-1">
                     <label for="currencySelector" class="text-gray-400">Devise:</label>
                     <select id="currencySelector" onchange="changeCurrency()" class="bg-gray-800 text-white border border-gray-700 rounded px-2 py-0.5 focus:outline-none focus:border-alibaba-orange">
@@ -44,9 +41,6 @@
                         <option value="CDF">CDF (FC)</option>
                     </select>
                 </div>
-                <span>|</span>
-                <!-- Accès Admin Discret (Code 9293RB) -->
-                <button onclick="promptAdminAccess()" class="hover:text-alibaba-orange transition text-gray-500 hover:text-white" title="Espace Réservé"><i class="fa-solid fa-key"></i></button>
             </div>
         </div>
     </div>
@@ -59,53 +53,57 @@
                 <div class="bg-alibaba-orange text-white font-black text-2xl px-3 py-1 rounded tracking-wider shadow">G</div>
                 <div>
                     <span class="text-2xl font-black text-alibaba-orange tracking-tight">GLOBAL</span>
-                    <span class="text-xs block text-gray-500 font-semibold uppercase tracking-widest -mt-1">B2B & Marketplace</span>
+                    <span class="text-xs block text-gray-500 font-semibold uppercase tracking-widest -mt-1">Marketplace & Vente Express</span>
                 </div>
             </div>
 
-            <!-- Barre de recherche globale -->
+            <!-- Barre de recherche globale unique -->
             <div class="flex-1 max-w-2xl hidden md:flex">
                 <div class="flex w-full border-2 border-alibaba-orange rounded-md overflow-hidden shadow-sm">
-                    <input type="text" id="searchInput" placeholder="Rechercher des produits, des fabricants, des devis RFQ..." class="w-full px-4 py-2 focus:outline-none text-sm">
+                    <input type="text" id="searchInput" oninput="searchProducts()" placeholder="Que recherchez-vous ? (Pavés, incubateurs, tech...)" class="w-full px-4 py-2 focus:outline-none text-sm">
                     <button onclick="searchProducts()" class="bg-alibaba-orange hover:bg-alibaba-darkOrange text-white px-6 py-2 font-semibold text-sm transition flex items-center">
                         <i class="fa-solid fa-magnifying-glass mr-1"></i> Rechercher
                     </button>
                 </div>
             </div>
 
-            <!-- Actions (Panier, Suivi Client & Messages) -->
-            <div class="flex items-center space-x-6">
+            <!-- Actions (Profil Client, Panier, Suivi & Messages) -->
+            <div class="flex items-center space-x-5">
+                <button onclick="openClientProfileModal()" class="flex items-center space-x-1 text-gray-700 hover:text-alibaba-orange transition bg-gray-50 border px-3 py-1.5 rounded-full shadow-xs">
+                    <div class="w-6 h-6 rounded-full bg-alibaba-orange text-white flex items-center justify-center font-bold text-xs" id="clientAvatarInitial">BR</div>
+                    <span class="text-xs font-bold hidden sm:inline" id="clientProfileNameNav">Busimba</span>
+                </button>
+
                 <button onclick="openClientTrackingModal()" class="relative flex items-center space-x-1 text-gray-700 hover:text-alibaba-orange transition">
                     <i class="fa-solid fa-box-open text-xl"></i>
-                    <span class="hidden md:inline text-sm font-medium">Mes Colis</span>
-                    <span id="clientOrdersBadge" class="absolute -top-2 -right-2 bg-blue-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">0</span>
+                    <span class="hidden md:inline text-xs font-medium">Suivi</span>
+                    <span id="clientOrdersBadge" class="absolute -top-2 -right-2 bg-blue-600 text-white text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center">0</span>
                 </button>
+
                 <button onclick="openCartModal()" class="relative flex items-center space-x-1 text-gray-700 hover:text-alibaba-orange transition">
                     <i class="fa-solid fa-cart-shopping text-xl"></i>
-                    <span class="hidden md:inline text-sm font-medium">Panier</span>
-                    <span id="cartBadge" class="absolute -top-2 -right-2 bg-alibaba-orange text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">0</span>
+                    <span class="hidden md:inline text-xs font-medium">Panier</span>
+                    <span id="cartBadge" class="absolute -top-2 -right-2 bg-alibaba-orange text-white text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center">0</span>
                 </button>
+
                 <button onclick="openChatDrawer()" class="relative flex items-center space-x-1 text-gray-700 hover:text-alibaba-orange transition">
                     <i class="fa-solid fa-comments text-xl"></i>
-                    <span class="hidden md:inline text-sm font-medium">Messages</span>
+                    <span class="hidden md:inline text-xs font-medium">Chat</span>
                 </button>
             </div>
         </div>
     </header>
 
-    <!-- Navigation secondaire : Catégories -->
+    <!-- Navigation secondaire : Liens rapides -->
     <nav class="bg-white border-b shadow-xs">
         <div class="max-w-7xl mx-auto px-4 flex items-center justify-between overflow-x-auto py-2 text-sm">
             <div class="flex items-center space-x-6 whitespace-nowrap">
-                <div class="bg-alibaba-orange text-white px-4 py-1.5 font-bold rounded flex items-center space-x-2">
+                <div class="bg-alibaba-orange text-white px-4 py-1.5 font-bold rounded flex items-center space-x-2 text-xs">
                     <i class="fa-solid fa-bars"></i>
-                    <span>Toutes les catégories</span>
+                    <span>Marché Global</span>
                 </div>
-                <a href="#" onclick="filterCategory('all')" class="hover:text-alibaba-orange font-medium transition">Accueil Marché</a>
-                <a href="#" onclick="filterCategory('B2B')" class="hover:text-alibaba-orange font-medium transition text-alibaba-orange font-bold"><i class="fa-solid fa-shield-halved mr-1"></i> Offres B2B & RFQ</a>
-                <a href="#" onclick="filterCategory('Materiaux')" class="hover:text-alibaba-orange font-medium transition">Matériaux & Construction</a>
-                <a href="#" onclick="filterCategory('Tech')" class="hover:text-alibaba-orange font-medium transition">Électronique & Tech</a>
-                <a href="#" onclick="filterCategory('Agriculture')" class="hover:text-alibaba-orange font-medium transition">Agroalimentaire & Élevage</a>
+                <a href="#" onclick="filterCategory('all')" class="hover:text-alibaba-orange font-medium transition text-xs">Accueil</a>
+                <a href="#" onclick="filterCategory('B2B')" class="hover:text-alibaba-orange font-medium transition text-alibaba-orange font-bold text-xs"><i class="fa-solid fa-shield-halved mr-1"></i> Offres Gros B2B</a>
             </div>
         </div>
     </nav>
@@ -113,48 +111,67 @@
     <!-- Corps Principal -->
     <main class="max-w-7xl mx-auto px-4 py-6 grid grid-cols-1 lg:grid-cols-4 gap-6">
         
-        <!-- Colonne de gauche : Annuaire des Fournisseurs (Mélange Vérifiés et Non Vérifiés + Filtre) -->
+        <!-- Colonne de gauche : Catégories avec Symboles / Icônes -->
         <aside class="hidden lg:block lg:col-span-1 space-y-4">
             <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-                <div class="flex justify-between items-center border-b pb-2 mb-3">
-                    <h3 class="font-bold text-gray-900 text-sm">Répertoire Fournisseurs</h3>
-                    <button onclick="toggleVerifiedFilter()" id="filterToggleBtn" class="text-[10px] bg-gray-100 hover:bg-orange-100 text-gray-700 px-2 py-1 rounded font-semibold transition">Tous / Vérifiés</button>
+                <h3 class="font-bold text-gray-900 text-xs uppercase tracking-wider border-b pb-2 mb-3">Catégories & Symboles</h3>
+                <div class="space-y-1.5 text-xs">
+                    <button onclick="filterCategory('all')" class="w-full flex items-center justify-between p-2 rounded hover:bg-orange-50 hover:text-alibaba-orange transition text-left font-medium">
+                        <span class="flex items-center"><i class="fa-solid fa-border-all w-6 text-alibaba-orange"></i> Tous les articles</span>
+                        <i class="fa-solid fa-chevron-right text-[10px] text-gray-400"></i>
+                    </button>
+                    <button onclick="filterCategory('Materiaux')" class="w-full flex items-center justify-between p-2 rounded hover:bg-orange-50 hover:text-alibaba-orange transition text-left font-medium">
+                        <span class="flex items-center"><i class="fa-solid fa-hammer w-6 text-alibaba-orange"></i> Matériaux & BTP</span>
+                        <i class="fa-solid fa-chevron-right text-[10px] text-gray-400"></i>
+                    </button>
+                    <button onclick="filterCategory('Tech')" class="w-full flex items-center justify-between p-2 rounded hover:bg-orange-50 hover:text-alibaba-orange transition text-left font-medium">
+                        <span class="flex items-center"><i class="fa-solid fa-laptop-code w-6 text-alibaba-orange"></i> Tech & Informatique</span>
+                        <i class="fa-solid fa-chevron-right text-[10px] text-gray-400"></i>
+                    </button>
+                    <button onclick="filterCategory('Agriculture')" class="w-full flex items-center justify-between p-2 rounded hover:bg-orange-50 hover:text-alibaba-orange transition text-left font-medium">
+                        <span class="flex items-center"><i class="fa-solid fa-seedling w-6 text-alibaba-orange"></i> Agro & Élevage</span>
+                        <i class="fa-solid fa-chevron-right text-[10px] text-gray-400"></i>
+                    </button>
+                    <button onclick="filterCategory('Autre')" class="w-full flex items-center justify-between p-2 rounded hover:bg-orange-50 hover:text-alibaba-orange transition text-left font-medium">
+                        <span class="flex items-center"><i class="fa-solid fa-box w-6 text-alibaba-orange"></i> Divers & Autres</span>
+                        <i class="fa-solid fa-chevron-right text-[10px] text-gray-400"></i>
+                    </button>
                 </div>
-                <!-- Liste mixte injectée dynamiquement -->
-                <div id="suppliersDirectory" class="space-y-3"></div>
+            </div>
+
+            <!-- Espace Publication Ultra-Rapide pour les Clients (1 clic) -->
+            <div class="bg-gradient-to-br from-gray-900 to-gray-800 text-white p-4 rounded-lg shadow-sm space-y-3">
+                <h4 class="font-bold text-xs flex items-center"><i class="fa-solid fa-bolt text-alibaba-orange mr-2"></i> Vendre un article</h4>
+                <p class="text-[11px] text-gray-300">Publiez en 10 secondes et gagnez de l'argent facilement.</p>
+                <button onclick="openUserPublishModal()" class="w-full bg-alibaba-orange hover:bg-alibaba-darkOrange text-white font-bold py-2.5 rounded text-xs transition shadow flex items-center justify-center space-x-1">
+                    <i class="fa-solid fa-circle-plus"></i>
+                    <span>Publier maintenant</span>
+                </button>
             </div>
         </aside>
 
-        <!-- Colonne Centrale : Bannière Animée B2B & Catalogue Général -->
+        <!-- Colonne Centrale : Bannière & Catalogue -->
         <section class="col-span-1 lg:col-span-3 space-y-6">
             
-            <!-- Bannière Animée B2B / Foire Commerciale (Support Vidéo & Visuels) -->
-            <div id="animatedBanner" class="relative bg-gradient-to-r from-orange-600 to-alibaba-orange text-white p-6 rounded-lg shadow-md overflow-hidden transition-all duration-500">
+            <!-- Bannière Animée B2B -->
+            <div class="bg-gradient-to-r from-orange-600 to-alibaba-orange text-white p-6 rounded-lg shadow-md relative overflow-hidden">
                 <div class="absolute right-4 bottom-2 opacity-15 text-8xl"><i class="fa-solid fa-store"></i></div>
                 <div class="relative z-10">
-                    <span id="bannerTag" class="bg-white text-alibaba-orange text-xs font-black uppercase px-2.5 py-1 rounded-full">Foire Commerciale B2B Live</span>
-                    <h2 id="bannerTitle" class="text-2xl font-black mt-2">Équipez vos projets industriels au meilleur tarif direct usine</h2>
-                    <p id="bannerDesc" class="text-xs text-orange-100 mt-1">Sélectionnez vos fabricants, négociez vos devis et suivez vos livraisons en temps réel.</p>
-                </div>
-                <div class="mt-4 flex items-center space-x-3">
-                    <button onclick="openRfqModal()" class="bg-white text-alibaba-orange font-bold text-sm px-5 py-2.5 rounded shadow hover:bg-gray-100 transition">
-                        <i class="fa-solid fa-file-invoice-dollar mr-2"></i> Soumettre une RFQ (Devis)
-                    </button>
-                    <button onclick="rotateBannerContent()" class="bg-black/30 hover:bg-black/50 text-white text-xs px-3 py-2.5 rounded transition">
-                        <i class="fa-solid fa-rotate"></i> Suivant
-                    </button>
+                    <span class="bg-white text-alibaba-orange text-[10px] font-black uppercase px-2.5 py-1 rounded-full">Espace Public Direct</span>
+                    <h2 class="text-xl md:text-2xl font-black mt-2">Achetez et vendez facilement entre membres</h2>
+                    <p class="text-xs text-orange-100 mt-1">Plateforme ouverte à tous les entrepreneurs, créateurs et particuliers.</p>
                 </div>
             </div>
 
-            <!-- Filtres & En-tête de catalogue -->
+            <!-- En-tête catalogue -->
             <div class="flex justify-between items-center bg-white p-4 rounded-lg shadow-sm border border-gray-200">
                 <div>
-                    <h3 id="catalogTitle" class="font-bold text-gray-900">Catalogue Global & Ventes en Direct</h3>
-                    <p class="text-xs text-gray-500">Tous les produits disponibles sur la marketplace</p>
+                    <h3 class="font-bold text-gray-900 text-sm">Articles Disponibles sur le Marché</h3>
+                    <p class="text-[11px] text-gray-500">Commandes directes ou négociation en gros</p>
                 </div>
                 <div class="flex items-center space-x-2 text-xs">
                     <span class="text-gray-500">Trier :</span>
-                    <select id="sortSelect" onchange="sortProducts()" class="border rounded px-2 py-1 bg-white focus:outline-none">
+                    <select id="sortSelect" onchange="sortProducts()" class="border rounded px-2 py-1 bg-white focus:outline-none text-xs">
                         <option value="popular">Popularité</option>
                         <option value="priceAsc">Prix croissant</option>
                         <option value="priceDesc">Prix décroissant</option>
@@ -167,131 +184,170 @@
         </section>
     </main>
 
-    <!-- Modal Espace Client : Suivi de Colis Personnel -->
+    <!-- Modal : Publication Ultra-Simplifiée (Accessible à tous, même aux jeunes) -->
+    <div id="userPublishModal" class="fixed inset-0 bg-black/60 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg max-w-sm w-full p-6 shadow-2xl relative space-y-4">
+            <button onclick="closeUserPublishModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-lg"><i class="fa-solid fa-xmark"></i></button>
+            <div class="text-center">
+                <div class="w-12 h-12 bg-orange-100 text-alibaba-orange rounded-full flex items-center justify-center mx-auto text-xl font-bold mb-2"><i class="fa-solid fa-bolt"></i></div>
+                <h3 class="text-base font-bold text-gray-900">Publication Express</h3>
+                <p class="text-xs text-gray-500">Mettez votre article en vente en 1 clic !</p>
+            </div>
+            
+            <div class="space-y-3 text-xs">
+                <div>
+                    <label class="font-bold text-gray-700 block mb-1">Nom de l'article *</label>
+                    <input type="text" id="pubName" placeholder="Ex: Mes pavés, mon produit..." class="w-full border rounded px-3 py-2 focus:outline-none focus:border-alibaba-orange">
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="font-bold text-gray-700 block mb-1">Prix ($) *</label>
+                        <input type="number" id="pubPrice" placeholder="10" class="w-full border rounded px-3 py-2 focus:outline-none focus:border-alibaba-orange">
+                    </div>
+                    <div>
+                        <label class="font-bold text-gray-700 block mb-1">Catégorie</label>
+                        <select id="pubCategory" class="w-full border rounded px-3 py-2 bg-white focus:outline-none focus:border-alibaba-orange text-xs">
+                            <option value="Materiaux">Matériaux</option>
+                            <option value="Tech">Tech</option>
+                            <option value="Agriculture">Agriculture</option>
+                            <option value="Autre">Divers</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="font-bold text-gray-700 block mb-1">Lien de l'image (Optionnel)</label>
+                    <input type="text" id="pubImage" placeholder="https://..." class="w-full border rounded px-3 py-2 focus:outline-none focus:border-alibaba-orange">
+                </div>
+            </div>
+
+            <button onclick="submitUserProduct()" class="w-full bg-alibaba-orange hover:bg-alibaba-darkOrange text-white font-bold py-3 rounded text-xs transition shadow">
+                Publier et gagner de l'argent ! 🚀
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal : Profil Client & Paramètres -->
+    <div id="clientProfileModal" class="fixed inset-0 bg-black/60 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg max-w-md w-full p-6 shadow-2xl relative space-y-4">
+            <button onclick="closeClientProfileModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-lg"><i class="fa-solid fa-xmark"></i></button>
+            <div class="flex items-center space-x-3 border-b pb-3">
+                <div class="w-12 h-12 rounded-full bg-alibaba-orange text-white flex items-center justify-center font-bold text-lg" id="profileModalAvatar">BR</div>
+                <div>
+                    <h3 class="font-bold text-gray-900 text-base" id="profileModalNameDisplay">Busimba Roland</h3>
+                    <span class="text-xs text-green-600 font-semibold"><i class="fa-solid fa-check-circle"></i> Compte Client Actif</span>
+                </div>
+            </div>
+            <div class="space-y-3 text-xs">
+                <div>
+                    <label class="font-bold text-gray-700 block mb-1">Votre Nom</label>
+                    <input type="text" id="editProfileName" class="w-full border rounded px-3 py-2 focus:outline-none focus:border-alibaba-orange">
+                </div>
+                <div>
+                    <label class="font-bold text-gray-700 block mb-1">Adresse de livraison</label>
+                    <input type="text" id="editProfileAddress" value="Goma / RDC" class="w-full border rounded px-3 py-2 focus:outline-none focus:border-alibaba-orange">
+                </div>
+            </div>
+            <button onclick="saveClientProfile()" class="w-full bg-alibaba-orange hover:bg-alibaba-darkOrange text-white font-bold py-2.5 rounded text-xs transition shadow">
+                Enregistrer
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal Espace Suivi de Colis -->
     <div id="clientTrackingModal" class="fixed inset-0 bg-black/60 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-lg max-w-lg w-full p-6 shadow-2xl relative">
             <button onclick="closeClientTrackingModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-lg"><i class="fa-solid fa-xmark"></i></button>
-            <h3 class="text-lg font-bold text-gray-900 mb-2"><i class="fa-solid fa-box-open text-alibaba-orange mr-2"></i> Espace de Suivi de Vos Colis</h3>
-            <p class="text-xs text-gray-500 mb-4">Retrouvez l'historique et l'état d'acheminement de vos commandes en temps réel.</p>
+            <h3 class="text-lg font-bold text-gray-900 mb-2"><i class="fa-solid fa-box-open text-alibaba-orange mr-2"></i> Suivi de Vos Colis</h3>
             <div id="clientOrdersList" class="space-y-3 max-h-64 overflow-y-auto pr-1"></div>
         </div>
     </div>
 
-    <!-- Panier & Validation de Commande -->
+    <!-- Panier -->
     <div id="cartModal" class="fixed inset-0 bg-black/60 hidden z-50 flex justify-end">
         <div class="bg-white w-full max-w-md h-full shadow-2xl flex flex-col justify-between p-6 overflow-y-auto">
             <div>
                 <div class="flex justify-between items-center border-b pb-4 mb-4">
-                    <h3 class="text-lg font-bold text-gray-900"><i class="fa-solid fa-cart-shopping text-alibaba-orange mr-2"></i> Votre Panier</h3>
+                    <h3 class="text-lg font-bold text-gray-900"><i class="fa-solid fa-cart-shopping text-alibaba-orange mr-2"></i> Panier</h3>
                     <button onclick="closeCartModal()" class="text-gray-400 hover:text-gray-600 text-lg"><i class="fa-solid fa-xmark"></i></button>
                 </div>
                 <div id="cartItemsList" class="space-y-4"></div>
             </div>
             <div class="border-t pt-4 mt-4 space-y-3">
-                <div class="flex justify-between text-sm">
-                    <span class="text-gray-600">Sous-total :</span>
-                    <span id="cartSubtotal" class="font-bold">0.00</span>
-                </div>
-                <div class="flex justify-between text-sm">
-                    <span class="text-gray-600">Frais logistiques :</span>
-                    <span id="cartShipping" class="font-bold">15.00</span>
-                </div>
-                <div class="flex justify-between text-base font-black border-t pt-2">
-                    <span>Total Général :</span>
+                <div class="flex justify-between text-base font-black">
+                    <span>Total :</span>
                     <span id="cartTotal" class="text-alibaba-orange">0.00</span>
                 </div>
-                <button onclick="checkoutOrder()" class="w-full bg-alibaba-orange hover:bg-alibaba-darkOrange text-white font-bold py-3 rounded text-sm transition shadow">
-                    Valider et Commander (Paiement Sécurisé)
+                <button onclick="checkoutOrder()" class="w-full bg-alibaba-orange hover:bg-alibaba-darkOrange text-white font-bold py-3 rounded text-xs transition shadow">
+                    Valider la commande
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Dashboard Administrateur Sécurisé (Accessible par code 9293RB) -->
-    <div id="adminDashboard" class="hidden fixed inset-0 bg-gray-100 z-50 overflow-y-auto p-6">
-        <div class="max-w-7xl mx-auto space-y-6">
-            <div class="bg-white p-4 rounded-lg shadow-sm flex justify-between items-center">
-                <div>
-                    <h2 class="text-xl font-black text-gray-900"><i class="fa-solid fa-gauge-high text-alibaba-orange mr-2"></i> Espace Administrateur Pro</h2>
-                    <p class="text-xs text-gray-500">Gestion complète de la plateforme, publication de produits et contrôle logistique des livreurs.</p>
-                </div>
-                <button onclick="closeAdminDashboard()" class="bg-gray-800 text-white px-4 py-2 text-xs font-bold rounded hover:bg-gray-700 transition">Fermer Dashboard</button>
+    <!-- Admin Masqué (Code secret: 9293RB) -->
+    <div id="adminDashboard" class="hidden fixed inset-0 bg-gray-900/95 text-white z-50 overflow-y-auto p-6">
+        <div class="max-w-6xl mx-auto space-y-6">
+            <div class="bg-gray-800 p-4 rounded-lg shadow flex justify-between items-center border border-gray-700">
+                <h2 class="text-xl font-black text-alibaba-orange"><i class="fa-solid fa-shield-cat mr-2"></i> Admin</h2>
+                <button onclick="closeAdminDashboard()" class="bg-red-600 text-white px-4 py-2 text-xs font-bold rounded">Fermer</button>
             </div>
-
-            <!-- Publication de Produits -->
-            <div class="bg-white p-6 rounded-lg shadow-sm space-y-4">
-                <h3 class="font-bold text-gray-900 border-b pb-2">Publier un Produit sur la Marketplace</h3>
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    <input type="text" id="newProdName" placeholder="Nom du produit" class="border rounded px-3 py-2 text-sm focus:outline-none">
-                    <input type="number" id="newProdPrice" placeholder="Prix (USD)" class="border rounded px-3 py-2 text-sm focus:outline-none">
-                    <input type="text" id="newProdSupplier" placeholder="Nom du Fournisseur" class="border rounded px-3 py-2 text-sm focus:outline-none">
-                    <select id="newProdCategory" class="border rounded px-3 py-2 text-sm focus:outline-none bg-white">
-                        <option value="Materiaux">Matériaux & Construction</option>
-                        <option value="Tech">Électronique & Tech</option>
-                        <option value="Agriculture">Agroalimentaire & Élevage</option>
-                    </select>
-                </div>
-                <input type="text" id="newProdImage" placeholder="URL de l'image (ex: https://...)" class="w-full border rounded px-3 py-2 text-sm focus:outline-none">
-                <button onclick="adminAddProduct()" class="bg-alibaba-orange hover:bg-alibaba-darkOrange text-white font-bold px-6 py-2 rounded text-sm transition">Publier le produit</button>
-            </div>
-
-            <!-- Gestion des Commandes / Livreurs -->
-            <div class="bg-white p-6 rounded-lg shadow-sm space-y-4">
-                <h3 class="font-bold text-gray-900 border-b pb-2">Suivi et Contrôle Logistique (Livreurs & Commandes)</h3>
-                <div id="adminOrdersList" class="space-y-3"></div>
-            </div>
+            <div id="adminOrdersList" class="space-y-3 text-xs"></div>
         </div>
     </div>
 
-    <!-- Module de Discussion Instantanée (Chat) -->
+    <!-- Chat -->
     <div id="chatDrawer" class="fixed inset-0 bg-black/40 hidden z-50 flex justify-end">
         <div class="bg-white w-full max-w-sm h-full shadow-2xl flex flex-col justify-between">
             <div class="bg-gray-900 text-white p-4 flex justify-between items-center">
-                <h3 class="font-bold text-sm flex items-center"><i class="fa-solid fa-comments text-alibaba-orange mr-2"></i> Messagerie Fournisseur</h3>
+                <h3 class="font-bold text-xs"><i class="fa-solid fa-comments text-alibaba-orange mr-2"></i> Messagerie</h3>
                 <button onclick="closeChatDrawer()" class="text-gray-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div id="chatMessages" class="flex-1 p-4 overflow-y-auto space-y-3 text-xs">
-                <div class="bg-gray-100 p-2.5 rounded-lg max-w-[80%]">
-                    <span class="font-bold text-gray-800 block">EcoPave Industries:</span>
-                    Bonjour ! Comment pouvons-nous vous accompagner sur vos commandes en gros ?
-                </div>
+                <div class="bg-gray-100 p-2.5 rounded-lg max-w-[80%] text-gray-800">Bonjour ! Comment puis-je vous aider ?</div>
             </div>
             <div class="p-3 border-t bg-white flex space-x-2">
-                <input type="text" id="chatInput" placeholder="Écrire un message..." class="flex-1 border rounded px-3 py-2 text-xs focus:outline-none">
+                <input type="text" id="chatInput" placeholder="Message..." class="flex-1 border rounded px-3 py-2 text-xs focus:outline-none">
                 <button onclick="sendChatMessage()" class="bg-alibaba-orange text-white px-4 py-2 rounded text-xs font-bold">Envoyer</button>
             </div>
         </div>
     </div>
 
-    <!-- Script JavaScript -->
+    <!-- JavaScript -->
     <script>
         let currentCurrency = 'USD';
         let exchangeRates = { USD: 1, EUR: 0.92, CDF: 2850 };
         let currencySymbols = { USD: '$', EUR: '€', CDF: 'FC' };
 
+        let userProfile = JSON.parse(localStorage.getItem('global_user_profile')) || {
+            name: "Busimba Roland",
+            address: "Goma / RDC"
+        };
+
         let productsData = JSON.parse(localStorage.getItem('global_products')) || [
-            { id: 1, name: "Pavés Écologiques en Plastique Recyclé (Pack 1000 pcs)", price: 1200, supplier: "EcoPave Industries", category: "Materiaux", image: "https://images.unsplash.com/photo-1581094288338-2314dddb7ece?w=300&h=300&fit=crop", rating: 4.8 },
-            { id: 2, name: "Incubateur Automatique pour Œufs 500 pcs", price: 450, supplier: "AgroTech Global", category: "Agriculture", image: "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=300&h=300&fit=crop", rating: 4.9 },
-            { id: 3, name: "ThinkPad X1 Carbon Developer Edition - Core i7", price: 850, supplier: "TechDirect Ltd", category: "Tech", image: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=300&h=300&fit=crop", rating: 4.7 },
-            { id: 4, name: "Kit de Culture de Champignons (Substrat enrichi)", price: 75, supplier: "AgroTech Local", category: "Agriculture", image: "https://images.unsplash.com/photo-1535591273668-578e31182c4f?w=300&h=300&fit=crop", rating: 4.2 }
+            { id: 1, name: "Pavés Écologiques en Plastique Recyclé", price: 1200, supplier: "EcoPave", category: "Materiaux", image: "https://images.unsplash.com/photo-1581094288338-2314dddb7ece?w=300&h=300&fit=crop", rating: 4.8 },
+            { id: 2, name: "Incubateur Automatique 500 œufs", price: 450, supplier: "AgroTech", category: "Agriculture", image: "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=300&h=300&fit=crop", rating: 4.9 },
+            { id: 3, name: "ThinkPad X1 Carbon Developer Edition", price: 850, supplier: "TechDirect", category: "Tech", image: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=300&h=300&fit=crop", rating: 4.7 }
         ];
 
-        // Liste mixte des fournisseurs (Vérifiés et Non Vérifiés)
-        let suppliersList = [
-            { name: "EcoPave Industries", verified: true, badge: "Vérifié B2B", image: "https://images.unsplash.com/photo-1581094288338-2314dddb7ece?w=100&h=100&fit=crop" },
-            { name: "AgroTech Global", verified: true, badge: "Fournisseur Or", image: "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=100&h=100&fit=crop" },
-            { name: "TechDirect Ltd", verified: true, badge: "Évaluation 4.9", image: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=100&h=100&fit=crop" },
-            { name: "AgroTech Local", verified: false, badge: "Nouveau Vendeur", image: "https://images.unsplash.com/photo-1535591273668-578e31182c4f?w=100&h=100&fit=crop" },
-            { name: "BTP Express SARL", verified: false, badge: "Standard", image: "https://images.unsplash.com/photo-1541888946425-d0fbb18f86f3?w=100&h=100&fit=crop" }
-        ];
-
-        let showOnlyVerified = false;
         let cart = JSON.parse(localStorage.getItem('global_cart')) || [];
-        let clientOrders = JSON.parse(localStorage.getItem('global_client_orders')) || [
-            { id: 'COLIS-9821', item: 'Pavés Écologiques x1000', status: 'En cours de livraison par le livreur moto' }
-        ];
+        let clientOrders = JSON.parse(localStorage.getItem('global_client_orders')) || [];
 
-        // --- GESTION DES DEVISES ---
+        window.onload = function() {
+            updateProfileUI();
+            renderProducts();
+            updateBadges();
+        };
+
+        function updateProfileUI() {
+            document.getElementById('clientProfileNameNav').innerText = userProfile.name.split(' ')[0];
+            let initials = userProfile.name.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase();
+            document.getElementById('clientAvatarInitial').innerText = initials;
+            document.getElementById('profileModalAvatar').innerText = initials;
+            document.getElementById('profileModalNameDisplay').innerText = userProfile.name;
+            document.getElementById('editProfileName').value = userProfile.name;
+            document.getElementById('editProfileAddress').value = userProfile.address;
+        }
+
         function changeCurrency() {
             currentCurrency = document.getElementById('currencySelector').value;
             renderProducts();
@@ -303,31 +359,30 @@
             return `${converted.toFixed(2)} ${currencySymbols[currentCurrency]}`;
         }
 
-        // --- AFFICHAGE PRODUITS & FOURNISSEURS ---
         function renderProducts(filteredList = productsData) {
             const grid = document.getElementById('productsGrid');
             grid.innerHTML = '';
-            
+            if(filteredList.length === 0) {
+                grid.innerHTML = `<div class="col-span-full py-10 text-center text-gray-500 text-xs">Aucun article trouvé.</div>`;
+                return;
+            }
             filteredList.forEach(prod => {
                 grid.innerHTML += `
                     <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition flex flex-col justify-between">
                         <div>
                             <div class="relative h-48 overflow-hidden bg-gray-100">
-                                <img src="${prod.image}" alt="${prod.name}" class="w-full h-full object-cover">
+                                <img src="${prod.image || 'https://images.unsplash.com/photo-1581094288338-2314dddb7ece?w=300&h=300&fit=crop'}" alt="${prod.name}" class="w-full h-full object-cover">
                                 <span class="absolute top-2 left-2 bg-black/60 text-white text-[10px] px-2 py-0.5 rounded">${prod.category}</span>
                             </div>
                             <div class="p-4">
-                                <span class="text-xs text-alibaba-orange font-bold"><i class="fa-solid fa-shield-halved"></i> ${prod.supplier}</span>
-                                <h4 class="font-bold text-sm text-gray-800 mt-1 line-clamp-2">${prod.name}</h4>
-                                <div class="mt-2 flex items-center text-xs text-yellow-500">
-                                    <i class="fa-solid fa-star"></i> <span class="ml-1 font-bold text-gray-700">${prod.rating}</span>
-                                </div>
+                                <span class="text-[11px] text-alibaba-orange font-bold">${prod.supplier}</span>
+                                <h4 class="font-bold text-xs text-gray-800 mt-1 line-clamp-2">${prod.name}</h4>
                             </div>
                         </div>
                         <div class="p-4 border-t bg-gray-50 flex items-center justify-between">
-                            <span class="text-lg font-black text-alibaba-orange">${formatPrice(prod.price)}</span>
+                            <span class="text-base font-black text-alibaba-orange">${formatPrice(prod.price)}</span>
                             <button onclick="addToCart(${prod.id})" class="bg-alibaba-orange hover:bg-alibaba-darkOrange text-white text-xs font-bold px-3 py-2 rounded transition shadow-sm">
-                                <i class="fa-solid fa-cart-plus mr-1"></i> Ajouter
+                                <i class="fa-solid fa-cart-plus mr-1"></i> Acheter
                             </button>
                         </div>
                     </div>
@@ -335,60 +390,51 @@
             });
         }
 
-        function renderSuppliersDirectory() {
-            const container = document.getElementById('suppliersDirectory');
-            container.innerHTML = '';
+        function openUserPublishModal() { document.getElementById('userPublishModal').classList.remove('hidden'); }
+        function closeUserPublishModal() { document.getElementById('userPublishModal').classList.add('hidden'); }
 
-            let list = showOnlyVerified ? suppliersList.filter(s => s.verified) : suppliersList;
+        function submitUserProduct() {
+            const name = document.getElementById('pubName').value;
+            const price = parseFloat(document.getElementById('pubPrice').value);
+            const category = document.getElementById('pubCategory').value;
+            const image = document.getElementById('pubImage').value;
 
-            list.forEach(sup => {
-                let badgeColor = sup.verified ? 'text-green-600' : 'text-gray-500';
-                let icon = sup.verified ? 'fa-check-circle' : 'fa-clock';
-                container.innerHTML += `
-                    <div onclick="filterSupplier('${sup.name}')" class="flex items-center justify-between p-2 rounded hover:bg-orange-50 cursor-pointer transition group">
-                        <div class="flex items-center space-x-3">
-                            <img src="${sup.image}" alt="${sup.name}" class="w-10 h-10 rounded object-cover border">
-                            <div>
-                                <h4 class="text-xs font-bold text-gray-800 group-hover:text-alibaba-orange">${sup.name}</h4>
-                                <span class="text-[10px] ${badgeColor} font-semibold"><i class="fa-solid ${icon}"></i> ${sup.badge}</span>
-                            </div>
-                        </div>
-                        <i class="fa-solid fa-chevron-right text-xs text-gray-400 group-hover:text-alibaba-orange transition"></i>
-                    </div>
-                `;
-            });
+            if(!name || isNaN(price) || price <= 0) {
+                alert("Veuillez entrer un nom et un prix valide.");
+                return;
+            }
+
+            let newProd = { id: Date.now(), name, price, supplier: userProfile.name, category, image, rating: 5.0 };
+            productsData.unshift(newProd);
+            localStorage.setItem('global_products', JSON.stringify(productsData));
+            
+            renderProducts();
+            closeUserPublishModal();
+            alert("Article publié avec succès ! Il est visible immédiatement.");
+            document.getElementById('pubName').value = '';
+            document.getElementById('pubPrice').value = '';
+            document.getElementById('pubImage').value = '';
         }
 
-        function toggleVerifiedFilter() {
-            showOnlyVerified = !showOnlyVerified;
-            document.getElementById('filterToggleBtn').innerText = showOnlyVerified ? 'Afficher Tous' : 'Filtrer Vérifiés';
-            renderSuppliersDirectory();
+        function openClientProfileModal() { document.getElementById('clientProfileModal').classList.remove('hidden'); }
+        function closeClientProfileModal() { document.getElementById('clientProfileModal').classList.add('hidden'); }
+
+        function saveClientProfile() {
+            userProfile.name = document.getElementById('editProfileName').value;
+            userProfile.address = document.getElementById('editProfileAddress').value;
+            localStorage.setItem('global_user_profile', JSON.stringify(userProfile));
+            updateProfileUI();
+            closeClientProfileModal();
+            alert("Profil mis à jour !");
         }
 
-        // --- BANNIÈRE ANIMÉE B2B ---
-        let bannerIndex = 0;
-        const bannerContent = [
-            { tag: "Foire Commerciale B2B Live", title: "Équipez vos projets industriels au meilleur tarif direct usine", desc: "Sélectionnez vos fabricants, négociez vos devis et suivez vos livraisons en temps réel." },
-            { tag: "Nouveau : Éco-Construction", title: "Matériaux durables et pavés écologiques certifiés", desc: "Réduisez l'empreinte carbone de vos chantiers avec nos fournisseurs partenaires vérifiés." },
-            { tag: "Logistique Intégrée", title: "Expédition rapide et sécurisée par nos livreurs moto agréés", desc: "Suivi en direct de chaque colis directement depuis votre espace client personnel." }
-        ];
-
-        function rotateBannerContent() {
-            bannerIndex = (bannerIndex + 1) % bannerContent.length;
-            let item = bannerContent[bannerIndex];
-            document.getElementById('bannerTag').innerText = item.tag;
-            document.getElementById('bannerTitle').innerText = item.title;
-            document.getElementById('bannerDesc').innerText = item.desc;
-        }
-
-        // --- PANIER & ESPACE CLIENT ---
         function addToCart(id) {
             const prod = productsData.find(p => p.id === id);
             if(prod) {
                 cart.push(prod);
                 localStorage.setItem('global_cart', JSON.stringify(cart));
                 updateBadges();
-                alert(`Produit ajouté au panier !`);
+                alert(`Ajouté au panier !`);
             }
         }
 
@@ -397,39 +443,26 @@
             document.getElementById('clientOrdersBadge').innerText = clientOrders.length;
         }
 
-        function openCartModal() {
-            document.getElementById('cartModal').classList.remove('hidden');
-            renderCart();
-        }
-
+        function openCartModal() { document.getElementById('cartModal').classList.remove('hidden'); renderCart(); }
         function closeCartModal() { document.getElementById('cartModal').classList.add('hidden'); }
 
         function renderCart() {
             const list = document.getElementById('cartItemsList');
             list.innerHTML = '';
             let subtotal = 0;
-
-            if(cart.length === 0) {
-                list.innerHTML = `<p class="text-xs text-gray-500 text-center py-6">Votre panier est vide.</p>`;
-            } else {
-                cart.forEach((item, index) => {
-                    subtotal += item.price;
-                    list.innerHTML += `
-                        <div class="flex justify-between items-center border-b pb-2 text-xs">
-                            <div>
-                                <h5 class="font-bold text-gray-800">${item.name}</h5>
-                                <span class="text-alibaba-orange font-bold">${formatPrice(item.price)}</span>
-                            </div>
-                            <button onclick="removeFromCart(${index})" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
+            cart.forEach((item, index) => {
+                subtotal += item.price;
+                list.innerHTML += `
+                    <div class="flex justify-between items-center border-b pb-2 text-xs">
+                        <div>
+                            <h5 class="font-bold text-gray-800">${item.name}</h5>
+                            <span class="text-alibaba-orange font-bold">${formatPrice(item.price)}</span>
                         </div>
-                    `;
-                });
-            }
-
-            let shipping = cart.length > 0 ? 15 : 0;
-            document.getElementById('cartSubtotal').innerText = formatPrice(subtotal);
-            document.getElementById('cartShipping').innerText = formatPrice(shipping);
-            document.getElementById('cartTotal').innerText = formatPrice(subtotal + shipping);
+                        <button onclick="removeFromCart(${index})" class="text-red-500"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                `;
+            });
+            document.getElementById('cartTotal').innerText = formatPrice(subtotal);
         }
 
         function removeFromCart(index) {
@@ -440,113 +473,57 @@
         }
 
         function checkoutOrder() {
-            if(cart.length === 0) return alert('Votre panier est vide !');
-            let trackingCode = 'COLIS-' + Math.floor(1000 + Math.random() * 9000);
-            clientOrders.push({ id: trackingCode, item: cart.length + ' article(s)', status: 'Pris en charge - En route' });
+            if(cart.length === 0) return alert('Panier vide !');
+            let trackingCode = 'CMD-' + Math.floor(1000 + Math.random() * 9000);
+            clientOrders.push({ id: trackingCode, item: cart.length + ' article(s)', status: 'En cours de traitement' });
             localStorage.setItem('global_client_orders', JSON.stringify(clientOrders));
-            
-            alert(`Commande validée avec succès ! Votre code de suivi personnel est ${trackingCode}`);
+            alert(`Commande validée ! Suivi : ${trackingCode}`);
             cart = [];
             localStorage.removeItem('global_cart');
             updateBadges();
             closeCartModal();
         }
 
-        function openClientTrackingModal() {
-            document.getElementById('clientTrackingModal').classList.remove('hidden');
-            renderClientOrders();
-        }
+        function openClientTrackingModal() { document.getElementById('clientTrackingModal').classList.remove('hidden'); renderClientOrders(); }
         function closeClientTrackingModal() { document.getElementById('clientTrackingModal').classList.add('hidden'); }
 
         function renderClientOrders() {
             const list = document.getElementById('clientOrdersList');
             list.innerHTML = '';
             if(clientOrders.length === 0) {
-                list.innerHTML = `<p class="text-xs text-gray-500 text-center py-4">Aucun colis en cours de suivi.</p>`;
+                list.innerHTML = `<p class="text-xs text-gray-500 text-center py-4">Aucun colis.</p>`;
                 return;
             }
             clientOrders.forEach(order => {
                 list.innerHTML += `
                     <div class="bg-gray-50 p-3 rounded border text-xs">
                         <div class="flex justify-between font-bold text-gray-900">
-                            <span><i class="fa-solid fa-barcode text-alibaba-orange mr-1"></i> ${order.id}</span>
+                            <span>${order.id}</span>
                             <span class="text-green-600">${order.status}</span>
                         </div>
-                        <p class="text-gray-600 mt-1">Contenu : ${order.item}</p>
                     </div>
                 `;
             });
         }
 
-        // --- SÉCURITÉ ADMIN (Code 9293RB) ---
-        function promptAdminAccess() {
-            let code = prompt("Entrez le code d'accès administrateur :");
-            if(code === "9293RB") {
+        let typedCode = "";
+        function handleSecretKeys(e) {
+            typedCode += e.key;
+            if(typedCode.endsWith("9293RB")) {
                 document.getElementById('adminDashboard').classList.remove('hidden');
-                renderAdminOrders();
-            } else if(code !== null) {
-                alert("Code d'accès incorrect.");
+                typedCode = "";
             }
         }
-
         function closeAdminDashboard() { document.getElementById('adminDashboard').classList.add('hidden'); }
 
-        function adminAddProduct() {
-            const name = document.getElementById('newProdName').value;
-            const price = parseFloat(document.getElementById('newProdPrice').value);
-            const supplier = document.getElementById('newProdSupplier').value;
-            const category = document.getElementById('newProdCategory').value;
-            const image = document.getElementById('newProdImage').value || "https://images.unsplash.com/photo-1581094288338-2314dddb7ece?w=300&h=300&fit=crop";
-
-            if(!name || !price || !supplier) return alert('Veuillez remplir tous les champs obligatoires.');
-
-            productsData.push({ id: Date.now(), name, price, supplier, category, image, rating: 5.0 });
-            localStorage.setItem('global_products', JSON.stringify(productsData));
-            renderProducts();
-            alert('Produit publié avec succès !');
-            document.getElementById('newProdName').value = '';
-            document.getElementById('newProdPrice').value = '';
-            document.getElementById('newProdSupplier').value = '';
-        }
-
-        function renderAdminOrders() {
-            const list = document.getElementById('adminOrdersList');
-            list.innerHTML = '';
-            clientOrders.forEach((order, idx) => {
-                list.innerHTML += `
-                    <div class="bg-gray-50 p-3 rounded border flex justify-between items-center text-xs">
-                        <div>
-                            <b>${order.id}</b> - ${order.item} | Statut : <i>${order.status}</i>
-                        </div>
-                        <button onclick="advanceAdminOrder(${idx})" class="bg-blue-600 text-white px-3 py-1.5 rounded font-bold">Avancer étape</button>
-                    </div>
-                `;
-            });
-        }
-
-        function advanceAdminOrder(idx) {
-            if(clientOrders[idx].status.includes('Pris en charge')) {
-                clientOrders[idx].status = 'Livré avec succès';
-            } else {
-                clientOrders[idx].status = 'Pris en charge - En route';
-            }
-            localStorage.setItem('global_client_orders', JSON.stringify(clientOrders));
-            renderAdminOrders();
-        }
-
-        // --- FILTRES & RECHERCHE ---
         function filterCategory(cat) {
             if(cat === 'all') renderProducts(productsData);
             else renderProducts(productsData.filter(p => p.category === cat));
         }
 
-        function filterSupplier(supName) {
-            renderProducts(productsData.filter(p => p.supplier.toLowerCase().includes(supName.toLowerCase())));
-        }
-
         function searchProducts() {
             const query = document.getElementById('searchInput').value.toLowerCase();
-            renderProducts(productsData.filter(p => p.name.toLowerCase().includes(query) || p.supplier.toLowerCase().includes(query)));
+            renderProducts(productsData.filter(p => p.name.toLowerCase().includes(query)));
         }
 
         function sortProducts() {
@@ -557,26 +534,16 @@
             renderProducts(sorted);
         }
 
-        // --- CHAT INSTANTANÉ ---
         function openChatDrawer() { document.getElementById('chatDrawer').classList.remove('hidden'); }
         function closeChatDrawer() { document.getElementById('chatDrawer').classList.add('hidden'); }
         function sendChatMessage() {
             const input = document.getElementById('chatInput');
             if(!input.value) return;
             const chat = document.getElementById('chatMessages');
-            chat.innerHTML += `<div class="bg-orange-50 p-2.5 rounded-lg max-w-[80%] ml-auto text-right"><span class="font-bold text-alibaba-orange block">Vous:</span>${input.value}</div>`;
+            chat.innerHTML += `<div class="bg-orange-50 p-2.5 rounded-lg max-w-[80%] ml-auto text-right text-gray-800">${input.value}</div>`;
             input.value = '';
             chat.scrollTop = chat.scrollHeight;
         }
-
-        function openRfqModal() { alert('Module RFQ (Demande de devis) ouvert. Les fabricants partenaires vous répondront sous 24h.'); }
-
-        // Initialisation
-        window.onload = function() {
-            renderProducts();
-            renderSuppliersDirectory();
-            updateBadges();
-        };
     </script>
 </body>
 </html>
