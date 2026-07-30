@@ -3,216 +3,545 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Service de Livraison</title>
-    <!-- CSS & Framework Tailwind pour une interface fluide et ultra-lisible -->
+    <title id="page-title">CoolB2B - Social Marketplace & Network</title>
+    
+    <!-- Tailwind CSS & FontAwesome Icons -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Carte Temps Réel (Leaflet JS) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        darkbg: '#121212',
+                        darkcard: '#1E1E1E',
+                        darkborder: '#2A2A2A',
+                        brandorange: '#FF6A00',
+                        brandorangeHover: '#E05D00'
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        #map { height: 300px; width: 100%; border-radius: 0.75rem; }
+        .heart-active { color: #EF4444 !important; transform: scale(1.15); transition: transform 0.2s ease-in-out; }
     </style>
 </head>
-<body class="bg-gray-100 text-gray-800 pb-20">
+<body class="bg-darkbg text-white pb-20 font-sans">
 
-    <!-- En-tête / Barre de navigation -->
-    <header class="bg-indigo-700 text-white p-4 sticky top-0 z-50 shadow-md">
-        <div class="max-w-4xl mx-auto flex justify-between items-center">
-            <h1 class="text-xl font-bold flex items-center gap-2">
-                <i class="fas fa-truck-fast"></i> Express Livraison
-            </h1>
-            <div id="cart-button" onclick="showSection('checkout-section')" class="relative cursor-pointer bg-indigo-800 px-3 py-2 rounded-lg hover:bg-indigo-900 transition">
-                <i class="fas fa-shopping-cart text-lg"></i>
-                <span id="cart-count" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 py-0.5 rounded-full font-bold">0</span>
+    <!-- EN-TÊTE FIXE STYLE SOCIAL-COMMERCE -->
+    <header class="bg-darkcard border-b border-darkborder sticky top-0 z-50 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 py-2.5 flex justify-between items-center gap-3">
+            
+            <div class="flex items-center gap-3 flex-1">
+                <div class="flex items-center gap-2 cursor-pointer" onclick="showSection('feed-section')">
+                    <img id="app-logo" src="https://cdn-icons-png.flaticon.com/512/3081/3081559.png" alt="Logo" class="w-9 h-9 object-contain bg-white rounded-lg p-1">
+                    <span id="app-name-display" class="text-xl font-black text-brandorange tracking-tight uppercase hidden sm:inline">COOL B2B</span>
+                </div>
+                
+                <div class="relative w-full max-w-md">
+                    <input type="text" id="global-search-input" onkeyup="filterFeed()" placeholder="Rechercher marchandises, posts ou taper 9293..." class="w-full pl-9 pr-4 py-1.5 bg-darkbg text-white border border-darkborder rounded-full focus:outline-none focus:border-brandorange text-xs placeholder-gray-400">
+                    <i class="fas fa-search absolute left-3 top-2.5 text-gray-400 text-xs"></i>
+                </div>
+            </div>
+
+            <div class="hidden md:flex items-center gap-1 lg:gap-2">
+                <button onclick="showSection('feed-section')" class="px-4 py-2 text-brandorange hover:bg-darkbg rounded-xl font-bold text-sm flex items-center gap-2">
+                    <i class="fas fa-house text-lg"></i> Fil Marchandises
+                </button>
+                <button onclick="showSection('market-section')" class="px-4 py-2 text-gray-300 hover:text-brandorange hover:bg-darkbg rounded-xl font-bold text-sm flex items-center gap-2">
+                    <i class="fas fa-store text-lg"></i> Catalogue
+                </button>
+                <button onclick="showSection('live-tracking')" class="px-4 py-2 text-gray-300 hover:text-brandorange hover:bg-darkbg rounded-xl font-bold text-sm flex items-center gap-2">
+                    <i class="fas fa-location-dot text-lg"></i> GPS
+                </button>
+                <button id="admin-nav-btn" onclick="showSection('admin-space')" class="hidden px-4 py-2 text-red-500 hover:bg-darkbg rounded-xl font-bold text-sm flex items-center gap-2">
+                    <i class="fas fa-user-shield text-lg"></i> Admin
+                </button>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <div id="auth-actions">
+                    <button onclick="openModal('auth-modal')" class="bg-brandorange text-white font-bold px-3.5 py-1.5 rounded-full hover:bg-brandorangeHover transition text-xs flex items-center gap-1.5">
+                        <i class="fas fa-user"></i> Inscription / Connexion
+                    </button>
+                </div>
+                <div id="user-profile-bar" class="hidden flex items-center gap-2 bg-darkbg px-3 py-1 rounded-full border border-darkborder">
+                    <span id="user-display-name" class="text-xs font-bold text-white">Mon Compte</span>
+                    <button onclick="logout()" class="text-gray-400 hover:text-red-400 text-xs ml-1"><i class="fas fa-sign-out-alt"></i></button>
+                </div>
             </div>
         </div>
     </header>
 
-    <main class="max-w-4xl mx-auto p-4">
+    <main class="max-w-7xl mx-auto p-3 sm:p-6 grid grid-cols-1 lg:grid-cols-4 gap-6">
 
-        <!-- SECTION 1 : CATALOGUE DE PRODUITS -->
-        <section id="catalog-section" class="space-y-4">
-            <div class="flex justify-between items-center border-b pb-2">
-                <h2 class="text-lg font-bold text-gray-700">Catalogue des produits</h2>
-                <span class="text-sm text-gray-500">Grossistes & Vendeurs locaux</span>
-            </div>
-
-            <!-- Grille des produits -->
-            <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <!-- Les produits seront injectés ici automatiquement par JavaScript -->
-            </div>
-        </section>
-
-
-        <!-- SECTION 2 : PANIER ET VALIDATION -->
-        <section id="checkout-section" class="hidden space-y-4">
-            <button onclick="showSection('catalog-section')" class="text-indigo-600 font-semibold mb-2 flex items-center gap-2">
-                <i class="fas fa-arrow-left"></i> Retour au catalogue
-            </button>
-            <h2 class="text-xl font-bold">Votre Panier</h2>
-
-            <div id="cart-items" class="bg-white p-4 rounded-xl shadow border divide-y divide-gray-100">
-                <!-- Produits du panier -->
-            </div>
-
-            <div class="bg-white p-4 rounded-xl shadow border space-y-3">
-                <h3 class="font-bold border-b pb-2">Adresse de livraison</h3>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Votre Nom</label>
-                    <input type="text" id="client-name" placeholder="Ex: Busimba Roland" class="w-full mt-1 p-2 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Quartier / Repère de livraison</label>
-                    <input type="text" id="client-address" placeholder="Ex: Av. Karisimbi N° 12" class="w-full mt-1 p-2 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
-                </div>
-                <div class="flex justify-between items-center pt-2 font-bold text-lg">
-                    <span>Total (Payable à la livraison) :</span>
-                    <span id="cart-total" class="text-green-600">$0.00</span>
-                </div>
-                <button onclick="confirmOrder()" class="w-full bg-green-600 text-white font-bold py-3 rounded-lg hover:bg-green-700 transition shadow-lg">
-                    <i class="fas fa-check-circle"></i> Valider et Commander
-                </button>
-            </div>
-        </section>
-
-
-        <!-- SECTION 3 : SUIVI DE COMMANDE EN TEMPS RÉEL -->
-        <section id="tracking-section" class="hidden space-y-4">
-            <div class="bg-white p-6 rounded-xl shadow-md border text-center space-y-4">
-                <h2 class="text-2xl font-bold text-indigo-700">Commande Confirmée !</h2>
-                <p class="text-gray-500 text-sm">Identifiant de commande : <span id="order-id" class="font-mono font-bold text-gray-800">#0000</span></p>
-
-                <!-- Statut de la commande -->
-                <div class="bg-indigo-50 p-4 rounded-lg border border-indigo-200">
-                    <p class="text-sm text-indigo-600 font-semibold">Statut actuel :</p>
-                    <p id="order-status" class="text-xl font-bold text-indigo-900 mt-1">Recherche d'un livreur...</p>
-                </div>
-
-                <!-- Code PIN Sécurisé -->
-                <div class="bg-amber-50 p-4 rounded-lg border border-amber-300 text-center space-y-1">
-                    <i class="fas fa-shield-alt text-amber-500 text-3xl"></i>
-                    <p class="text-sm font-bold text-amber-900">Code PIN de livraison :</p>
-                    <p id="delivery-pin" class="text-4xl font-extrabold tracking-widest text-amber-800">----</p>
-                    <p class="text-xs text-amber-700">Communiquez ce code au livreur à la réception de votre colis.</p>
-                </div>
-
-                <!-- Bouton simulation de progression -->
-                <div class="pt-4 border-t">
-                    <button onclick="simulateStatusUpdate()" class="text-xs bg-gray-200 text-gray-700 px-3 py-1 rounded hover:bg-gray-300">
-                        ⚙️ Simuler le changement de statut (Test)
-                    </button>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- JS : Logique de l'application -->
-    <script>
-        // Base de données locale de produits
-        const products = [
-            { id: 1, title: "Sac de Ciment 50kg", vendor: "Quincaillerie Centrale", price: 12.50 },
-            { id: 2, title: "Carton d'Huile Végétale (12L)", vendor: "Dépôt Général", price: 24.00 },
-            { id: 3, title: "Pneu Moto Tout-Terrain", vendor: "Auto-Pièces Express", price: 35.00 }
-        ];
-
-        let cart = [];
-        let currentOrder = null;
-        let statusStep = 0;
-        const statuses = [
-            "Commande reçue",
-            "Récupération chez le vendeur",
-            "Livreur en route vers votre adresse",
-            "Livrée avec succès !"
-        ];
-
-        // Charger les produits au démarrage
-        function initApp() {
-            const grid = document.getElementById('products-grid');
-            grid.innerHTML = products.map(p => `
-                <div class="bg-white p-4 rounded-xl shadow border flex flex-col justify-between">
-                    <div>
-                        <div class="w-full h-32 bg-gray-100 rounded-lg flex items-center justify-center mb-3 text-indigo-500">
-                            <i class="fas fa-box text-4xl"></i>
-                        </div>
-                        <h3 class="font-bold text-gray-800">${p.title}</h3>
-                        <p class="text-xs text-gray-500">Vendeur: ${p.vendor}</p>
+        <!-- COLONNE GAUCHE : MENU PROFIL -->
+        <aside class="hidden lg:block space-y-4">
+            <div class="bg-darkcard p-4 rounded-2xl border border-darkborder">
+                <div class="flex items-center gap-3 border-b border-darkborder pb-3">
+                    <div class="w-10 h-10 bg-brandorange/20 text-brandorange rounded-full flex items-center justify-center font-bold">
+                        <i class="fas fa-shop"></i>
                     </div>
-                    <div class="flex justify-between items-center mt-4">
-                        <span class="text-green-600 font-bold text-lg">$${p.price.toFixed(2)}</span>
-                        <button onclick="addToCart(${p.id})" class="bg-indigo-600 text-white px-3 py-1.5 rounded-lg text-sm font-semibold hover:bg-indigo-700 transition">
-                            <i class="fas fa-plus"></i> Ajouter
+                    <div>
+                        <h3 id="aside-user-name" class="font-bold text-sm text-white">Vendeur / Acheteur</h3>
+                        <p class="text-[11px] text-gray-400">Compte B2B Authentifié</p>
+                    </div>
+                </div>
+                <nav class="mt-3 space-y-1 text-xs">
+                    <a href="#" onclick="showSection('feed-section')" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-darkbg text-gray-200 font-semibold"><i class="fas fa-fire text-brandorange w-5"></i> Flux Tendances B2B</a>
+                    <a href="#" onclick="showSection('market-section')" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-darkbg text-gray-200 font-semibold"><i class="fas fa-boxes-packing text-brandorange w-5"></i> Stock Machines & Équipements</a>
+                    <a href="#" onclick="showSection('live-tracking')" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-darkbg text-gray-200 font-semibold"><i class="fas fa-truck-fast text-brandorange w-5"></i> Géolocalisation Livraisons</a>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- COLONNE CENTRALE : FLUX MARCHANDISES STYLE INSTAGRAM & ALIBABA -->
+        <div class="lg:col-span-2 space-y-6">
+
+            <!-- SECTION 1 : FIL SOCIAL ET BOUTON DE PUBLICATION -->
+            <section id="feed-section" class="space-y-4">
+                
+                <!-- ZONE DE CREATION DE PUBLICATION -->
+                <div class="bg-darkcard p-4 rounded-2xl border border-darkborder space-y-3 shadow-md">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 bg-brandorange rounded-full flex items-center justify-center font-bold text-white text-xs">
+                            <i class="fas fa-camera"></i>
+                        </div>
+                        <input type="text" id="post-input-text" placeholder="Décrivez votre marchandise ou produit à vendre..." class="w-full bg-darkbg border border-darkborder rounded-full px-4 py-2 text-xs text-white outline-none focus:border-brandorange">
+                    </div>
+                    <div class="flex flex-wrap justify-between items-center border-t border-darkborder pt-3 gap-2">
+                        <input type="number" id="post-input-price" placeholder="Prix ($ USD)" class="w-28 bg-darkbg border border-darkborder rounded-lg px-2.5 py-1.5 text-xs text-white outline-none">
+                        <input type="text" id="post-input-media" placeholder="Lien Photo ou Vidéo MP4..." class="flex-1 bg-darkbg border border-darkborder rounded-lg px-2.5 py-1.5 text-xs text-white outline-none">
+                        <button onclick="addNewPost()" class="bg-brandorange hover:bg-brandorangeHover text-white font-bold text-xs px-4 py-1.5 rounded-lg transition flex items-center gap-1.5">
+                            <i class="fas fa-plus"></i> Publier
                         </button>
                     </div>
                 </div>
-            `).join('');
-        }
 
-        function addToCart(productId) {
-            const product = products.find(p => p.id === productId);
-            cart.push(product);
-            updateCart();
-        }
+                <!-- FLUX DYNAMIQUE DES PUBLICATIONS -->
+                <div id="posts-feed" class="space-y-5">
+                    <!-- Généré dynamiquement par l'algorithme JS -->
+                </div>
+            </section>
 
-        function updateCart() {
-            document.getElementById('cart-count').innerText = cart.length;
-            const cartItems = document.getElementById('cart-items');
-            
-            if (cart.length === 0) {
-                cartItems.innerHTML = `<p class="text-gray-500 text-center py-4">Votre panier est vide.</p>`;
-            } else {
-                cartItems.innerHTML = cart.map(item => `
-                    <div class="py-2 flex justify-between items-center">
+            <!-- SECTION 2 : MARKETPLACE CATALOGUE -->
+            <section id="market-section" class="hidden space-y-4">
+                <div class="bg-darkcard p-4 rounded-2xl border border-darkborder border-l-4 border-l-brandorange">
+                    <h2 class="font-extrabold text-base text-white">Catalogue Général des Équipements</h2>
+                    <p class="text-xs text-gray-400">Achat direct auprès des usines partenaires.</p>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="bg-darkcard p-4 rounded-xl border border-darkborder flex flex-col justify-between">
                         <div>
-                            <p class="font-semibold text-sm">${item.title}</p>
-                            <p class="text-xs text-gray-500">$${item.price.toFixed(2)}</p>
+                            <div class="h-32 bg-darkbg rounded-lg flex items-center justify-center text-brandorange text-4xl mb-2">
+                                <i class="fas fa-screwdriver-wrench"></i>
+                            </div>
+                            <h3 class="font-bold text-xs text-white">Meuleuse d'Angle Pro 1200W</h3>
+                        </div>
+                        <div class="mt-3 flex justify-between items-center border-t border-darkborder pt-2">
+                            <span class="font-black text-brandorange text-sm">$45.00</span>
+                            <button onclick="createOrder('Meuleuse 1200W', 45.00)" class="bg-brandorange text-white text-xs font-bold px-3 py-1 rounded-lg">Acheter</button>
                         </div>
                     </div>
-                `).join('');
+                    <div class="bg-darkcard p-4 rounded-xl border border-darkborder flex flex-col justify-between">
+                        <div>
+                            <div class="h-32 bg-darkbg rounded-lg flex items-center justify-center text-brandorange text-4xl mb-2">
+                                <i class="fas fa-industry"></i>
+                            </div>
+                            <h3 class="font-bold text-xs text-white">Presse à Pavés Recyclage</h3>
+                        </div>
+                        <div class="mt-3 flex justify-between items-center border-t border-darkborder pt-2">
+                            <span class="font-black text-brandorange text-sm">$320.00</span>
+                            <button onclick="createOrder('Presse à Pavés', 320.00)" class="bg-brandorange text-white text-xs font-bold px-3 py-1 rounded-lg">Acheter</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 3 : GEOLOCALISATION GPS -->
+            <section id="live-tracking" class="hidden space-y-4">
+                <div class="bg-darkcard p-4 rounded-2xl border border-darkborder space-y-3">
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-sm font-bold text-white"><i class="fas fa-crosshairs text-brandorange"></i> Positionnement GPS en Direct</h2>
+                        <button onclick="getUserLocation()" class="bg-darkbg text-brandorange border border-brandorange font-bold text-xs px-2.5 py-1 rounded-lg">Actualiser GPS</button>
+                    </div>
+                    <div id="map"></div>
+                    <div class="bg-darkbg p-3 rounded-xl border border-darkborder flex justify-between items-center">
+                        <div>
+                            <p class="text-xs text-gray-400">Code PIN Réception Colis :</p>
+                            <p class="text-lg font-mono font-bold text-brandorange tracking-widest">9293</p>
+                        </div>
+                        <button onclick="startDriverSimulation()" class="bg-brandorange text-white text-xs font-bold px-3 py-1.5 rounded-lg">Lancer Livreur</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 4 : ADMIN & REGIE PUB (Code 9293) -->
+            <section id="admin-space" class="hidden space-y-4">
+                <div class="bg-darkcard p-4 rounded-2xl border border-red-900/50 flex justify-between items-center">
+                    <div>
+                        <h2 class="text-base font-black text-red-500"><i class="fas fa-user-shield"></i> Administration & Publicités Payantes</h2>
+                        <p class="text-xs text-gray-400">Boostez des marchandises en tête du fil général.</p>
+                    </div>
+                    <span class="bg-red-600 text-white text-[10px] font-bold px-2 py-0.5 rounded">Super-Admin</span>
+                </div>
+                <div class="bg-darkcard p-4 rounded-xl border border-darkborder space-y-3">
+                    <h3 class="font-bold border-b border-darkborder pb-2 text-white text-xs">Créer une Publicité Sponsorisée (Payante)</h3>
+                    <input type="text" id="ad-title-input" placeholder="Titre du produit sponsorisé..." class="w-full p-2 bg-darkbg border border-darkborder text-white rounded-lg text-xs outline-none">
+                    <div class="grid grid-cols-2 gap-2">
+                        <input type="number" id="ad-price-input" placeholder="Prix de vente ($)" class="p-2 bg-darkbg border border-darkborder text-white rounded-lg text-xs outline-none">
+                        <input type="number" id="ad-budget-input" placeholder="Budget Sponsorisé ($)" class="p-2 bg-darkbg border border-darkborder text-white rounded-lg text-xs outline-none">
+                    </div>
+                    <input type="text" id="ad-media-input" placeholder="Lien Photo ou Vidéo..." class="w-full p-2 bg-darkbg border border-darkborder text-white rounded-lg text-xs outline-none">
+                    <button onclick="publishSponsoredAd()" class="w-full bg-brandorange text-white font-bold py-2 rounded-lg text-xs hover:bg-brandorangeHover">Injecter la Publicité Payante</button>
+                </div>
+            </section>
+
+        </div>
+
+        <!-- COLONNE DROITE : TENDANCES -->
+        <aside class="hidden lg:block space-y-4">
+            <div class="bg-darkcard p-4 rounded-2xl border border-darkborder space-y-3">
+                <h3 class="font-bold text-xs text-white border-b border-darkborder pb-2"><i class="fas fa-chart-line text-brandorange mr-1"></i> Mots-Clés Recherchés</h3>
+                <div class="flex flex-wrap gap-1.5 text-[11px]">
+                    <span class="bg-darkbg px-2.5 py-1 rounded-full border border-darkborder text-gray-300">#PavageÉcolo</span>
+                    <span class="bg-darkbg px-2.5 py-1 rounded-full border border-darkborder text-gray-300">#OutillageB2B</span>
+                    <span class="bg-darkbg px-2.5 py-1 rounded-full border border-darkborder text-gray-300">#Broyeurs</span>
+                </div>
+            </div>
+        </aside>
+
+    </main>
+
+    <!-- MODAL MARCHANDAGE / NEGOCIATION -->
+    <div id="bargain-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-darkcard max-w-sm w-full p-5 rounded-2xl border border-darkborder space-y-3 relative">
+            <button onclick="closeModal('bargain-modal')" class="absolute right-4 top-4 text-gray-400 hover:text-white"><i class="fas fa-times"></i></button>
+            <h3 class="text-sm font-bold text-white flex items-center gap-2"><i class="fas fa-comments-dollar text-brandorange"></i> Négocier le Prix</h3>
+            <p class="text-xs text-gray-400" id="bargain-product-name">Nom du produit</p>
+            <div>
+                <label class="block text-[11px] font-bold text-gray-300">Proposer votre prix bas ($ USD)</label>
+                <input type="number" id="bargain-price-input" placeholder="Entrez votre offre..." class="w-full mt-1 p-2 bg-darkbg border border-darkborder text-white rounded-lg text-xs outline-none focus:border-brandorange">
+            </div>
+            <button onclick="submitBargain()" class="w-full bg-brandorange text-white font-bold py-2 rounded-lg text-xs hover:bg-brandorangeHover">Envoyer l'Offre au Vendeur</button>
+        </div>
+    </div>
+
+    <!-- MODAL INSCRIPTION -->
+    <div id="auth-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-darkcard max-w-sm w-full p-5 rounded-2xl border border-darkborder space-y-3 relative">
+            <button onclick="closeModal('auth-modal')" class="absolute right-4 top-4 text-gray-400 hover:text-white"><i class="fas fa-times"></i></button>
+            <h3 class="text-sm font-bold text-white"><i class="fas fa-user-plus text-brandorange mr-1"></i> Créer votre Compte Marchand</h3>
+            <input type="text" id="reg-name" placeholder="Nom complet / Nom Entreprise..." class="w-full p-2 bg-darkbg border border-darkborder text-white rounded-lg text-xs outline-none">
+            <button onclick="registerUser()" class="w-full bg-brandorange text-white font-bold py-2 rounded-lg text-xs">Créer Mon Compte</button>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT ET ALGORITHME DE RECOMMANDATION INTELLIGENT -->
+    <script>
+        // BASE DE DONNEES DU FIL MARCHANDISES
+        let postsData = [
+            {
+                id: 1,
+                author: "Atelier Métal Pro",
+                verified: true,
+                content: "Presse à pavés écologiques haute pression. Idéale pour recyclage de plastique usagé. Livraison rapide avec géolocalisation GPS.",
+                price: 350.00,
+                media: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=600",
+                isVideo: false,
+                likes: 38,
+                isLiked: false,
+                isSponsored: false,
+                score: 150
+            },
+            {
+                id: 2,
+                author: "Outillage Express",
+                verified: false,
+                content: "Meuleuse d'angle professionnelle 1200W en promotion. Stock direct usine.",
+                price: 45.00,
+                media: "https://images.unsplash.com/photo-1504148455328-c376907d081c?w=600",
+                isVideo: false,
+                likes: 19,
+                isLiked: false,
+                isSponsored: false,
+                score: 90
             }
+        ];
 
-            const total = cart.reduce((sum, item) => sum + item.price, 0);
-            document.getElementById('cart-total').innerText = `$${total.toFixed(2)}`;
-        }
+        // RENDU DYNAMIQUE ET ALGORITHME INTELLIGENT
+        function renderFeed() {
+            const feedContainer = document.getElementById('posts-feed');
+            feedContainer.innerHTML = '';
 
-        function showSection(sectionId) {
-            ['catalog-section', 'checkout-section', 'tracking-section'].forEach(id => {
-                document.getElementById(id).classList.add('hidden');
+            // Algorithme : Tri par (Sponsorisé en priorité, puis par score combiné de Likes + Intérêt)
+            let sortedPosts = [...postsData].sort((a, b) => {
+                if (a.isSponsored && !b.isSponsored) return -1;
+                if (!a.isSponsored && b.isSponsored) return 1;
+                return b.score - a.score;
             });
-            document.getElementById(sectionId).classList.remove('hidden');
+
+            sortedPosts.forEach(post => {
+                const isVid = post.media && post.media.endsWith('.mp4');
+                
+                const postHtml = `
+                    <div class="bg-darkcard rounded-2xl border ${post.isSponsored ? 'border-brandorange' : 'border-darkborder'} overflow-hidden shadow-lg">
+                        <!-- Entête de la publication -->
+                        <div class="p-3 flex justify-between items-center border-b border-darkborder/50">
+                            <div class="flex items-center gap-2">
+                                <div class="w-7 h-7 bg-brandorange/20 text-brandorange rounded-full flex items-center justify-center font-bold text-xs">
+                                    ${post.author.charAt(0)}
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-xs text-white flex items-center gap-1">
+                                        ${post.author}
+                                        ${post.verified ? '<i class="fas fa-circle-check text-brandorange text-[10px]"></i>' : ''}
+                                    </h4>
+                                    <p class="text-[9px] text-gray-400">Produit Vérifié • Marchandise B2B</p>
+                                </div>
+                            </div>
+                            ${post.isSponsored ? '<span class="bg-brandorange/20 text-brandorange text-[9px] font-bold px-2 py-0.5 rounded border border-brandorange/40"><i class="fas fa-ad"></i> SPONSORISÉ</span>' : ''}
+                        </div>
+
+                        <!-- Description du produit -->
+                        <div class="px-3 py-2">
+                            <p class="text-xs text-gray-200 leading-snug">${post.content}</p>
+                        </div>
+
+                        <!-- Média : Photo ou Vidéo -->
+                        ${post.media ? `
+                            <div class="w-full bg-black flex items-center justify-center">
+                                ${isVid ? `
+                                    <video src="${post.media}" controls class="w-full max-h-80 object-contain"></video>
+                                ` : `
+                                    <img src="${post.media}" class="w-full max-h-80 object-cover">
+                                `}
+                            </div>
+                        ` : ''}
+
+                        <!-- BARRE D'ACTIONS STYLE INSTAGRAM + ALIBABA (CŒUR, ACHETER, MARCHANT) -->
+                        <div class="p-3 border-t border-darkborder space-y-2">
+                            <div class="flex justify-between items-center">
+                                <!-- Aimer (Petit Cœur Style Instagram) -->
+                                <div class="flex items-center gap-3">
+                                    <button onclick="toggleLike(${post.id})" class="flex items-center gap-1.5 text-xs font-bold text-gray-300 hover:text-red-500 transition">
+                                        <i class="fas fa-heart text-base ${post.isLiked ? 'heart-active' : 'text-gray-400'}"></i>
+                                        <span>${post.likes}</span>
+                                    </button>
+                                    
+                                    <!-- Négocier / Marchander -->
+                                    <button onclick="openBargainModal('${post.author}', ${post.price})" class="flex items-center gap-1 text-xs font-bold text-gray-300 hover:text-brandorange transition">
+                                        <i class="fas fa-comments-dollar text-base text-brandorange"></i>
+                                        <span>Marchander</span>
+                                    </button>
+                                </div>
+
+                                <!-- Prix & Bouton d'Achat Direct -->
+                                <div class="flex items-center gap-2">
+                                    ${post.price ? `<span class="text-sm font-black text-white">$${post.price.toFixed(2)}</span>` : ''}
+                                    <button onclick="createOrder('${post.author}', ${post.price || 0})" class="bg-brandorange hover:bg-brandorangeHover text-white font-bold text-xs px-3 py-1.5 rounded-lg flex items-center gap-1 shadow-md">
+                                        <i class="fas fa-cart-shopping"></i> Acheter
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                feedContainer.innerHTML += postHtml;
+            });
         }
 
-        function confirmOrder() {
-            const name = document.getElementById('client-name').value;
-            const address = document.getElementById('client-address').value;
+        // ACTION DU BOUTON CŒUR (AIMER)
+        function toggleLike(id) {
+            const post = postsData.find(p => p.id === id);
+            if (post) {
+                if (post.isLiked) {
+                    post.likes--;
+                    post.score -= 2;
+                    post.isLiked = false;
+                } else {
+                    post.likes++;
+                    post.score += 2; // L'algorithme augmente la visibilité
+                    post.isLiked = true;
+                }
+                renderFeed();
+            }
+        }
 
-            if (!name || !address || cart.length === 0) {
-                alert('Veuillez remplir votre nom, adresse et ajouter au moins un produit.');
+        // PUBLICATION DE CONTENU PAR UN UTILISATEUR
+        function addNewPost() {
+            const text = document.getElementById('post-input-text').value.trim();
+            const price = parseFloat(document.getElementById('post-input-price').value) || null;
+            const media = document.getElementById('post-input-media').value.trim();
+
+            if (!text) return alert("Rédigez une description pour votre marchandise.");
+
+            const newPost = {
+                id: Date.now(),
+                author: document.getElementById('user-display-name').innerText || "Nouveau Vendeur",
+                verified: true,
+                content: text,
+                price: price,
+                media: media || null,
+                likes: 1,
+                isLiked: false,
+                isSponsored: false,
+                score: 50
+            };
+
+            postsData.unshift(newPost);
+            renderFeed();
+
+            document.getElementById('post-input-text').value = '';
+            document.getElementById('post-input-price').value = '';
+            document.getElementById('post-input-media').value = '';
+        }
+
+        // INJECTION D'UNE PUB PAR L'ADMIN (CODE 9293)
+        function publishSponsoredAd() {
+            const title = document.getElementById('ad-title-input').value.trim();
+            const price = parseFloat(document.getElementById('ad-price-input').value) || null;
+            const budget = parseFloat(document.getElementById('ad-budget-input').value) || 10;
+            const media = document.getElementById('ad-media-input').value.trim();
+
+            if (!title) return alert("Indiquez un titre.");
+
+            const adPost = {
+                id: Date.now(),
+                author: "Sponsorisé - " + title,
+                verified: true,
+                content: `[Annonce Sponsorisée Payante] ${title}. Quantités limitées en stock usine.`,
+                price: price,
+                media: media || "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=600",
+                likes: 50,
+                isLiked: false,
+                isSponsored: true,
+                score: 1000 + (budget * 5)
+            };
+
+            postsData.unshift(adPost);
+            renderFeed();
+            alert("Publicité sponsorisée activée dans le fil !");
+            showSection('feed-section');
+        }
+
+        // RECHERCHE INSTANTANEE ET ACCES SECRET ADMIN (9293)
+        function filterFeed() {
+            const query = document.getElementById('global-search-input').value.toLowerCase().trim();
+
+            if (query === '9293') {
+                document.getElementById('admin-nav-btn').classList.remove('hidden');
+                showSection('admin-space');
+                alert("Accès Administrateur Débloqué !");
+                document.getElementById('global-search-input').value = '';
                 return;
             }
 
-            // Génération du code PIN unique
-            const pin = Math.floor(1000 + Math.random() * 9000);
-            const orderId = Math.floor(100000 + Math.random() * 900000);
-
-            document.getElementById('order-id').innerText = '#' + orderId;
-            document.getElementById('delivery-pin').innerText = pin;
-            document.getElementById('order-status').innerText = statuses[0];
-
-            cart = [];
-            updateCart();
-            showSection('tracking-section');
+            const cards = document.getElementById('posts-feed').children;
+            Array.from(cards).forEach(card => {
+                const text = card.innerText.toLowerCase();
+                card.style.display = text.includes(query) ? 'block' : 'none';
+            });
         }
 
-        function simulateStatusUpdate() {
-            if (statusStep < statuses.length - 1) {
-                statusStep++;
-                document.getElementById('order-status').innerText = statuses[statusStep];
-            } else {
-                alert('La commande est déjà marquée comme livrée !');
+        // NEGOCIATION DE PRIX
+        function openBargainModal(vendeur, prixActuel) {
+            document.getElementById('bargain-product-name').innerText = `Vendeur : ${vendeur} (Prix officiel : $${prixActuel || '--'})`;
+            openModal('bargain-modal');
+        }
+
+        function submitBargain() {
+            const offer = document.getElementById('bargain-price-input').value;
+            if (!offer) return alert("Entrez un prix.");
+            alert(`Votre offre de $${offer} a été transmise directement au vendeur !`);
+            closeModal('bargain-modal');
+        }
+
+        // INSCRIPTION & MODALS
+        function registerUser() {
+            const name = document.getElementById('reg-name').value.trim();
+            if (!name) return alert("Veuillez saisir votre nom.");
+
+            document.getElementById('user-display-name').innerText = name;
+            document.getElementById('aside-user-name').innerText = name;
+            document.getElementById('auth-actions').classList.add('hidden');
+            document.getElementById('user-profile-bar').classList.remove('hidden');
+            closeModal('auth-modal');
+        }
+
+        function logout() {
+            document.getElementById('auth-actions').classList.remove('hidden');
+            document.getElementById('user-profile-bar').classList.add('hidden');
+        }
+
+        function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+        // CARTE GPS TEMPS REEL
+        let map, userMarker, driverMarker;
+        let userLat = null, userLng = null;
+
+        function initMap() {
+            if (map) return;
+            map = L.map('map').setView([0, 0], 2);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+            getUserLocation();
+        }
+
+        function getUserLocation() {
+            if ("geolocation" in navigator) {
+                navigator.geolocation.getCurrentPosition((pos) => {
+                    userLat = pos.coords.latitude;
+                    userLng = pos.coords.longitude;
+                    map.setView([userLat, userLng], 15);
+
+                    if (userMarker) userMarker.setLatLng([userLat, userLng]);
+                    else userMarker = L.marker([userLat, userLng]).addTo(map).bindPopup("<b>Votre position GPS</b>").openPopup();
+                });
             }
         }
 
-        // Lancement au chargement de la page
-        initApp();
+        function startDriverSimulation() {
+            if (!userLat) return alert("Localisation GPS requise.");
+            let driverLat = userLat - 0.005;
+            let driverLng = userLng - 0.005;
+
+            if (driverMarker) map.removeLayer(driverMarker);
+            driverMarker = L.marker([driverLat, driverLng]).addTo(map).bindPopup("<b>Livreur en approche !</b>").openPopup();
+
+            setInterval(() => {
+                driverLat += (userLat - driverLat) * 0.1;
+                driverLng += (userLng - driverLng) * 0.1;
+                driverMarker.setLatLng([driverLat, driverLng]);
+            }, 1000);
+        }
+
+        // NAVIGATION
+        function showSection(id) {
+            ['feed-section', 'market-section', 'live-tracking', 'admin-space'].forEach(s => {
+                document.getElementById(s).classList.add('hidden');
+            });
+            document.getElementById(id).classList.remove('hidden');
+
+            if (id === 'live-tracking') setTimeout(initMap, 200);
+        }
+
+        function createOrder(nom, prix) {
+            alert(`Commande initiée pour "${nom}" ($${prix}). Redirection vers le suivi GPS...`);
+            showSection('live-tracking');
+        }
+
+        // CHARGEMENT INITIAL
+        window.onload = () => {
+            renderFeed();
+        };
     </script>
 </body>
 </html>
