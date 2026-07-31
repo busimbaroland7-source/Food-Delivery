@@ -3,457 +3,495 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Global Market - Plateforme E-commerce & Logistique</title>
+    <title>Social Shopping - Livraison de Repas</title>
     <style>
         :root {
-            --bg-main: #f4f6f8;
+            --shopify-green: #008060;
+            --shopify-green-hover: #006e52;
+            --bg-main: #f6f6f7;
             --bg-card: #ffffff;
-            --header-bg: #131921;
-            --header-sub: #232f3e;
-            --accent: #ff9900;
-            --accent-hover: #e88b00;
-            --text-dark: #0f1111;
-            --text-muted: #565959;
-            --border-color: #d5d9d9;
-            --success: #007600;
-            --danger: #cc0c39;
+            --text-dark: #202223;
+            --text-muted: #6d7175;
+            --border-color: #e1e3e5;
+            --sidebar-bg: #1a1a1a;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
         body {
             background-color: var(--bg-main);
             color: var(--text-dark);
             min-height: 100vh;
+            display: flex;
         }
 
-        /* Header */
-        header {
-            background-color: var(--header-bg);
+        /* Sidebar Style Shopify Admin / Polaris */
+        aside {
+            width: 240px;
+            background-color: var(--sidebar-bg);
             color: white;
-            padding: 12px 24px;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+            z-index: 100;
+        }
+
+        .sidebar-brand {
+            padding: 20px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            letter-spacing: -0.3px;
+        }
+
+        .sidebar-brand span {
+            color: #50e3c2;
+        }
+
+        .sidebar-menu {
+            padding: 15px 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .sidebar-item {
+            padding: 10px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: #b3b3b3;
+            transition: all 0.2s;
+        }
+
+        .sidebar-item:hover, .sidebar-item.active {
+            background-color: rgba(255,255,255,0.08);
+            color: white;
+        }
+
+        /* Main Content Area */
+        .main-wrapper {
+            margin-left: 240px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Shopify Top Bar */
+        header {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            padding: 12px 30px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 20px;
             position: sticky;
             top: 0;
-            z-index: 1000;
+            z-index: 90;
         }
 
-        .logo-area {
-            font-size: 1.4rem;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            color: white;
-            cursor: pointer;
+        .search-box {
+            position: relative;
+            width: 400px;
         }
 
-        .logo-area span {
-            color: var(--accent);
-        }
-
-        .search-container {
-            flex: 1;
-            max-width: 650px;
-            display: flex;
-        }
-
-        .search-container input {
+        .search-box input {
             width: 100%;
-            padding: 10px 16px;
-            border: none;
-            border-radius: 4px 0 0 4px;
-            font-size: 0.95rem;
+            padding: 8px 12px 8px 36px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 0.9rem;
             outline: none;
+            background-color: #f1f2f3;
+            transition: background 0.2s, border 0.2s;
         }
 
-        .search-container button {
-            background-color: var(--accent);
-            border: none;
-            padding: 0 20px;
-            border-radius: 0 4px 4px 0;
-            cursor: pointer;
-            font-size: 1.1rem;
-            transition: background 0.2s;
+        .search-box input:focus {
+            background-color: white;
+            border-color: var(--shopify-green);
+            box-shadow: 0 0 0 1px var(--shopify-green);
         }
 
-        .search-container button:hover {
-            background-color: var(--accent-hover);
+        .search-box span {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
         }
 
         .header-actions {
             display: flex;
             align-items: center;
-            gap: 20px;
-            font-size: 0.9rem;
+            gap: 15px;
         }
 
-        .nav-link {
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
+        .btn {
+            background-color: var(--shopify-green);
             color: white;
-            text-decoration: none;
-        }
-
-        .nav-link span:first-child {
-            font-size: 0.75rem;
-            color: #cccccc;
-        }
-
-        .nav-link span:last-child {
-            font-weight: bold;
-        }
-
-        /* Sub Navigation */
-        .sub-nav {
-            background-color: var(--header-sub);
-            color: white;
-            padding: 10px 24px;
-            display: flex;
-            gap: 25px;
-            font-size: 0.9rem;
-            align-items: center;
-        }
-
-        .sub-nav div {
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.85rem;
             cursor: pointer;
-            padding: 4px 8px;
-            border-radius: 3px;
             transition: background 0.2s;
         }
 
-        .sub-nav div:hover {
-            background: rgba(255,255,255,0.1);
+        .btn:hover {
+            background-color: var(--shopify-green-hover);
         }
 
-        /* Main Container */
-        .main-container {
-            max-width: 1300px;
-            margin: 20px auto;
-            padding: 0 20px;
+        .btn-secondary {
+            background-color: white;
+            color: var(--text-dark);
+            border: 1px solid var(--border-color);
         }
 
-        /* Admin Dashboard Section (Visible/Unlockable) */
-        .admin-dashboard {
+        .btn-secondary:hover {
+            background-color: #f6f6f7;
+        }
+
+        /* Content Container */
+        .container {
+            padding: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Admin Panel Shopify Style */
+        .admin-panel {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
-            border-radius: 8px;
+            border-radius: 12px;
             padding: 24px;
-            margin-bottom: 25px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
             display: none;
         }
 
-        .admin-dashboard.active {
+        .admin-panel.active {
             display: block;
-            animation: fadeIn 0.3s ease-in-out;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .admin-header {
+        .section-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 12px;
         }
 
-        .admin-stats-grid {
+        .section-header h2 {
+            font-size: 1.15rem;
+            font-weight: 600;
+        }
+
+        .metrics-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 15px;
+            gap: 20px;
+        }
+
+        .metric-card {
+            background: #fafbfb;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .metric-card .label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .metric-card .value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-top: 8px;
+            color: var(--text-dark);
+        }
+
+        /* Products Grid Shopify Style */
+        .page-title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 20px;
         }
 
-        .stat-card {
-            background: #f8f9fa;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 16px;
-            text-align: center;
+        .page-title-row h1 {
+            font-size: 1.4rem;
+            font-weight: 600;
         }
 
-        .stat-card .value {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: var(--accent);
-            margin-top: 5px;
-        }
-
-        .admin-security-box {
-            background: #fff8e8;
-            border: 1px solid #ffeeba;
-            padding: 15px;
-            border-radius: 6px;
-            display: flex;
-            gap: 15px;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .admin-security-box input {
-            padding: 8px 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            width: 250px;
-        }
-
-        .btn-primary {
-            background: var(--accent);
-            color: var(--text-dark);
-            border: none;
-            padding: 8px 16px;
-            border-radius: 4px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .btn-primary:hover {
-            background: var(--accent-hover);
-        }
-
-        /* Products Grid */
-        .section-title {
-            font-size: 1.3rem;
-            font-weight: 700;
-            margin-bottom: 15px;
-        }
-
-        .products-grid {
+        .grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
             gap: 20px;
         }
 
-        .product-card {
+        .card {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 18px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+            transition: box-shadow 0.2s;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            transition: box-shadow 0.2s, transform 0.2s;
         }
 
-        .product-card:hover {
-            box-shadow: 0 6px 18px rgba(0,0,0,0.08);
-            transform: translateY(-2px);
+        .card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
 
-        .product-img {
+        .card-img {
             width: 100%;
-            height: 180px;
-            object-fit: contain;
-            margin-bottom: 12px;
+            height: 160px;
+            object-fit: cover;
+            border-bottom: 1px solid var(--border-color);
         }
 
-        .product-category {
-            font-size: 0.75rem;
+        .card-body {
+            padding: 16px;
+        }
+
+        .tag {
+            display: inline-block;
+            font-size: 0.7rem;
+            background: #e4e5e7;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 600;
             text-transform: uppercase;
+            margin-bottom: 6px;
             color: var(--text-muted);
-            font-weight: bold;
+        }
+
+        .store-name {
+            font-size: 0.8rem;
+            color: var(--shopify-green);
+            font-weight: 600;
             margin-bottom: 4px;
         }
 
-        .product-title {
+        .card-title {
             font-size: 0.95rem;
             font-weight: 600;
-            color: var(--text-dark);
-            margin-bottom: 8px;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
+            margin-bottom: 10px;
         }
 
-        .product-rating {
-            color: #ffa41c;
-            font-size: 0.85rem;
-            margin-bottom: 8px;
+        .card-footer {
+            padding: 12px 16px;
+            background: #fafbfb;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
-        .product-price {
-            font-size: 1.25rem;
-            font-weight: 800;
-            color: var(--text-dark);
-            margin-bottom: 12px;
+        .price {
+            font-weight: 700;
+            font-size: 1rem;
         }
 
-        .product-price span {
-            font-size: 0.75rem;
-            vertical-align: super;
-        }
-
-        .btn-buy {
-            background-color: #ffd814;
-            border: 1px solid #fcd200;
-            border-radius: 20px;
-            padding: 8px;
-            width: 100%;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.85rem;
-            box-shadow: 0 2px 5px rgba(213,217,217,.5);
-            transition: background 0.2s;
-        }
-
-        .btn-buy:hover {
-            background-color: #f7ca00;
-        }
-
-        /* Modal Lock Admin Code */
-        .modal-overlay {
+        /* Modal Polaris Style */
+        .modal-backdrop {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6);
+            background: rgba(0, 0, 0, 0.4);
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 2000;
+            z-index: 1000;
             display: none;
         }
 
-        .modal-box {
+        .modal-content {
             background: white;
-            padding: 25px;
-            border-radius: 8px;
-            width: 350px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            border-radius: 12px;
+            width: 440px;
+            padding: 24px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
         }
 
-        .modal-box h3 {
-            margin-bottom: 15px;
+        .modal-content h3 {
             font-size: 1.1rem;
+            margin-bottom: 15px;
         }
 
-        .modal-box input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
+        .form-group {
             margin-bottom: 15px;
-            font-size: 0.95rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 5px;
+            color: var(--text-dark);
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: var(--shopify-green);
+            box-shadow: 0 0 0 1px var(--shopify-green);
         }
 
         .modal-actions {
             display: flex;
             justify-content: flex-end;
             gap: 10px;
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="logo-area" onclick="location.reload()">Global<span>Store</span></div>
-        <div class="search-container">
-            <input type="text" id="search-input" placeholder="Rechercher un produit, une offre..." oninput="handleSearch()">
-            <button onclick="handleSearch()">🔍</button>
+    <!-- SIDEBAR SHOPIFY -->
+    <aside>
+        <div class="sidebar-brand">Social<span>Shopping</span></div>
+        <div class="sidebar-menu">
+            <div class="sidebar-item active" onclick="filterCategory('all')">🍔 Tous les Plats</div>
+            <div class="sidebar-item" onclick="filterCategory('fastfood')">🍟 Fast-Food & Burgers</div>
+            <div class="sidebar-item" onclick="filterCategory('local')">🍲 Cuisine Locale</div>
+            <div class="sidebar-item" onclick="filterCategory('grill')">🔥 Grillades</div>
+            <div class="sidebar-item" style="margin-top: 20px; color:#50e3c2;" onclick="openVendorModal()">+ Ajouter un Restaurant</div>
+            <div class="sidebar-item" onclick="openAdminPrompt()">🔒 Panneau Admin</div>
         </div>
-        <div class="header-actions">
-            <div class="nav-link" onclick="openAdminPrompt()">
-                <span>Panneau</span>
-                <span>🔒 Admin</span>
-            </div>
-            <div class="nav-link" onclick="alert('Votre panier contient ' + cartCount + ' article(s).')">
-                <span>Panier</span>
-                <span>🛒 (<span id="cart-counter">0</span>)</span>
-            </div>
-        </div>
-    </header>
+    </aside>
 
-    <div class="sub-nav">
-        <div onclick="filterCategory('all')">📦 Tout le Catalogue</div>
-        <div onclick="filterCategory('constr')">🏗️ Construction & Matériaux</div>
-        <div onclick="filterCategory('agri')">🌱 Agriculture & Élevage</div>
-        <div onclick="filterCategory('tech')">💻 High-Tech & Matériel</div>
+    <!-- WRAPPER -->
+    <div class="main-wrapper">
+        <header>
+            <div class="search-box">
+                <span>🔍</span>
+                <input type="text" id="search-input" placeholder="Rechercher un plat ou un restaurant..." oninput="handleSearch()">
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-secondary" onclick="openVendorModal()">Espace Restaurateur</button>
+                <button class="btn" onclick="alert('Panier actif. Prêt pour la livraison.')">🛒 Panier (<span id="cart-counter">0</span>)</button>
+            </div>
+        </header>
+
+        <div class="container">
+
+            <!-- TABLEAU DE BORD ADMINISTRATEUR (STYLE ANALYTICS SHOPIFY) -->
+            <div id="admin-panel" class="admin-panel">
+                <div class="section-header">
+                    <h2>📊 Tableau de Bord Administrateur & Commissions</h2>
+                    <button class="btn btn-secondary" onclick="lockAdminPanel()" style="padding: 4px 10px; font-size:0.75rem;">Fermer</button>
+                </div>
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="label">Ventes Totales de Livraison</div>
+                        <div class="value" id="stat-volume">$0.00</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="label">Commission Plateforme (10%)</div>
+                        <div class="value" id="stat-commission" style="color: var(--shopify-green);">$0.00</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="label">Commandes Totales</div>
+                        <div class="value" id="stat-sales-count">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-title-row">
+                <h1>Catalogue des Plats</h1>
+                <button class="btn" onclick="openVendorModal()">Ajouter un plat</button>
+            </div>
+
+            <div id="products-grid" class="grid">
+                <!-- Injection dynamique -->
+            </div>
+
+        </div>
     </div>
 
-    <div class="main-container">
-
-        <!-- ESPACE ADMIN DESIGNÉ ET VISIBLE (Déverrouillable par code) -->
-        <div id="admin-panel" class="admin-dashboard">
-            <div class="admin-header">
-                <h3>🛡️ Supervision Administrative Globale & Commissions</h3>
-                <button class="btn-primary" onclick="lockAdminPanel()" style="background:#e7e7e7; color:#333;">Verrouiller</button>
+    <!-- MODAL CODE ADMIN -->
+    <div id="admin-modal" class="modal-backdrop">
+        <div class="modal-content">
+            <h3>🔒 Accès Sécurisé Administrateur</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 15px;">Entrez votre code d'accès (Par défaut : <code>admin 9D93</code>)</p>
+            <div class="form-group">
+                <input type="password" id="modal-code-input" placeholder="Code secret...">
             </div>
-            
-            <div class="admin-stats-grid">
-                <div class="stat-card">
-                    <div>Volume Total des Ventes</div>
-                    <div class="value" id="stat-volume">$0.00</div>
-                </div>
-                <div class="stat-card">
-                    <div>Commission Admin (5%)</div>
-                    <div class="value" id="stat-commission">$0.00</div>
-                </div>
-                <div class="stat-card">
-                    <div>Commandes Validées</div>
-                    <div class="value" id="stat-sales-count">0</div>
-                </div>
-            </div>
-
-            <div class="admin-security-box">
-                <div>
-                    <strong>🔑 Sécurité du Code d'Accès</strong>
-                    <div style="font-size: 0.8rem; color: var(--text-muted);">Modifiez le code secret requis pour administrer la plateforme.</div>
-                </div>
-                <div style="display: flex; gap: 10px;">
-                    <input type="text" id="new-code-input" placeholder="Nouveau code admin...">
-                    <button class="btn-primary" onclick="updateAdminPasscode()">Mettre à jour</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="section-title">Catalogue des Offres & Produits Recommandés</div>
-        
-        <div id="products-grid" class="products-grid">
-            <!-- Injection dynamique des produits -->
-        </div>
-
-    </div>
-
-    <!-- MODAL DE CODE ADMIN -->
-    <div id="admin-modal" class="modal-overlay">
-        <div class="modal-box">
-            <h3>🔑 Accès Sécurisé Administrateur</h3>
-            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">Entrez votre code d'accès pour déverrouiller le tableau de bord (Code par défaut : <code>admin 9D93</code>)</p>
-            <input type="password" id="modal-code-input" placeholder="Entrez le code...">
             <div class="modal-actions">
-                <button class="btn-primary" style="background:#e7e7e7; color:#333;" onclick="closeAdminModal()">Annuler</button>
-                <button class="btn-primary" onclick="verifyAdminCode()">Valider</button>
+                <button class="btn btn-secondary" onclick="closeAdminModal()">Annuler</button>
+                <button class="btn" onclick="verifyAdminCode()">Valider</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL AJOUT RESTAURANT/PLAT -->
+    <div id="vendor-modal" class="modal-backdrop">
+        <div class="modal-content">
+            <h3>🍳 Espace Restaurateur - Enregistrer un Plat</h3>
+            <div class="form-group">
+                <label>Nom du Restaurant</label>
+                <input type="text" id="v-name" placeholder="Ex: Le Gourmet Express">
+            </div>
+            <div class="form-group">
+                <label>Nom du Plat</label>
+                <input type="text" id="v-dish" placeholder="Ex: Poulet braisé & frites">
+            </div>
+            <div class="form-group">
+                <label>Prix ($)</label>
+                <input type="number" id="v-price" placeholder="12.50">
+            </div>
+            <div class="form-group">
+                <label>Catégorie</label>
+                <select id="v-category">
+                    <option value="fastfood">Fast-Food & Burgers</option>
+                    <option value="local">Cuisine Locale</option>
+                    <option value="grill">Grillades</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>URL de l'image (optionnel)</label>
+                <input type="text" id="v-image" placeholder="https://...">
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeVendorModal()">Annuler</button>
+                <button class="btn" onclick="addNewDish()">Publier le Plat</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Base de données locale de produits
-        const products = [
-            { id: 1, category: 'constr', title: 'Pavés écologiques en plastique recyclé (Lot résistant)', price: 15.00, rating: '★★★★★ (42)', image: 'https://images.unsplash.com/photo-1590069261209-f8e9b8642343?auto=format&fit=crop&w=400&q=80' },
-            { id: 2, category: 'agri', title: 'Kit d’Incubation Automatique pour Élevage Avicole', price: 245.50, rating: '★★★★☆ (18)', image: 'https://images.unsplash.com/photo-1516467508483-a7212febe31a?auto=format&fit=crop&w=400&q=80' },
-            { id: 3, category: 'tech', title: 'Ordinateur Portable Ultra-Fin ThinkPad X1 Carbon', price: 899.99, rating: '★★★★☆ (124)', image: 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&w=400&q=80' },
-            { id: 4, category: 'agri', title: 'Substrat enrichi pour culture de champignons domestiques', price: 25.00, rating: '★★★★★ (29)', image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=400&q=80' }
+        let products = [
+            { id: 1, restaurant: 'Le Gourmet Express', category: 'fastfood', title: 'Burger Double Bacon & Fromage Fondant', price: 9.50, image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=400&q=80' },
+            { id: 2, restaurant: 'Saveurs du Terroir', category: 'local', title: 'Plat Traditionnel & Accompagnement', price: 12.00, image: 'https://images.unsplash.com/photo-15452c5951-3ccd637f39f2?auto=format&fit=crop&w=400&q=80' },
+            { id: 3, restaurant: 'Grill House Master', category: 'grill', title: 'Brochettes Mixtes & Frites Maison', price: 14.00, image: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=400&q=80' }
         ];
 
         let cartCount = 0;
         let currentFilter = 'all';
 
         function getAdminCode() {
-            return localStorage.getItem('globalstore_admin_code') || 'admin 9D93';
+            return localStorage.getItem('socialshopping_admin_code') || 'admin 9D93';
         }
 
         function renderProducts(items) {
@@ -461,45 +499,48 @@
             grid.innerHTML = '';
             
             if(items.length === 0) {
-                grid.innerHTML = '<p style="grid-column:1/-1; text-align:center; color:var(--text-muted); padding:30px;">Aucun produit trouvé.</p>';
+                grid.innerHTML = '<p style="grid-column:1/-1; text-align:center; color:var(--text-muted); padding:30px;">Aucun plat trouvé.</p>';
                 return;
             }
 
             items.forEach(p => {
                 grid.innerHTML += `
-                    <div class="product-card">
+                    <div class="card">
                         <div>
-                            <img src="${p.image}" class="product-img" alt="${p.title}">
-                            <div class="product-category">${p.category.toUpperCase()}</div>
-                            <div class="product-title">${p.title}</div>
-                            <div class="product-rating">${p.rating}</div>
-                            <div class="product-price"><span>$</span>${p.price.toFixed(2)}</div>
+                            <img src="${p.image || 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=400&q=80'}" class="card-img" alt="${p.title}">
+                            <div class="card-body">
+                                <span class="tag">${p.category}</span>
+                                <div class="store-name">🏪 ${p.restaurant}</div>
+                                <div class="card-title">${p.title}</div>
+                            </div>
                         </div>
-                        <button class="btn-buy" onclick="simulatePurchase(${p.price})">🛒 Acheter / Commander</button>
+                        <div class="card-footer">
+                            <span class="price">$${p.price.toFixed(2)}</span>
+                            <button class="btn" onclick="orderMeal(${p.price})">Commander</button>
+                        </div>
                     </div>
                 `;
             });
         }
 
-        function simulatePurchase(price) {
+        function orderMeal(price) {
             cartCount++;
             document.getElementById('cart-counter').textContent = cartCount;
 
-            // Enregistrement de la vente pour l'administrateur (5% commission)
-            let totalVolume = parseFloat(localStorage.getItem('gs_volume') || '0') + price;
-            let salesCount = parseInt(localStorage.getItem('gs_sales') || '0') + 1;
+            let totalVolume = parseFloat(localStorage.getItem('ss_volume') || '0') + price;
+            let salesCount = parseInt(localStorage.getItem('ss_sales') || '0') + 1;
             
-            localStorage.setItem('gs_volume', totalVolume);
-            localStorage.setItem('gs_sales', salesCount);
+            localStorage.setItem('ss_volume', totalVolume);
+            localStorage.setItem('ss_sales', salesCount);
             
             updateAdminStats();
-            alert('Achat validé avec succès ! Commission administrateur calculée.');
+            alert('Commande validée ! Livreur en route. Commission enregistrée.');
         }
 
         function updateAdminStats() {
-            let volume = parseFloat(localStorage.getItem('gs_volume') || '0');
-            let sales = parseInt(localStorage.getItem('gs_sales') || '0');
-            let commission = volume * 0.05;
+            let volume = parseFloat(localStorage.getItem('ss_volume') || '0');
+            let sales = parseInt(localStorage.getItem('ss_sales') || '0');
+            let commission = volume * 0.10;
 
             document.getElementById('stat-volume').textContent = `$${volume.toFixed(2)}`;
             document.getElementById('stat-commission').textContent = `$${commission.toFixed(2)}`;
@@ -532,19 +573,36 @@
             document.getElementById('admin-panel').classList.remove('active');
         }
 
-        function updateAdminPasscode() {
-            const newCode = document.getElementById('new-code-input').value.trim();
-            if(newCode.length < 3) {
-                alert('Le code doit contenir au moins 3 caractères.');
+        function openVendorModal() {
+            document.getElementById('vendor-modal').style.display = 'flex';
+        }
+
+        function closeVendorModal() {
+            document.getElementById('vendor-modal').style.display = 'none';
+        }
+
+        function addNewDish() {
+            const restaurant = document.getElementById('v-name').value.trim();
+            const title = document.getElementById('v-dish').value.trim();
+            const price = parseFloat(document.getElementById('v-price').value);
+            const category = document.getElementById('v-category').value;
+            const image = document.getElementById('v-image').value.trim();
+
+            if(!restaurant || !title || isNaN(price) || price <= 0) {
+                alert('Veuillez remplir correctement les champs.');
                 return;
             }
-            localStorage.setItem('globalstore_admin_code', newCode);
-            document.getElementById('new-code-input').value = '';
-            alert('Code administrateur mis à jour avec succès !');
+
+            products.unshift({ id: products.length + 1, restaurant, title, price, category, image });
+            applyFilters();
+            closeVendorModal();
+            alert('Plat publié avec succès !');
         }
 
         function filterCategory(cat) {
             currentFilter = cat;
+            document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
+            event.target.classList.add('active');
             applyFilters();
         }
 
@@ -561,13 +619,12 @@
             }
 
             if(query) {
-                filtered = filtered.filter(p => p.title.toLowerCase().includes(query));
+                filtered = filtered.filter(p => p.title.toLowerCase().includes(query) || p.restaurant.toLowerCase().includes(query));
             }
 
             renderProducts(filtered);
         }
 
-        // Initialisation
         renderProducts(products);
         updateAdminStats();
     </script>
