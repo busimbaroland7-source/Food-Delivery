@@ -32,7 +32,6 @@
                 radial-gradient(circle at 90% 80%, rgba(59, 130, 246, 0.15) 0%, transparent 40%);
         }
 
-        /* Effet futuriste / Glassmorphism */
         .glass-panel {
             background: var(--bg-card);
             backdrop-filter: blur(16px);
@@ -42,102 +41,8 @@
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
         }
 
-        /* Écran d'authentification */
-        #auth-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            background: rgba(11, 15, 25, 0.85);
-            backdrop-filter: blur(20px);
-            transition: opacity 0.5s ease, visibility 0.5s ease;
-        }
-
-        .auth-card {
-            width: 100%;
-            max-width: 420px;
-            padding: 40px;
-            text-align: center;
-        }
-
-        .auth-card h1 {
-            font-size: 2.5rem;
-            font-weight: 800;
-            margin-bottom: 8px;
-            background: linear-gradient(135deg, #ff6600, #ff9933);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: 1px;
-        }
-
-        .auth-card p {
-            color: var(--text-muted);
-            margin-bottom: 30px;
-            font-size: 0.95rem;
-        }
-
-        .input-group {
-            margin-bottom: 20px;
-            text-align: left;
-        }
-
-        .input-group label {
-            display: block;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-bottom: 6px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .input-group input {
-            width: 100%;
-            padding: 12px 16px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border-glass);
-            border-radius: 8px;
-            color: white;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .input-group input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 15px rgba(255, 102, 0, 0.3);
-            background: rgba(255, 255, 255, 0.08);
-        }
-
-        .btn-primary {
-            width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, #ff6600, #ff8533);
-            border: none;
-            border-radius: 8px;
-            color: white;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            box-shadow: 0 4px 15px rgba(255, 102, 0, 0.4);
-            margin-top: 10px;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 102, 0, 0.6);
-        }
-
-        /* Application principale (Workspace) */
+        /* Application principale */
         #app-workspace {
-            display: none;
-            opacity: 0;
-            transition: opacity 0.6s ease;
             max-width: 1400px;
             margin: 0 auto;
             padding: 20px;
@@ -147,8 +52,10 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 30px;
+            padding: 15px 30px;
             margin-bottom: 30px;
+            gap: 20px;
+            flex-wrap: wrap;
         }
 
         .logo-area {
@@ -159,6 +66,53 @@
             -webkit-text-fill-color: transparent;
         }
 
+        /* Barre de recherche et accès admin intégré */
+        .search-admin-bar {
+            flex: 1;
+            max-width: 500px;
+            display: flex;
+            position: relative;
+        }
+
+        .search-admin-bar input {
+            width: 100%;
+            padding: 12px 20px;
+            padding-right: 110px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-glass);
+            border-radius: 30px;
+            color: white;
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-admin-bar input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(255, 102, 0, 0.3);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .admin-login-btn {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: linear-gradient(135deg, #ff6600, #ff8533);
+            border: none;
+            border-radius: 20px;
+            color: white;
+            padding: 8px 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .admin-login-btn:hover {
+            opacity: 0.9;
+        }
+
         .user-badge {
             display: flex;
             align-items: center;
@@ -167,14 +121,25 @@
             padding: 8px 16px;
             border-radius: 30px;
             border: 1px solid var(--border-glass);
+            font-size: 0.9rem;
         }
 
         .user-badge span {
-            font-weight: 600;
             color: var(--primary);
+            font-weight: 600;
         }
 
-        /* Grille des catégories exhaustives avec symboles */
+        .admin-badge {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            border: 1px solid rgba(239, 68, 68, 0.4);
+        }
+
+        /* Catégories */
         .categories-section {
             margin-bottom: 40px;
         }
@@ -222,7 +187,7 @@
             color: var(--text-main);
         }
 
-        /* Espace de publication multimédia */
+        /* Publication & Flux */
         .publish-container {
             display: grid;
             grid-template-columns: 1fr 2fr;
@@ -282,7 +247,26 @@
             border-color: var(--primary);
         }
 
-        /* Grille des flux / produits publiés */
+        .btn-primary {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #ff6600, #ff8533);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 4px 15px rgba(255, 102, 0, 0.4);
+            margin-top: 10px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 102, 0, 0.6);
+        }
+
         .feed-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -295,6 +279,7 @@
             border-radius: 14px;
             overflow: hidden;
             transition: transform 0.3s;
+            position: relative;
         }
 
         .item-card:hover {
@@ -343,73 +328,73 @@
             font-size: 0.8rem;
             color: var(--text-muted);
         }
+
+        .btn-delete-admin {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.5);
+            padding: 4px 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .btn-delete-admin:hover {
+            background: rgba(239, 68, 68, 0.4);
+        }
     </style>
 </head>
 <body>
 
-    <!-- Écran d'authentification (Effet Waouh / Futuriste) -->
-    <div id="auth-screen">
-        <div class="glass-panel auth-card">
-            <h1>STYLE</h1>
-            <p>Accédez au futur du commerce mondial multi-services</p>
-            <form id="login-form">
-                <div class="input-group">
-                    <label for="user-name">Nom</label>
-                    <input type="text" id="user-name" required placeholder="Ex: Roland">
-                </div>
-                <div class="input-group">
-                    <label for="user-postname">Post-nom</label>
-                    <input type="text" id="user-postname" required placeholder="Ex: Busimba">
-                </div>
-                <div class="input-group">
-                    <label for="user-code">Code d'accès unique</label>
-                    <input type="password" id="user-code" required placeholder="••••••••">
-                </div>
-                <button type="submit" class="btn-primary">Entrer dans l'Espace de Travail</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Espace de Travail Principal (Workspace) -->
+    <!-- Espace de Travail Principal -->
     <div id="app-workspace">
         <header class="glass-panel">
-            <div class="logo-area">STYLE. WORKSPACE</div>
+            <div class="logo-area">STYLE</div>
+            
+            <!-- Barre de recherche & Accès Admin -->
+            <div class="search-admin-bar">
+                <input type="text" id="search-input" placeholder="Rechercher un produit, service..." oninput="handleSearch()">
+                <button class="admin-login-btn" onclick="promptAdminAccess()">Admin</button>
+            </div>
+
             <div class="user-badge">
-                <span>Connecté :</span> <strong id="display-username">Utilisateur</strong>
+                <span>Rôle :</span> 
+                <strong id="display-role">Membre</strong>
+                <span id="admin-badge-container"></span>
             </div>
         </header>
 
-        <!-- Section des Catégories Exhaustives -->
+        <!-- Section des Catégories (Inclut TOUT et LIVRAISON) -->
         <section class="categories-section">
             <div class="section-title">✨ Sélectionnez votre Niche & Catégories</div>
-            <div class="categories-grid" id="categories-container">
-                <!-- Généré dynamiquement par JavaScript -->
-            </div>
+            <div class="categories-grid" id="categories-container"></div>
         </section>
 
-        <!-- Espace de Publication Multimédia Compact & Avancé -->
+        <!-- Espace de Publication et Flux -->
         <div class="publish-container">
             <div class="glass-panel publish-card">
                 <div class="section-title" style="font-size: 1.1rem; margin-bottom: 15px;">🚀 Publier un Produit / Service</div>
                 <form id="publish-form">
                     <div class="form-row">
-                        <label>Niche / Catégorie sélectionnée</label>
+                        <label>Niche / Catégorie obligatoire</label>
                         <select id="pub-category" required>
-                            <option value="">-- Choisir une catégorie --</option>
+                            <option value="">-- Choisir une niche --</option>
                         </select>
                     </div>
                     <div class="form-row">
                         <label>Titre de l'offre</label>
-                        <input type="text" id="pub-title" required placeholder="ex: Paves écologiques en plastique">
+                        <input type="text" id="pub-title" required placeholder="ex: Pavés écologiques / Livraison...">
                     </div>
                     <div class="form-row">
                         <label>Prix ($)</label>
                         <input type="number" id="pub-price" step="0.01" required placeholder="0.00">
                     </div>
                     <div class="form-row">
-                        <label>Média (Photo ou Vidéo max 5 sec)</label>
+                        <label>Média (Photo ou Vidéo max 5s)</label>
                         <div class="media-dropzone" id="dropzone">
-                            📁 Glissez ou cliquez pour charger photo/vidéo (5s max)
+                            📁 Glissez ou cliquez pour charger photo/vidéo
                             <input type="file" id="pub-file" accept="image/*,video/*" style="display: none;">
                         </div>
                     </div>
@@ -417,27 +402,27 @@
                         <label>Description rapide</label>
                         <textarea id="pub-desc" placeholder="Détails essentiels..."></textarea>
                     </div>
-                    <button type="submit" class="btn-primary">Publier instantanément</button>
+                    <button type="submit" class="btn-primary">Publier dans le flux permanent</button>
                 </form>
             </div>
 
-            <!-- Flux des publications en temps réel -->
+            <!-- Flux des publications persistantes -->
             <div>
                 <div class="section-title">🔥 Flux d'activités & Catalogue en direct</div>
-                <div class="feed-grid" id="feed-container">
-                    <!-- Les publications s'afficheront ici -->
-                </div>
+                <div class="feed-grid" id="feed-container"></div>
             </div>
         </div>
     </div>
 
     <script>
-        // Liste exhaustive des catégories avec symboles
+        // Catalogue complet incluant TOUT, LIVRAISON, et les autres secteurs
         const categories = [
+            { id: 'all', name: 'Tout', symbol: '🌐' },
+            { id: 'livr', name: 'Livraison', symbol: '🚚' },
             { id: 'constr', name: 'Construction & Matériaux', symbol: '🏗️' },
             { id: 'tech', name: 'E-commerce & High-Tech', symbol: '💻' },
             { id: 'agri', name: 'Agriculture & Élevage', symbol: '🌱' },
-            { id: 'logi', name: 'Livraison & Logistique', symbol: '🚀' },
+            { id: 'logi', name: 'Logistique & Transport', symbol: '🚀' },
             { id: 'mode', name: 'Mode & Vêtements', symbol: '👕' },
             { id: 'immo', name: 'Immobilier & Terrains', symbol: '🏢' },
             { id: 'sante', name: 'Santé & Bien-être', symbol: '💊' },
@@ -446,20 +431,22 @@
             { id: 'serv', name: 'Services Professionnels', symbol: '⚙️' }
         ];
 
-        let selectedCategoryFilter = null;
+        let selectedCategoryFilter = 'all';
+        let searchQuery = '';
+        let currentUser = { isAdmin: false };
 
-        // Initialisation de l'interface des catégories
+        // Initialisation des catégories graphiques et du menu déroulant de publication
         function initCategories() {
             const container = document.getElementById('categories-container');
             const selectDropdown = document.getElementById('pub-category');
             
             container.innerHTML = '';
-            selectDropdown.innerHTML = '<option value="">-- Choisir une catégorie --</option>';
+            selectDropdown.innerHTML = '<option value="">-- Choisir une niche --</option>';
 
             categories.forEach(cat => {
-                // Remplissage de la grille interactive
+                // Bouton cliquable de la grille
                 const card = document.createElement('div');
-                card.className = 'category-card';
+                card.className = `category-card ${cat.id === 'all' ? 'active' : ''}`;
                 card.innerHTML = `
                     <div class="category-icon">${cat.symbol}</div>
                     <div class="category-name">${cat.name}</div>
@@ -467,83 +454,92 @@
                 card.onclick = () => filterByCategory(cat.id, card);
                 container.appendChild(card);
 
-                // Remplissage du menu déroulant de publication
-                const option = document.createElement('option');
-                option.value = cat.id;
-                option.textContent = `${cat.symbol} ${cat.name}`;
-                selectDropdown.appendChild(option);
+                // Option dans le formulaire de publication (sauf "Tout")
+                if (cat.id !== 'all') {
+                    const option = document.createElement('option');
+                    option.value = cat.id;
+                    option.textContent = `${cat.symbol} ${cat.name}`;
+                    selectDropdown.appendChild(option);
+                }
             });
         }
 
         function filterByCategory(catId, element) {
             document.querySelectorAll('.category-card').forEach(c => c.classList.remove('active'));
-            if (selectedCategoryFilter === catId) {
-                selectedCategoryFilter = null;
-            } else {
-                selectedCategoryFilter = catId;
-                element.classList.add('active');
-            }
+            selectedCategoryFilter = catId;
+            element.classList.add('active');
             renderFeed();
         }
 
-        // Gestion de l'authentification (Nom, Post-nom, Code)
-        document.getElementById('login-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const name = document.getElementById('user-name').value.trim();
-            const postname = document.getElementById('user-postname').value.trim();
-            const code = document.getElementById('user-code').value.trim();
+        function handleSearch() {
+            searchQuery = document.getElementById('search-input').value.toLowerCase().trim();
+            renderFeed();
+        }
 
-            if (name && postname && code) {
-                document.getElementById('display-username').textContent = `${name} ${postname}`;
-                
-                // Animation de transition futuriste vers l'espace de travail
-                const authScreen = document.getElementById('auth-screen');
-                authScreen.style.opacity = '0';
-                authScreen.style.visibility = 'hidden';
-
-                const workspace = document.getElementById('app-workspace');
-                workspace.style.display = 'block';
-                setTimeout(() => {
-                    workspace.style.opacity = '1';
-                }, 50);
+        // Accès administrateur sécurisé via la barre de recherche
+        function promptAdminAccess() {
+            const code = prompt('Entrez le code d\'accès administrateur :');
+            if (code === 'ADMIN99') {
+                currentUser.isAdmin = true;
+                document.getElementById('display-role').textContent = 'Administrateur';
+                document.getElementById('admin-badge-container').innerHTML = '<span class="admin-badge">ADMIN</span>';
+                alert('Accès administrateur accordé avec succès ! Vous pouvez maintenant supprimer des publications.');
+                renderFeed();
+            } else if (code !== null) {
+                alert('Code d\'accès incorrect.');
             }
-        });
+        }
 
-        // Gestion du chargement de fichiers (Glisser-déposer / Clic)
+        // Gestion du chargement de fichiers multimédias
         const dropzone = document.getElementById('dropzone');
         const fileInput = document.getElementById('pub-file');
 
         dropzone.onclick = () => fileInput.click();
-
         fileInput.onchange = (e) => {
             if (e.target.files.length > 0) {
                 dropzone.innerHTML = `✅ Fichier sélectionné : <strong>${e.target.files[0].name}</strong>`;
             }
         };
 
-        // Base de données locale temporaire pour les publications du flux
-        let publications = [
-            {
-                id: 1,
-                category: 'constr',
-                title: 'Pavés écologiques en plastique recyclé',
-                price: 15.00,
-                desc: 'Résistants et durables pour vos chantiers.',
-                mediaUrl: 'https://images.unsplash.com/photo-1590069261209-f8e9b8642343?auto=format&fit=crop&w=500&q=80',
-                date: 'Aujourd\'hui'
-            },
-            {
-                id: 2,
-                category: 'logi',
-                title: 'Service de Livraison Express Multi-Services',
-                price: 5.00,
-                desc: 'Livraison rapide avec suivi sécurisé par code.',
-                mediaUrl: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=500&q=80',
-                date: 'Aujourd\'hui'
+        // Persistance des données avec localStorage
+        function getSavedPublications() {
+            const data = localStorage.getItem('style_app_publications');
+            if (data) {
+                try { return JSON.parse(data); } catch (err) { return getDefaultPublications(); }
             }
-        ];
+            return getDefaultPublications();
+        }
 
-        // Soumission du formulaire de publication
+        function savePublications(pubs) {
+            localStorage.setItem('style_app_publications', JSON.stringify(pubs));
+        }
+
+        function getDefaultPublications() {
+            return [
+                {
+                    id: 1,
+                    category: 'livr',
+                    title: 'Service de Livraison Express Sécurisé',
+                    price: 5.00,
+                    desc: 'Livraison rapide de colis et marchandises en ville avec suivi.',
+                    mediaUrl: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=500&q=80',
+                    author: 'Équipe Logistique',
+                    date: 'Aujourd\'hui'
+                },
+                {
+                    id: 2,
+                    category: 'constr',
+                    title: 'Pavés écologiques en plastique recyclé',
+                    price: 15.00,
+                    desc: 'Résistants et durables pour tous vos aménagements.',
+                    mediaUrl: 'https://images.unsplash.com/photo-1590069261209-f8e9b8642343?auto=format&fit=crop&w=500&q=80',
+                    author: 'Roland B.',
+                    date: 'Aujourd\'hui'
+                }
+            ];
+        }
+
+        // Soumission de publication enregistrée durablement
         document.getElementById('publish-form').addEventListener('submit', function(e) {
             e.preventDefault();
             const category = document.getElementById('pub-category').value;
@@ -551,7 +547,6 @@
             const price = parseFloat(document.getElementById('pub-price').value);
             const desc = document.getElementById('pub-desc').value;
 
-            // Simulation d'une image/vidéo par défaut si aucun fichier joint
             let mediaUrl = 'https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=500&q=80';
             if (fileInput.files.length > 0) {
                 mediaUrl = URL.createObjectURL(fileInput.files[0]);
@@ -564,34 +559,69 @@
                 price,
                 desc,
                 mediaUrl,
+                author: currentUser.isAdmin ? 'Administrateur' : 'Membre',
                 date: 'À l\'instant'
             };
 
+            let publications = getSavedPublications();
             publications.unshift(newPub);
+            savePublications(publications);
+
             renderFeed();
             this.reset();
-            dropzone.innerHTML = '📁 Glissez ou cliquez pour charger photo/vidéo (5s max)';
-            alert('Publication effectuée avec succès dans votre espace de niche !');
+            dropzone.innerHTML = '📁 Glissez ou cliquez pour charger photo/vidéo';
+            alert('Publication enregistrée et ajoutée au flux permanent !');
         });
 
-        // Affichage dynamique du flux
+        // Suppression (Réservée exclusivement à l'administration)
+        window.deletePublication = function(id) {
+            if (!currentUser.isAdmin) {
+                alert('Action refusée : Seuls les membres de l\'administration peuvent supprimer une publication.');
+                return;
+            }
+            if (confirm('Voulez-vous vraiment supprimer définitivement cette publication ?')) {
+                let publications = getSavedPublications();
+                publications = publications.filter(p => p.id !== id);
+                savePublications(publications);
+                renderFeed();
+            }
+        };
+
+        // Affichage dynamique et filtré du flux
         function renderFeed() {
             const feedContainer = document.getElementById('feed-container');
             feedContainer.innerHTML = '';
 
-            const filtered = selectedCategoryFilter 
-                ? publications.filter(p => p.category === selectedCategoryFilter)
-                : publications;
+            let publications = getSavedPublications();
 
-            if (filtered.length === 0) {
-                feedContainer.innerHTML = '<p style="color: var(--text-muted); grid-column: 1/-1; text-align: center; padding: 40px;">Aucune publication dans cette catégorie pour le moment.</p>';
+            // Filtrage par catégorie (si ce n'est pas "all")
+            if (selectedCategoryFilter !== 'all') {
+                publications = publications.filter(p => p.category === selectedCategoryFilter);
+            }
+
+            // Filtrage par recherche textuelle (barre de recherche en haut)
+            if (searchQuery) {
+                publications = publications.filter(p => 
+                    p.title.toLowerCase().includes(searchQuery) || 
+                    p.desc.toLowerCase().includes(searchQuery)
+                );
+            }
+
+            if (publications.length === 0) {
+                feedContainer.innerHTML = '<p style="color: var(--text-muted); grid-column: 1/-1; text-align: center; padding: 40px;">Aucune publication trouvée.</p>';
                 return;
             }
 
-            filtered.forEach(pub => {
+            publications.forEach(pub => {
                 const catObj = categories.find(c => c.id === pub.category);
                 const card = document.createElement('div');
                 card.className = 'item-card glass-panel';
+                
+                let adminControlHtml = '';
+                if (currentUser.isAdmin) {
+                    adminControlHtml = `<button class="btn-delete-admin" onclick="deletePublication(${pub.id})">🗑️ Supprimer (Admin)</button>`;
+                }
+
                 card.innerHTML = `
                     <img src="${pub.mediaUrl}" class="item-media" alt="Média publication">
                     <div class="item-content">
@@ -599,10 +629,11 @@
                         <div class="item-title">${pub.title}</div>
                         <div class="item-price">$${pub.price.toFixed(2)}</div>
                         <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 5px;">${pub.desc}</p>
+                        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 8px;">Par : <strong>${pub.author || 'Membre'}</strong></p>
                     </div>
                     <div class="item-footer">
-                        <span>Publié ${pub.date}</span>
-                        <span style="color: var(--primary); font-weight: 600; cursor: pointer;">Détails ➔</span>
+                        <span>${pub.date}</span>
+                        ${adminControlHtml}
                     </div>
                 `;
                 feedContainer.appendChild(card);
