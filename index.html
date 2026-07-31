@@ -3,720 +3,573 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Social Shop - Application Installable & Sécurisée</title>
-    <meta name="theme-color" content="#ff6600">
+    <title>Global Market - Plateforme E-commerce & Logistique</title>
     <style>
         :root {
-            --primary: #ff6600;
-            --primary-dark: #e65c00;
-            --bg-dark: #0f1117;
-            --bg-card: #1a1d24;
-            --border-glass: rgba(255, 255, 255, 0.08);
-            --text-main: #f3f4f6;
-            --text-muted: #9ca3af;
+            --bg-main: #f4f6f8;
+            --bg-card: #ffffff;
+            --header-bg: #131921;
+            --header-sub: #232f3e;
+            --accent: #ff9900;
+            --accent-hover: #e88b00;
+            --text-dark: #0f1111;
+            --text-muted: #565959;
+            --border-color: #d5d9d9;
+            --success: #007600;
+            --danger: #cc0c39;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
         body {
-            background-color: var(--bg-dark);
-            color: var(--text-main);
+            background-color: var(--bg-main);
+            color: var(--text-dark);
             min-height: 100vh;
         }
 
+        /* Header */
         header {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            background: rgba(15, 17, 23, 0.95);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--border-glass);
-            padding: 12px 20px;
+            background-color: var(--header-bg);
+            color: white;
+            padding: 12px 24px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 15px;
+            gap: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
 
         .logo-area {
+            font-size: 1.4rem;
             font-weight: 800;
-            color: var(--primary);
-            font-size: 1.1rem;
-            letter-spacing: 0.5px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .search-bar-container {
-            flex: 1;
-            max-width: 550px;
-            position: relative;
-        }
-
-        .search-bar-container input {
-            width: 100%;
-            padding: 10px 14px 10px 40px;
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid var(--border-glass);
-            border-radius: 20px;
+            letter-spacing: -0.5px;
             color: white;
-            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .logo-area span {
+            color: var(--accent);
+        }
+
+        .search-container {
+            flex: 1;
+            max-width: 650px;
+            display: flex;
+        }
+
+        .search-container input {
+            width: 100%;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 4px 0 0 4px;
+            font-size: 0.95rem;
             outline: none;
-            transition: border-color 0.2s;
         }
 
-        .search-bar-container input:focus {
-            border-color: var(--primary);
+        .search-container button {
+            background-color: var(--accent);
+            border: none;
+            padding: 0 20px;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: background 0.2s;
         }
 
-        .search-icon {
-            position: absolute;
-            left: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-muted);
+        .search-container button:hover {
+            background-color: var(--accent-hover);
         }
 
         .header-actions {
             display: flex;
-            gap: 10px;
             align-items: center;
-        }
-
-        .btn-share, .btn-install-header {
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid var(--border-glass);
-            color: var(--text-main);
-            padding: 6px 12px;
-            border-radius: 16px;
-            font-size: 0.8rem;
-            cursor: pointer;
-            font-weight: 500;
-        }
-
-        .btn-install-header {
-            background: var(--primary);
-            border: none;
-            display: none;
-        }
-
-        .app-container {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        #install-banner {
-            background: linear-gradient(135deg, #1f2937, #111827);
-            border: 1px solid var(--primary);
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 15px;
-            box-shadow: 0 4px 20px rgba(255, 102, 0, 0.15);
-        }
-
-        .install-banner-content h3 {
-            font-size: 1rem;
-            color: var(--primary);
-            margin-bottom: 4px;
-        }
-
-        .install-banner-content p {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-        }
-
-        .install-actions {
-            display: flex;
-            gap: 8px;
-        }
-
-        .btn-install-action {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 8px 14px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 0.82rem;
-            cursor: pointer;
-        }
-
-        .btn-close-banner {
-            background: transparent;
-            border: 1px solid var(--border-glass);
-            color: var(--text-muted);
-            padding: 8px 10px;
-            border-radius: 8px;
-            font-size: 0.82rem;
-            cursor: pointer;
-        }
-
-        .dynamic-view-panel {
-            background: var(--bg-card);
-            border: 1px solid var(--border-glass);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-            display: none;
-        }
-
-        .dynamic-view-panel.active-panel {
-            display: block;
-        }
-
-        .panel-title {
-            color: var(--primary);
-            font-size: 1.1rem;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .quick-publish {
-            background: var(--bg-card);
-            border: 1px solid var(--border-glass);
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 20px;
-        }
-
-        .quick-publish input, .quick-publish select, .quick-publish textarea {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            background: rgba(255,255,255,0.04);
-            border: 1px solid var(--border-glass);
-            border-radius: 8px;
-            color: white;
+            gap: 20px;
             font-size: 0.9rem;
         }
 
-        .quick-publish textarea {
-            resize: vertical;
-            height: 60px;
-        }
-
-        .btn-submit {
-            width: 100%;
-            padding: 11px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            border: none;
-            border-radius: 8px;
-            color: white;
-            font-weight: 600;
+        .nav-link {
             cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            color: white;
+            text-decoration: none;
         }
 
-        .feed-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 16px;
+        .nav-link span:first-child {
+            font-size: 0.75rem;
+            color: #cccccc;
         }
 
-        .feed-post {
+        .nav-link span:last-child {
+            font-weight: bold;
+        }
+
+        /* Sub Navigation */
+        .sub-nav {
+            background-color: var(--header-sub);
+            color: white;
+            padding: 10px 24px;
+            display: flex;
+            gap: 25px;
+            font-size: 0.9rem;
+            align-items: center;
+        }
+
+        .sub-nav div {
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 3px;
+            transition: background 0.2s;
+        }
+
+        .sub-nav div:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1300px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        /* Admin Dashboard Section (Visible/Unlockable) */
+        .admin-dashboard {
             background: var(--bg-card);
-            border: 1px solid var(--border-glass);
-            border-radius: 12px;
-            overflow: hidden;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            display: none;
+        }
+
+        .admin-dashboard.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 12px;
+        }
+
+        .admin-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: #f8f9fa;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .stat-card .value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--accent);
+            margin-top: 5px;
+        }
+
+        .admin-security-box {
+            background: #fff8e8;
+            border: 1px solid #ffeeba;
+            padding: 15px;
+            border-radius: 6px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .admin-security-box input {
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            width: 250px;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: var(--text-dark);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+        }
+
+        /* Products Grid */
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        .product-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 18px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            transition: box-shadow 0.2s, transform 0.2s;
         }
 
-        .post-header {
-            padding: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+        .product-card:hover {
+            box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+            transform: translateY(-2px);
         }
 
-        .post-author-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .avatar-placeholder {
-            width: 32px;
-            height: 32px;
-            background: var(--primary);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 0.8rem;
-        }
-
-        .post-media {
+        .product-img {
             width: 100%;
             height: 180px;
-            object-fit: cover;
-            background: #000;
+            object-fit: contain;
+            margin-bottom: 12px;
         }
 
-        .post-body {
-            padding: 12px;
-        }
-
-        .post-title {
-            font-size: 1rem;
-            font-weight: 600;
+        .product-category {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            font-weight: bold;
             margin-bottom: 4px;
         }
 
-        .post-price {
-            color: #10b981;
-            font-weight: 700;
-            font-size: 1.1rem;
-            margin-bottom: 6px;
+        .product-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
 
-        .post-desc {
-            font-size: 0.82rem;
-            color: var(--text-muted);
-            margin-bottom: 10px;
+        .product-rating {
+            color: #ffa41c;
+            font-size: 0.85rem;
+            margin-bottom: 8px;
         }
 
-        .post-actions {
-            display: flex;
-            border-top: 1px solid var(--border-glass);
-            padding: 8px 12px;
-            justify-content: space-between;
-            font-size: 0.82rem;
+        .product-price {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 12px;
         }
 
-        .post-btn {
-            background: none;
-            border: none;
-            color: var(--text-muted);
+        .product-price span {
+            font-size: 0.75rem;
+            vertical-align: super;
+        }
+
+        .btn-buy {
+            background-color: #ffd814;
+            border: 1px solid #fcd200;
+            border-radius: 20px;
+            padding: 8px;
+            width: 100%;
             cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            box-shadow: 0 2px 5px rgba(213,217,217,.5);
+            transition: background 0.2s;
         }
 
-        .post-btn:hover {
-            color: var(--primary);
+        .btn-buy:hover {
+            background-color: #f7ca00;
+        }
+
+        /* Modal Lock Admin Code */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            display: none;
+        }
+
+        .modal-box {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            width: 350px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .modal-box h3 {
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .modal-box input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
         }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="logo-area">🛍️ Social Shop</div>
-        <div class="search-bar-container">
-            <span class="search-icon">🔍</span>
-            <input type="text" id="search-input" placeholder="Rechercher produit, ou tapez 'admin 9D93', 'livreur'..." oninput="handleGlobalSearch()">
+        <div class="logo-area" onclick="location.reload()">Global<span>Store</span></div>
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="Rechercher un produit, une offre..." oninput="handleSearch()">
+            <button onclick="handleSearch()">🔍</button>
         </div>
         <div class="header-actions">
-            <button id="header-install-btn" class="btn-install-header" onclick="triggerInstall()">📱 Installer</button>
-            <button class="btn-share" onclick="shareApp()">🔗 Partager</button>
+            <div class="nav-link" onclick="openAdminPrompt()">
+                <span>Panneau</span>
+                <span>🔒 Admin</span>
+            </div>
+            <div class="nav-link" onclick="alert('Votre panier contient ' + cartCount + ' article(s).')">
+                <span>Panier</span>
+                <span>🛒 (<span id="cart-counter">0</span>)</span>
+            </div>
         </div>
     </header>
 
-    <div class="app-container">
+    <div class="sub-nav">
+        <div onclick="filterCategory('all')">📦 Tout le Catalogue</div>
+        <div onclick="filterCategory('constr')">🏗️ Construction & Matériaux</div>
+        <div onclick="filterCategory('agri')">🌱 Agriculture & Élevage</div>
+        <div onclick="filterCategory('tech')">💻 High-Tech & Matériel</div>
+    </div>
 
-        <!-- Bannière d'invitation à l'installation -->
-        <div id="install-banner">
-            <div class="install-banner-content">
-                <h3>Installez Social Shop</h3>
-                <p>Ouvrez l'application directement depuis votre écran d'accueil en un seul clic.</p>
-            </div>
-            <div class="install-actions">
-                <button class="btn-install-action" onclick="triggerInstall()">Installer</button>
-                <button class="btn-close-banner" onclick="dismissInstallBanner()">Plus tard</button>
-            </div>
-        </div>
+    <div class="main-container">
 
-        <!-- PANNEAU ADMINISTRATEUR SECRETS (Déclenché par: admin 9D93) -->
-        <div id="panel-admin" class="dynamic-view-panel">
-            <div class="panel-title">🛡️ Espace Administration Global (Accès Sécurisé: admin 9D93)</div>
-            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 15px;">Supervision générale des flux et validation des commissions (5%).</p>
+        <!-- ESPACE ADMIN DESIGNÉ ET VISIBLE (Déverrouillable par code) -->
+        <div id="admin-panel" class="admin-dashboard">
+            <div class="admin-header">
+                <h3>🛡️ Supervision Administrative Globale & Commissions</h3>
+                <button class="btn-primary" onclick="lockAdminPanel()" style="background:#e7e7e7; color:#333;">Verrouiller</button>
+            </div>
             
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; text-align: center; margin-bottom: 20px;">
-                <div style="background:rgba(255,255,255,0.03); padding:10px; border-radius:8px;">
-                    <div style="font-size:1.2rem; font-weight:bold; color:#10b981;" id="admin-total-rev">$0.00</div>
-                    <div style="font-size:0.75rem; color:var(--text-muted);">Volume Global</div>
+            <div class="admin-stats-grid">
+                <div class="stat-card">
+                    <div>Volume Total des Ventes</div>
+                    <div class="value" id="stat-volume">$0.00</div>
                 </div>
-                <div style="background:rgba(255,255,255,0.03); padding:10px; border-radius:8px;">
-                    <div style="font-size:1.2rem; font-weight:bold; color:var(--primary);" id="admin-total-comm">$0.00</div>
-                    <div style="font-size:0.75rem; color:var(--text-muted);">Commissions Admin (5%)</div>
+                <div class="stat-card">
+                    <div>Commission Admin (5%)</div>
+                    <div class="value" id="stat-commission">$0.00</div>
                 </div>
-                <div style="background:rgba(255,255,255,0.03); padding:10px; border-radius:8px;">
-                    <div style="font-size:1.2rem; font-weight:bold;" id="admin-total-sales">0</div>
-                    <div style="font-size:0.75rem; color:var(--text-muted);">Transactions Réussies</div>
+                <div class="stat-card">
+                    <div>Commandes Validées</div>
+                    <div class="value" id="stat-sales-count">0</div>
                 </div>
             </div>
 
-            <!-- Module de changement de mot de passe admin -->
-            <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-glass); padding: 15px; border-radius: 8px;">
-                <h4 style="font-size:0.9rem; color:var(--primary); margin-bottom:8px;">🔑 Sécurité : Modifier le code d'accès Admin</h4>
-                <input type="password" id="new-admin-code" placeholder="Nouveau code (ex: admin 1234)" style="width:100%; padding:8px; margin-bottom:8px; background:rgba(255,255,255,0.04); border:1px solid var(--border-glass); border-radius:6px; color:white; font-size:0.85rem;">
-                <button onclick="updateAdminCode()" style="padding:8px 14px; background:var(--primary); border:none; border-radius:6px; color:white; font-weight:600; cursor:pointer; font-size:0.85rem;">Enregistrer le nouveau code</button>
+            <div class="admin-security-box">
+                <div>
+                    <strong>🔑 Sécurité du Code d'Accès</strong>
+                    <div style="font-size: 0.8rem; color: var(--text-muted);">Modifiez le code secret requis pour administrer la plateforme.</div>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="new-code-input" placeholder="Nouveau code admin...">
+                    <button class="btn-primary" onclick="updateAdminPasscode()">Mettre à jour</button>
+                </div>
             </div>
         </div>
 
-        <!-- PANNEAU LIVREUR -->
-        <div id="panel-delivery" class="dynamic-view-panel">
-            <div class="panel-title">🚚 Espace Livreur & Suivi Logistique</div>
-            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px;">Courses et colis en attente d'acheminement.</p>
-            <div id="delivery-items-list" style="font-size: 0.85rem;"></div>
+        <div class="section-title">Catalogue des Offres & Produits Recommandés</div>
+        
+        <div id="products-grid" class="products-grid">
+            <!-- Injection dynamique des produits -->
         </div>
-
-        <!-- Formulaire de Publication -->
-        <div class="quick-publish">
-            <form id="pub-form" onsubmit="createPost(event)">
-                <select id="pub-cat" required>
-                    <option value="">-- Catégorie du produit / service --</option>
-                    <option value="livr">🚚 Logistique & Livraison</option>
-                    <option value="constr">🏗️ Construction & Matériaux</option>
-                    <option value="tech">💻 E-commerce & High-Tech</option>
-                    <option value="agri">🌱 Agriculture & Élevage</option>
-                    <option value="auto">🚗 Véhicules & Pièces</option>
-                </select>
-                <input type="text" id="pub-title" placeholder="Titre de l'offre..." required>
-                <input type="number" id="pub-price" placeholder="Prix en USD ($)" step="0.01" required>
-                <textarea id="pub-desc" placeholder="Description et détails..."></textarea>
-                <input type="file" id="pub-file" accept="image/*" style="font-size:0.8rem; margin-bottom:10px;">
-                <button type="submit" class="btn-submit">Publier dans le flux</button>
-            </form>
-        </div>
-
-        <div id="feed-container" class="feed-grid"></div>
 
     </div>
 
+    <!-- MODAL DE CODE ADMIN -->
+    <div id="admin-modal" class="modal-overlay">
+        <div class="modal-box">
+            <h3>🔑 Accès Sécurisé Administrateur</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">Entrez votre code d'accès pour déverrouiller le tableau de bord (Code par défaut : <code>admin 9D93</code>)</p>
+            <input type="password" id="modal-code-input" placeholder="Entrez le code...">
+            <div class="modal-actions">
+                <button class="btn-primary" style="background:#e7e7e7; color:#333;" onclick="closeAdminModal()">Annuler</button>
+                <button class="btn-primary" onclick="verifyAdminCode()">Valider</button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        let deferredPrompt = null;
+        // Base de données locale de produits
+        const products = [
+            { id: 1, category: 'constr', title: 'Pavés écologiques en plastique recyclé (Lot résistant)', price: 15.00, rating: '★★★★★ (42)', image: 'https://images.unsplash.com/photo-1590069261209-f8e9b8642343?auto=format&fit=crop&w=400&q=80' },
+            { id: 2, category: 'agri', title: 'Kit d’Incubation Automatique pour Élevage Avicole', price: 245.50, rating: '★★★★☆ (18)', image: 'https://images.unsplash.com/photo-1516467508483-a7212febe31a?auto=format&fit=crop&w=400&q=80' },
+            { id: 3, category: 'tech', title: 'Ordinateur Portable Ultra-Fin ThinkPad X1 Carbon', price: 899.99, rating: '★★★★☆ (124)', image: 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&w=400&q=80' },
+            { id: 4, category: 'agri', title: 'Substrat enrichi pour culture de champignons domestiques', price: 25.00, rating: '★★★★★ (29)', image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=400&q=80' }
+        ];
 
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            document.getElementById('install-banner').style.display = 'flex';
-            document.getElementById('header-install-btn').style.display = 'inline-block';
-        });
+        let cartCount = 0;
+        let currentFilter = 'all';
 
-        function triggerInstall() {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((choiceResult) => {
-                    if (choiceResult.outcome === 'accepted') {
-                        console.log('Utilisateur a accepté l\'installation');
-                    }
-                    deferredPrompt = null;
-                });
+        function getAdminCode() {
+            return localStorage.getItem('globalstore_admin_code') || 'admin 9D93';
+        }
+
+        function renderProducts(items) {
+            const grid = document.getElementById('products-grid');
+            grid.innerHTML = '';
+            
+            if(items.length === 0) {
+                grid.innerHTML = '<p style="grid-column:1/-1; text-align:center; color:var(--text-muted); padding:30px;">Aucun produit trouvé.</p>';
+                return;
+            }
+
+            items.forEach(p => {
+                grid.innerHTML += `
+                    <div class="product-card">
+                        <div>
+                            <img src="${p.image}" class="product-img" alt="${p.title}">
+                            <div class="product-category">${p.category.toUpperCase()}</div>
+                            <div class="product-title">${p.title}</div>
+                            <div class="product-rating">${p.rating}</div>
+                            <div class="product-price"><span>$</span>${p.price.toFixed(2)}</div>
+                        </div>
+                        <button class="btn-buy" onclick="simulatePurchase(${p.price})">🛒 Acheter / Commander</button>
+                    </div>
+                `;
+            });
+        }
+
+        function simulatePurchase(price) {
+            cartCount++;
+            document.getElementById('cart-counter').textContent = cartCount;
+
+            // Enregistrement de la vente pour l'administrateur (5% commission)
+            let totalVolume = parseFloat(localStorage.getItem('gs_volume') || '0') + price;
+            let salesCount = parseInt(localStorage.getItem('gs_sales') || '0') + 1;
+            
+            localStorage.setItem('gs_volume', totalVolume);
+            localStorage.setItem('gs_sales', salesCount);
+            
+            updateAdminStats();
+            alert('Achat validé avec succès ! Commission administrateur calculée.');
+        }
+
+        function updateAdminStats() {
+            let volume = parseFloat(localStorage.getItem('gs_volume') || '0');
+            let sales = parseInt(localStorage.getItem('gs_sales') || '0');
+            let commission = volume * 0.05;
+
+            document.getElementById('stat-volume').textContent = `$${volume.toFixed(2)}`;
+            document.getElementById('stat-commission').textContent = `$${commission.toFixed(2)}`;
+            document.getElementById('stat-sales-count').textContent = sales;
+        }
+
+        function openAdminPrompt() {
+            document.getElementById('admin-modal').style.display = 'flex';
+            document.getElementById('modal-code-input').value = '';
+            document.getElementById('modal-code-input').focus();
+        }
+
+        function closeAdminModal() {
+            document.getElementById('admin-modal').style.display = 'none';
+        }
+
+        function verifyAdminCode() {
+            const entered = document.getElementById('modal-code-input').value.trim();
+            if(entered === getAdminCode()) {
+                closeAdminModal();
+                document.getElementById('admin-panel').classList.add('active');
+                updateAdminStats();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             } else {
-                alert('Pour installer Social Shop :\n- Android / PC (Chrome) : Ouvrez le menu du navigateur (3 points) et sélectionnez "Ajouter à l\'écran d\'accueil" ou "Installer l\'application".\n- iPhone (Safari) : Appuyez sur le bouton de partage en bas et sélectionnez "Sur l\'écran d\'accueil".');
+                alert('Code d\'accès incorrect.');
             }
         }
 
-        function dismissInstallBanner() {
-            document.getElementById('install-banner').style.display = 'none';
+        function lockAdminPanel() {
+            document.getElementById('admin-panel').classList.remove('active');
         }
 
-        function shareApp() {
-            const appUrl = window.location.href;
-            if (navigator.share) {
-                navigator.share({
-                    title: 'Social Shop',
-                    text: 'Découvrez la plateforme Social Shop :',
-                    url: appUrl,
-                }).catch(() => {});
-            } else {
-                navigator.clipboard.writeText(appUrl);
-                alert('Lien de Social Shop copié dans le presse-papier !');
-            }
-        }
-
-        function getAdminPasscode() {
-            return localStorage.getItem('socialshop_admin_passcode') || 'admin 9D93';
-        }
-
-        function updateAdminCode() {
-            const val = document.getElementById('new-admin-code').value.trim();
-            if(val.length < 3) {
+        function updateAdminPasscode() {
+            const newCode = document.getElementById('new-code-input').value.trim();
+            if(newCode.length < 3) {
                 alert('Le code doit contenir au moins 3 caractères.');
                 return;
             }
-            localStorage.setItem('socialshop_admin_passcode', val);
-            document.getElementById('new-admin-code').value = '';
-            alert('Code d\'accès administrateur modifié avec succès ! Utilisez désormais : ' + val);
+            localStorage.setItem('globalstore_admin_code', newCode);
+            document.getElementById('new-code-input').value = '';
+            alert('Code administrateur mis à jour avec succès !');
         }
 
-        function getPublications() {
-            const data = localStorage.getItem('socialshop_secure_posts');
-            if(data) {
-                try { return JSON.parse(data); } catch(e) { return getDefaultPosts(); }
-            }
-            return getDefaultPosts();
+        function filterCategory(cat) {
+            currentFilter = cat;
+            applyFilters();
         }
 
-        function savePublications(posts) {
-            localStorage.setItem('socialshop_secure_posts', JSON.stringify(posts));
+        function handleSearch() {
+            applyFilters();
         }
 
-        function getDefaultPosts() {
-            return [
-                {
-                    id: 1,
-                    category: 'livr',
-                    title: 'Service de Livraison Urbain Rapide',
-                    price: 5.00,
-                    desc: 'Course sécurisée de colis en ville.',
-                    mediaUrl: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=500&q=80',
-                    author: 'Logistique Social Shop',
-                    sold: false
-                },
-                {
-                    id: 2,
-                    category: 'constr',
-                    title: 'Pavés écologiques en plastique recyclé',
-                    price: 15.00,
-                    desc: 'Matériau résistant pour chantiers durables.',
-                    mediaUrl: 'https://images.unsplash.com/photo-1590069261209-f8e9b8642343?auto=format&fit=crop&w=500&q=80',
-                    author: 'Busimba Roland',
-                    sold: false
-                }
-            ];
-        }
-
-        function createPost(e) {
-            e.preventDefault();
-            const category = document.getElementById('pub-cat').value;
-            const title = document.getElementById('pub-title').value;
-            const price = parseFloat(document.getElementById('pub-price').value);
-            const desc = document.getElementById('pub-desc').value;
-            const fileInput = document.getElementById('pub-file');
-
-            let mediaUrl = 'https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=500&q=80';
-            if(fileInput.files.length > 0) {
-                mediaUrl = URL.createObjectURL(fileInput.files[0]);
-            }
-
-            const newPost = {
-                id: Date.now(),
-                category,
-                title,
-                price,
-                desc,
-                mediaUrl,
-                author: 'Busimba Roland',
-                sold: false
-            };
-
-            let posts = getPublications();
-            posts.unshift(newPost);
-            savePublications(posts);
-
-            document.getElementById('pub-form').reset();
-            renderApp('');
-            alert('Offre publiée !');
-        }
-
-        function simulateSale(id) {
-            let posts = getPublications();
-            const post = posts.find(p => p.id === id);
-            if(post) {
-                post.sold = true;
-                savePublications(posts);
-                renderApp(document.getElementById('search-input').value);
-                alert(`Vente validée ! Commission administrateur calculée.`);
-            }
-        }
-
-        function deletePost(id) {
-            if(confirm('Supprimer cette publication ?')) {
-                let posts = getPublications();
-                posts = posts.filter(p => p.id !== id);
-                savePublications(posts);
-                renderApp(document.getElementById('search-input').value);
-            }
-        }
-
-        function handleGlobalSearch() {
+        function applyFilters() {
             const query = document.getElementById('search-input').value.toLowerCase().trim();
-            renderApp(query);
+            let filtered = products;
+
+            if(currentFilter !== 'all') {
+                filtered = filtered.filter(p => p.category === currentFilter);
+            }
+
+            if(query) {
+                filtered = filtered.filter(p => p.title.toLowerCase().includes(query));
+            }
+
+            renderProducts(filtered);
         }
 
-        function renderApp(query) {
-            const panelAdmin = document.getElementById('panel-admin');
-            const panelDelivery = document.getElementById('panel-delivery');
-
-            panelAdmin.classList.remove('active-panel');
-            panelDelivery.classList.remove('active-panel');
-
-            const currentAdminKey = getAdminPasscode().toLowerCase();
-            if(query.includes(currentAdminKey)) {
-                panelAdmin.classList.add('active-panel');
-            }
-
-            if(query.includes('livreur') || query.includes('logistique')) {
-                panelDelivery.classList.add('active-panel');
-            }
-
-            const posts = getPublications();
-            const soldPosts = posts.filter(p => p.sold);
-            const totalRev = soldPosts.reduce((acc, curr) => acc + curr.price, 0);
-            
-            document.getElementById('admin-total-rev').textContent = `$${totalRev.toFixed(2)}`;
-            document.getElementById('admin-total-comm').textContent = `$${(totalRev * 0.05).toFixed(2)}`;
-            document.getElementById('admin-total-sales').textContent = soldPosts.length;
-
-            const deliveryBox = document.getElementById('delivery-items-list');
-            const deliveryPosts = posts.filter(p => p.category === 'livr');
-            deliveryBox.innerHTML = deliveryPosts.length ? '' : 'Aucune course en cours.';
-            deliveryPosts.forEach(d => {
-                deliveryBox.innerHTML += `<div style="padding:4px 0; border-bottom:1px solid rgba(255,255,255,0.03); display:flex; justify-content:space-between;"><span>🚚 ${d.title}</span> <strong style="color:#10b981">$${d.price}</strong></div>`;
-            });
-
-            const container = document.getElementById('feed-container');
-            container.innerHTML = '';
-
-            let filtered = posts;
-            const pureQuery = query.replace(currentAdminKey, '').replace('livreur', '').replace('logistique', '').trim();
-
-            if(pureQuery) {
-                filtered = posts.filter(p => p.title.toLowerCase().includes(pureQuery) || p.desc.toLowerCase().includes(pureQuery) || p.category.toLowerCase().includes(pureQuery));
-            }
-
-            if(filtered.length === 0) {
-                container.innerHTML = '<p style="grid-column: 1/-1; text-align:center; color:var(--text-muted); padding:20px;">Aucun résultat trouvé pour cette recherche.</p>';
-                return;
-            }
-
-            filtered.forEach(post => {
-                const card = document.createElement('div');
-                card.className = 'feed-post';
-                let soldBadge = post.sold ? '<span style="background:#10b981; color:white; padding:2px 6px; border-radius:4px; font-size:0.7rem;">Vendu</span>' : '';
-
-                card.innerHTML = `
-                    <div>
-                        <div class="post-header">
-                            <div class="post-author-info">
-                                <div class="avatar-placeholder">${post.author.charAt(0)}</div>
-                                <span style="font-size:0.85rem; font-weight:600;">${post.author}</span>
-                            </div>
-                            ${soldBadge}
-                        </div>
-                        <img src="${post.mediaUrl}" class="post-media" alt="Média">
-                        <div class="post-body">
-                            <div class="post-title">${post.title}</div>
-                            <div class="post-price">$${post.price.toFixed(2)}</div>
-                            <div class="post-desc">${post.desc}</div>
-                        </div>
-                    </div>
-                    <div class="post-actions">
-                        <button class="post-btn" onclick="simulateSale(${post.id})">🛒 Acheter</button>
-                        <button class="post-btn" onclick="deletePost(${post.id})" style="color:#ef4444;">🗑️ Supprimer</button>
-                    </div>
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        renderApp('');
+        // Initialisation
+        renderProducts(products);
+        updateAdminStats();
     </script>
 </body>
 </html>
--- Suppression des tables existantes pour une réinitialisation propre
-DROP TABLE IF EXISTS real_time_deliveries;
-DROP TABLE IF EXISTS order_items;
-DROP TABLE IF EXISTS orders;
-DROP TABLE IF EXISTS cart_items;
-DROP TABLE IF EXISTS social_posts;
-DROP TABLE IF EXISTS products;
-DROP TABLE IF EXISTS users;
-
--- 1. Table des utilisateurs (Acheteurs, Vendeurs, Livreurs)
-CREATE TABLE users (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(100) NOT NULL UNIQUE,
-    email VARCHAR(150) NOT NULL UNIQUE,
-    password_hash VARCHAR(255) NOT NULL,
-    role ENUM('buyer', 'seller', 'delivery_driver') DEFAULT 'buyer',
-    avatar_url VARCHAR(255),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- 2. Table des produits (inspirée d'Alibaba : MOQ - Minimum Order Quantity)
-CREATE TABLE products (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    seller_id INT NOT NULL,
-    title VARCHAR(255) NOT NULL,
-    description TEXT NOT NULL,
-    unit_price DECIMAL(10, 2) NOT NULL,
-    moq INT DEFAULT 1 COMMENT 'Minimum Order Quantity',
-    stock_quantity INT NOT NULL,
-    image_url VARCHAR(255),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (seller_id) REFERENCES users(id) ON DELETE CASCADE
-);
-
--- 3. Table des publications sociales (Flux interactif style Facebook + Produit épinglé)
-CREATE TABLE social_posts (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    product_id INT DEFAULT NULL COMMENT 'Produit optionnel lié au post (Caddie/Social Shop)',
-    content TEXT NOT NULL,
-    media_url VARCHAR(255),
-    likes_count INT DEFAULT 0,
-    comments_count INT DEFAULT 0,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE SET NULL
-);
-
--- 4. Table du panier dynamique (Le "Caddie rempli" Social Shop)
-CREATE TABLE cart_items (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    product_id INT NOT NULL,
-    quantity INT NOT NULL DEFAULT 1,
-    added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
-);
-
--- 5. Table des commandes (Style Alibaba B2B/B2C)
-CREATE TABLE orders (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    buyer_id INT NOT NULL,
-    total_amount DECIMAL(10,2) NOT NULL,
-    status ENUM('pending', 'processing', 'shipped', 'delivered', 'cancelled') DEFAULT 'pending',
-    shipping_address TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (buyer_id) REFERENCES users(id) ON DELETE CASCADE
-);
-
-CREATE TABLE order_items (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    order_id INT NOT NULL,
-    product_id INT NOT NULL,
-    quantity INT NOT NULL,
-    price_at_purchase DECIMAL(10,2) NOT NULL,
-    FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
-    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
-);
-
--- 6. Table de livraison en temps réel (GPS & Suivi transporteur)
-CREATE TABLE real_time_deliveries (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    order_id INT NOT NULL,
-    driver_id INT NOT NULL,
-    current_latitude DECIMAL(10, 8) NOT NULL,
-    current_longitude DECIMAL(11, 8) NOT NULL,
-    estimated_delivery_time DATETIME,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
-    FOREIGN KEY (driver_id) REFERENCES users(id) ON DELETE CASCADE
-);
