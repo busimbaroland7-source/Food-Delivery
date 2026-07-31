@@ -522,7 +522,6 @@
         let cartCount = 0;
         let currentFilter = 'all';
 
-        // Gestion de la couleur dynamique (Persistante)
         function applyStoredTheme() {
             const savedColor = localStorage.getItem('ss_theme_color') || '#008060';
             document.documentElement.style.setProperty('--theme-color', savedColor);
@@ -674,7 +673,6 @@
             renderProducts(filtered);
         }
 
-        // Initialisation
         applyStoredTheme();
         renderProducts(products);
         updateAdminStats();
