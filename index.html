@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alibaba-Style MVP - Sécurisé par Code</title>
+    <title>Social Shop - Application Installable & Sécurisée</title>
+    <meta name="theme-color" content="#ff6600">
     <style>
         :root {
             --primary: #ff6600;
@@ -45,13 +46,16 @@
         .logo-area {
             font-weight: 800;
             color: var(--primary);
-            font-size: 1.3rem;
+            font-size: 1.1rem;
             letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .search-bar-container {
             flex: 1;
-            max-width: 650px;
+            max-width: 550px;
             position: relative;
         }
 
@@ -79,22 +83,83 @@
             color: var(--text-muted);
         }
 
-        .search-hint {
-            position: absolute;
-            right: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            background: rgba(255,255,255,0.05);
-            padding: 2px 6px;
-            border-radius: 4px;
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .btn-share, .btn-install-header {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border-glass);
+            color: var(--text-main);
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .btn-install-header {
+            background: var(--primary);
+            border: none;
+            display: none;
         }
 
         .app-container {
             max-width: 1100px;
             margin: 0 auto;
             padding: 20px;
+        }
+
+        #install-banner {
+            background: linear-gradient(135deg, #1f2937, #111827);
+            border: 1px solid var(--primary);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            box-shadow: 0 4px 20px rgba(255, 102, 0, 0.15);
+        }
+
+        .install-banner-content h3 {
+            font-size: 1rem;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+
+        .install-banner-content p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .install-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-install-action {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.82rem;
+            cursor: pointer;
+        }
+
+        .btn-close-banner {
+            background: transparent;
+            border: 1px solid var(--border-glass);
+            color: var(--text-muted);
+            padding: 8px 10px;
+            border-radius: 8px;
+            font-size: 0.82rem;
+            cursor: pointer;
         }
 
         .dynamic-view-panel {
@@ -248,16 +313,30 @@
 <body>
 
     <header>
-        <div class="logo-area">🌐 Alibaba-MVP</div>
+        <div class="logo-area">🛍️ Social Shop</div>
         <div class="search-bar-container">
             <span class="search-icon">🔍</span>
             <input type="text" id="search-input" placeholder="Rechercher produit, ou tapez 'admin 9D93', 'livreur'..." oninput="handleGlobalSearch()">
-            <span class="search-hint">Tapez admin 9D93</span>
         </div>
-        <div style="font-size: 0.8rem; color: var(--text-muted);">Sécurisé</div>
+        <div class="header-actions">
+            <button id="header-install-btn" class="btn-install-header" onclick="triggerInstall()">📱 Installer</button>
+            <button class="btn-share" onclick="shareApp()">🔗 Partager</button>
+        </div>
     </header>
 
     <div class="app-container">
+
+        <!-- Bannière d'invitation à l'installation -->
+        <div id="install-banner">
+            <div class="install-banner-content">
+                <h3>Installez Social Shop</h3>
+                <p>Ouvrez l'application directement depuis votre écran d'accueil en un seul clic.</p>
+            </div>
+            <div class="install-actions">
+                <button class="btn-install-action" onclick="triggerInstall()">Installer</button>
+                <button class="btn-close-banner" onclick="dismissInstallBanner()">Plus tard</button>
+            </div>
+        </div>
 
         <!-- PANNEAU ADMINISTRATEUR SECRETS (Déclenché par: admin 9D93) -->
         <div id="panel-admin" class="dynamic-view-panel">
@@ -318,8 +397,49 @@
     </div>
 
     <script>
+        let deferredPrompt = null;
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('install-banner').style.display = 'flex';
+            document.getElementById('header-install-btn').style.display = 'inline-block';
+        });
+
+        function triggerInstall() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('Utilisateur a accepté l\'installation');
+                    }
+                    deferredPrompt = null;
+                });
+            } else {
+                alert('Pour installer Social Shop :\n- Android / PC (Chrome) : Ouvrez le menu du navigateur (3 points) et sélectionnez "Ajouter à l\'écran d\'accueil" ou "Installer l\'application".\n- iPhone (Safari) : Appuyez sur le bouton de partage en bas et sélectionnez "Sur l\'écran d\'accueil".');
+            }
+        }
+
+        function dismissInstallBanner() {
+            document.getElementById('install-banner').style.display = 'none';
+        }
+
+        function shareApp() {
+            const appUrl = window.location.href;
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Social Shop',
+                    text: 'Découvrez la plateforme Social Shop :',
+                    url: appUrl,
+                }).catch(() => {});
+            } else {
+                navigator.clipboard.writeText(appUrl);
+                alert('Lien de Social Shop copié dans le presse-papier !');
+            }
+        }
+
         function getAdminPasscode() {
-            return localStorage.getItem('alibaba_admin_passcode') || 'admin 9D93';
+            return localStorage.getItem('socialshop_admin_passcode') || 'admin 9D93';
         }
 
         function updateAdminCode() {
@@ -328,13 +448,13 @@
                 alert('Le code doit contenir au moins 3 caractères.');
                 return;
             }
-            localStorage.setItem('alibaba_admin_passcode', val);
+            localStorage.setItem('socialshop_admin_passcode', val);
             document.getElementById('new-admin-code').value = '';
             alert('Code d\'accès administrateur modifié avec succès ! Utilisez désormais : ' + val);
         }
 
         function getPublications() {
-            const data = localStorage.getItem('alibaba_secure_posts');
+            const data = localStorage.getItem('socialshop_secure_posts');
             if(data) {
                 try { return JSON.parse(data); } catch(e) { return getDefaultPosts(); }
             }
@@ -342,7 +462,7 @@
         }
 
         function savePublications(posts) {
-            localStorage.setItem('alibaba_secure_posts', JSON.stringify(posts));
+            localStorage.setItem('socialshop_secure_posts', JSON.stringify(posts));
         }
 
         function getDefaultPosts() {
@@ -354,7 +474,7 @@
                     price: 5.00,
                     desc: 'Course sécurisée de colis en ville.',
                     mediaUrl: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=500&q=80',
-                    author: 'Logistique Centrale',
+                    author: 'Logistique Social Shop',
                     sold: false
                 },
                 {
@@ -364,7 +484,7 @@
                     price: 15.00,
                     desc: 'Matériau résistant pour chantiers durables.',
                     mediaUrl: 'https://images.unsplash.com/photo-1590069261209-f8e9b8642343?auto=format&fit=crop&w=500&q=80',
-                    author: 'Roland Busimba',
+                    author: 'Busimba Roland',
                     sold: false
                 }
             ];
@@ -390,7 +510,7 @@
                 price,
                 desc,
                 mediaUrl,
-                author: 'Roland Busimba',
+                author: 'Busimba Roland',
                 sold: false
             };
 
@@ -435,7 +555,6 @@
             panelAdmin.classList.remove('active-panel');
             panelDelivery.classList.remove('active-panel');
 
-            // Vérification stricte du code d'administration configuré
             const currentAdminKey = getAdminPasscode().toLowerCase();
             if(query.includes(currentAdminKey)) {
                 panelAdmin.classList.add('active-panel');
@@ -509,3 +628,95 @@
     </script>
 </body>
 </html>
+-- Suppression des tables existantes pour une réinitialisation propre
+DROP TABLE IF EXISTS real_time_deliveries;
+DROP TABLE IF EXISTS order_items;
+DROP TABLE IF EXISTS orders;
+DROP TABLE IF EXISTS cart_items;
+DROP TABLE IF EXISTS social_posts;
+DROP TABLE IF EXISTS products;
+DROP TABLE IF EXISTS users;
+
+-- 1. Table des utilisateurs (Acheteurs, Vendeurs, Livreurs)
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(100) NOT NULL UNIQUE,
+    email VARCHAR(150) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    role ENUM('buyer', 'seller', 'delivery_driver') DEFAULT 'buyer',
+    avatar_url VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 2. Table des produits (inspirée d'Alibaba : MOQ - Minimum Order Quantity)
+CREATE TABLE products (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    seller_id INT NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    description TEXT NOT NULL,
+    unit_price DECIMAL(10, 2) NOT NULL,
+    moq INT DEFAULT 1 COMMENT 'Minimum Order Quantity',
+    stock_quantity INT NOT NULL,
+    image_url VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (seller_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- 3. Table des publications sociales (Flux interactif style Facebook + Produit épinglé)
+CREATE TABLE social_posts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    product_id INT DEFAULT NULL COMMENT 'Produit optionnel lié au post (Caddie/Social Shop)',
+    content TEXT NOT NULL,
+    media_url VARCHAR(255),
+    likes_count INT DEFAULT 0,
+    comments_count INT DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE SET NULL
+);
+
+-- 4. Table du panier dynamique (Le "Caddie rempli" Social Shop)
+CREATE TABLE cart_items (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    product_id INT NOT NULL,
+    quantity INT NOT NULL DEFAULT 1,
+    added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
+);
+
+-- 5. Table des commandes (Style Alibaba B2B/B2C)
+CREATE TABLE orders (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    buyer_id INT NOT NULL,
+    total_amount DECIMAL(10,2) NOT NULL,
+    status ENUM('pending', 'processing', 'shipped', 'delivered', 'cancelled') DEFAULT 'pending',
+    shipping_address TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (buyer_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE order_items (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id INT NOT NULL,
+    product_id INT NOT NULL,
+    quantity INT NOT NULL,
+    price_at_purchase DECIMAL(10,2) NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
+);
+
+-- 6. Table de livraison en temps réel (GPS & Suivi transporteur)
+CREATE TABLE real_time_deliveries (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id INT NOT NULL,
+    driver_id INT NOT NULL,
+    current_latitude DECIMAL(10, 8) NOT NULL,
+    current_longitude DECIMAL(11, 8) NOT NULL,
+    estimated_delivery_time DATETIME,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
+    FOREIGN KEY (driver_id) REFERENCES users(id) ON DELETE CASCADE
+);
