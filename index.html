@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Style - Plateforme Mondiale Multi-Services</title>
+    <title>Style - MVP Marketplace & Social</title>
     <style>
         :root {
             --primary: #ff6600;
             --primary-dark: #e65c00;
-            --bg-dark: #0b0f19;
-            --bg-card: rgba(17, 24, 39, 0.7);
-            --border-glass: rgba(255, 255, 255, 0.1);
+            --bg-dark: #0f1117;
+            --bg-card: #1a1d24;
+            --border-glass: rgba(255, 255, 255, 0.08);
             --text-main: #f3f4f6;
             --text-muted: #9ca3af;
         }
@@ -19,455 +19,507 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
 
         body {
             background-color: var(--bg-dark);
             color: var(--text-main);
             min-height: 100vh;
-            overflow-x: hidden;
-            background-image: 
-                radial-gradient(circle at 10% 20%, rgba(255, 102, 0, 0.15) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(59, 130, 246, 0.15) 0%, transparent 40%);
         }
 
-        .glass-panel {
-            background: var(--bg-card);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--border-glass);
-            border-radius: 16px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-        }
-
-        /* Application principale */
-        #app-workspace {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
+        /* En-tête supérieur */
         header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(15, 17, 23, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-glass);
+            padding: 12px 20px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            padding: 15px 30px;
-            margin-bottom: 30px;
-            gap: 20px;
-            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 15px;
         }
 
         .logo-area {
-            font-size: 1.8rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #ff6600, #ff9933);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1.2rem;
         }
 
-        /* Barre de recherche et accès admin intégré */
-        .search-admin-bar {
+        .search-bar-container {
             flex: 1;
             max-width: 500px;
-            display: flex;
             position: relative;
         }
 
-        .search-admin-bar input {
+        .search-bar-container input {
             width: 100%;
-            padding: 12px 20px;
-            padding-right: 110px;
-            background: rgba(255, 255, 255, 0.05);
+            padding: 8px 12px 8px 36px;
+            background: rgba(255, 255, 255, 0.06);
             border: 1px solid var(--border-glass);
-            border-radius: 30px;
-            color: white;
-            font-size: 0.95rem;
-            outline: none;
-            transition: all 0.3s ease;
-        }
-
-        .search-admin-bar input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 15px rgba(255, 102, 0, 0.3);
-            background: rgba(255, 255, 255, 0.08);
-        }
-
-        .admin-login-btn {
-            position: absolute;
-            right: 5px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: linear-gradient(135deg, #ff6600, #ff8533);
-            border: none;
             border-radius: 20px;
             color: white;
-            padding: 8px 15px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: opacity 0.2s;
+            font-size: 0.9rem;
+            outline: none;
         }
 
-        .admin-login-btn:hover {
-            opacity: 0.9;
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
         }
 
-        .user-badge {
+        /* Agencement Global en 3 Colonnes pour PC (et empilé sur mobile) */
+        .app-layout {
+            display: grid;
+            grid-template-columns: 260px 1fr 320px;
+            max-width: 1400px;
+            margin: 0 auto;
+            min-height: calc(100vh - 65px);
+        }
+
+        /* COLONNE GAUCHE : Menu Latéral Fixe (Style Alibaba) */
+        .left-sidebar {
+            background: #14171f;
+            border-right: 1px solid var(--border-glass);
+            padding: 20px 0;
+            position: sticky;
+            top: 65px;
+            height: calc(100vh - 65px);
+            overflow-y: auto;
+        }
+
+        .sidebar-category-title {
+            padding: 0 20px 10px 20px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+        }
+
+        .sidebar-item {
+            padding: 12px 20px;
             display: flex;
             align-items: center;
             gap: 12px;
-            background: rgba(255, 255, 255, 0.05);
-            padding: 8px 16px;
-            border-radius: 30px;
-            border: 1px solid var(--border-glass);
             font-size: 0.9rem;
+            color: var(--text-main);
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+            border-left: 3px solid transparent;
         }
 
-        .user-badge span {
+        .sidebar-item:hover, .sidebar-item.active {
+            background: rgba(255, 102, 0, 0.1);
             color: var(--primary);
-            font-weight: 600;
+            border-left-color: var(--primary);
         }
 
-        .admin-badge {
-            background: rgba(239, 68, 68, 0.2);
-            color: #ef4444;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            border: 1px solid rgba(239, 68, 68, 0.4);
+        /* COLONNE CENTRALE : Flux d'Actualités (Style Facebook) */
+        .center-feed {
+            padding: 20px;
+            overflow-y: auto;
         }
 
-        /* Catégories */
-        .categories-section {
-            margin-bottom: 40px;
-        }
-
-        .section-title {
-            font-size: 1.3rem;
+        .quick-publish {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            border-radius: 12px;
+            padding: 16px;
             margin-bottom: 20px;
+        }
+
+        .quick-publish input, .quick-publish select, .quick-publish textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--border-glass);
+            border-radius: 8px;
+            color: white;
+            font-size: 0.9lg;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 10px;
+            background: var(--primary);
+            border: none;
+            border-radius: 8px;
+            color: white;
             font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-submit:hover {
+            background: var(--primary-dark);
+        }
+
+        .feed-post {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            border-radius: 12px;
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+
+        .post-header {
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .post-author-info {
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
-        .categories-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-            gap: 15px;
+        .avatar-placeholder {
+            width: 36px;
+            height: 36px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
         }
 
-        .category-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-glass);
-            border-radius: 12px;
-            padding: 18px 10px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        .post-author-name {
+            font-weight: 600;
+            font-size: 0.9rem;
         }
 
-        .category-card:hover, .category-card.active {
-            border-color: var(--primary);
-            transform: translateY(-4px);
-            background: rgba(255, 102, 0, 0.1);
-            box-shadow: 0 10px 25px -5px rgba(255, 102, 0, 0.2);
-        }
-
-        .category-icon {
-            font-size: 2rem;
-            margin-bottom: 8px;
-        }
-
-        .category-name {
-            font-size: 0.85rem;
-            font-weight: 500;
-            color: var(--text-main);
-        }
-
-        /* Publication & Flux */
-        .publish-container {
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 30px;
-            margin-bottom: 40px;
-        }
-
-        @media (max-width: 900px) {
-            .publish-container {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .publish-card {
-            padding: 30px;
-        }
-
-        .form-row {
-            margin-bottom: 15px;
-        }
-
-        .form-row label {
-            display: block;
-            font-size: 0.85rem;
+        .post-time {
+            font-size: 0.75rem;
             color: var(--text-muted);
-            margin-bottom: 5px;
         }
 
-        .form-row input, .form-row select, .form-row textarea {
+        .post-media {
             width: 100%;
-            padding: 10px 14px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border-glass);
-            border-radius: 8px;
-            color: white;
-            font-size: 0.95rem;
+            max-height: 320px;
+            object-fit: cover;
+            background: #000;
         }
 
-        .form-row textarea {
-            resize: vertical;
-            height: 80px;
+        .post-body {
+            padding: 12px;
         }
 
-        .media-dropzone {
-            border: 2px dashed var(--border-glass);
-            border-radius: 12px;
-            padding: 25px;
-            text-align: center;
-            cursor: pointer;
-            transition: background 0.3s;
-            background: rgba(255, 255, 255, 0.02);
-            margin-bottom: 15px;
-        }
-
-        .media-dropzone:hover {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: var(--primary);
-        }
-
-        .btn-primary {
-            width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, #ff6600, #ff8533);
-            border: none;
-            border-radius: 8px;
-            color: white;
+        .post-title {
             font-size: 1rem;
             font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            box-shadow: 0 4px 15px rgba(255, 102, 0, 0.4);
-            margin-top: 10px;
+            margin-bottom: 4px;
         }
 
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 102, 0, 0.6);
-        }
-
-        .feed-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
-        }
-
-        .item-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-glass);
-            border-radius: 14px;
-            overflow: hidden;
-            transition: transform 0.3s;
-            position: relative;
-        }
-
-        .item-card:hover {
-            transform: translateY(-5px);
-            border-color: rgba(255, 102, 0, 0.4);
-        }
-
-        .item-media {
-            width: 100%;
-            height: 180px;
-            object-fit: cover;
-            background: #1a202c;
-        }
-
-        .item-content {
-            padding: 15px;
-        }
-
-        .item-niche {
-            font-size: 0.75rem;
-            color: var(--primary);
-            text-transform: uppercase;
+        .post-price {
+            color: #10b981;
             font-weight: 700;
-            letter-spacing: 0.5px;
-            margin-bottom: 5px;
-        }
-
-        .item-title {
             font-size: 1.1rem;
-            font-weight: 600;
             margin-bottom: 8px;
         }
 
-        .item-price {
-            font-size: 1.2rem;
+        .post-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+
+        .post-actions {
+            display: flex;
+            border-top: 1px solid var(--border-glass);
+            padding: 8px 12px;
+            justify-content: space-between;
+            font-size: 0.85rem;
+        }
+
+        .post-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .post-btn:hover {
+            color: var(--primary);
+        }
+
+        /* COLONNE DROITE : Espace Profil & Business Admin */
+        .right-sidebar {
+            background: #14171f;
+            border-left: 1px solid var(--border-glass);
+            padding: 20px;
+            position: sticky;
+            top: 65px;
+            height: calc(100vh - 65px);
+            overflow-y: auto;
+        }
+
+        .profile-card-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .profile-avatar-large {
+            width: 60px;
+            height: 60px;
+            background: var(--primary);
+            border-radius: 50%;
+            margin: 0 auto 10px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            font-weight: bold;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .stat-box {
+            background: rgba(255,255,255,0.03);
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border-glass);
+        }
+
+        .stat-box .val {
+            font-size: 1.1rem;
             font-weight: 700;
             color: #10b981;
         }
 
-        .item-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 15px;
-            border-top: 1px solid var(--border-glass);
-            font-size: 0.8rem;
+        .stat-box .lbl {
+            font-size: 0.7rem;
             color: var(--text-muted);
         }
 
-        .btn-delete-admin {
-            background: rgba(239, 68, 68, 0.2);
-            color: #ef4444;
-            border: 1px solid rgba(239, 68, 68, 0.5);
-            padding: 4px 8px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.75rem;
-            font-weight: 600;
-            transition: background 0.2s;
+        .business-model-box {
+            background: rgba(255, 102, 0, 0.05);
+            border: 1px solid rgba(255, 102, 0, 0.2);
+            border-radius: 12px;
+            padding: 14px;
+            font-size: 0.8rem;
+            line-height: 1.4;
         }
 
-        .btn-delete-admin:hover {
-            background: rgba(239, 68, 68, 0.4);
+        .business-model-box h4 {
+            color: var(--primary);
+            margin-bottom: 6px;
+            font-size: 0.85rem;
+        }
+
+        /* Adaptation responsive pour les petits écrans (Smartphones) */
+        @media (max-width: 900px) {
+            .app-layout {
+                grid-template-columns: 1fr;
+            }
+            .left-sidebar, .right-sidebar {
+                display: none; /* Masqué par défaut sur mobile, affichable via menu tiroir si besoin */
+            }
+            body {
+                padding-bottom: 50px;
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- Espace de Travail Principal -->
-    <div id="app-workspace">
-        <header class="glass-panel">
-            <div class="logo-area">STYLE</div>
+    <!-- En-tête supérieur -->
+    <header>
+        <div class="logo-area">⚡ Style MVP</div>
+        <div class="search-bar-container">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="search-input" placeholder="Rechercher un projet, un produit..." oninput="handleSearch()">
+        </div>
+        <button onclick="toggleMobileProfile()" style="background:none; border:none; color:white; font-size:1.2rem; cursor:pointer;" class="d-md-none">👤</button>
+    </header>
+
+    <!-- Structure Principale en 3 Colonnes -->
+    <div class="app-layout">
+
+        <!-- 1. COLONNE GAUCHE : Menu & Catégories (Style Alibaba) -->
+        <aside class="left-sidebar">
+            <div class="sidebar-category-title">Navigation Principale</div>
+            <div class="sidebar-item active" onclick="filterByCategory('all', this)">🌐 <span>Tout voir (Flux)</span></div>
             
-            <!-- Barre de recherche & Accès Admin -->
-            <div class="search-admin-bar">
-                <input type="text" id="search-input" placeholder="Rechercher un produit, service..." oninput="handleSearch()">
-                <button class="admin-login-btn" onclick="promptAdminAccess()">Admin</button>
-            </div>
+            <div class="sidebar-category-title" style="margin-top: 15px;">Écosystème & Projets</div>
+            <div class="sidebar-item" onclick="filterByCategory('constr', this)">🏗️ <span>Construction & Pavés</span></div>
+            <div class="sidebar-item" onclick="filterByCategory('livr', this)">🚚 <span>Livraison & Logistique</span></div>
+            <div class="sidebar-item" onclick="filterByCategory('tech', this)">💻 <span>E-commerce & Apps</span></div>
+            <div class="sidebar-item" onclick="filterByCategory('agri', this)">🌱 <span>Agriculture & Élevage</span></div>
+            <div class="sidebar-item" onclick="filterByCategory('auto', this)">🚗 <span>Véhicules & Pièces</span></div>
+            <div class="sidebar-item" onclick="filterByCategory('serv', this)">⚙️ <span>Services & Négoces</span></div>
+        </aside>
 
-            <div class="user-badge">
-                <span>Rôle :</span> 
-                <strong id="display-role">Membre</strong>
-                <span id="admin-badge-container"></span>
-            </div>
-        </header>
-
-        <!-- Section des Catégories (Inclut TOUT et LIVRAISON) -->
-        <section class="categories-section">
-            <div class="section-title">✨ Sélectionnez votre Niche & Catégories</div>
-            <div class="categories-grid" id="categories-container"></div>
-        </section>
-
-        <!-- Espace de Publication et Flux -->
-        <div class="publish-container">
-            <div class="glass-panel publish-card">
-                <div class="section-title" style="font-size: 1.1rem; margin-bottom: 15px;">🚀 Publier un Produit / Service</div>
-                <form id="publish-form">
-                    <div class="form-row">
-                        <label>Niche / Catégorie obligatoire</label>
-                        <select id="pub-category" required>
-                            <option value="">-- Choisir une niche --</option>
-                        </select>
-                    </div>
-                    <div class="form-row">
-                        <label>Titre de l'offre</label>
-                        <input type="text" id="pub-title" required placeholder="ex: Pavés écologiques / Livraison...">
-                    </div>
-                    <div class="form-row">
-                        <label>Prix ($)</label>
-                        <input type="number" id="pub-price" step="0.01" required placeholder="0.00">
-                    </div>
-                    <div class="form-row">
-                        <label>Média (Photo ou Vidéo max 5s)</label>
-                        <div class="media-dropzone" id="dropzone">
-                            📁 Glissez ou cliquez pour charger photo/vidéo
-                            <input type="file" id="pub-file" accept="image/*,video/*" style="display: none;">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <label>Description rapide</label>
-                        <textarea id="pub-desc" placeholder="Détails essentiels..."></textarea>
-                    </div>
-                    <button type="submit" class="btn-primary">Publier dans le flux permanent</button>
+        <!-- 2. COLONNE CENTRALE : Flux d'Actualités (Style Facebook) -->
+        <main class="center-feed">
+            <!-- Formulaire de Publication Rapide -->
+            <div class="quick-publish">
+                <form id="pub-form" onsubmit="createPost(event)">
+                    <select id="pub-cat">
+                        <option value="constr">🏗️ Construction & Matériaux</option>
+                        <option value="livr">🚚 Livraison & Logistique</option>
+                        <option value="tech">💻 E-commerce & High-Tech</option>
+                        <option value="agri">🌱 Agriculture & Élevage</option>
+                        <option value="auto">🚗 Véhicules & Pièces</option>
+                        <option value="serv">⚙️ Services Professionnels</option>
+                    </select>
+                    <input type="text" id="pub-title" placeholder="Titre de votre projet ou produit..." required>
+                    <input type="number" id="pub-price" placeholder="Prix en USD ($)" step="0.01" required>
+                    <textarea id="pub-desc" placeholder="Décrivez votre offre ou service..." rows="2"></textarea>
+                    <input type="file" id="pub-file" accept="image/*,video/*" style="font-size:0.8rem; margin-bottom:10px;">
+                    <button type="submit" class="btn-submit">Publier dans le flux</button>
                 </form>
             </div>
 
-            <!-- Flux des publications persistantes -->
-            <div>
-                <div class="section-title">🔥 Flux d'activités & Catalogue en direct</div>
-                <div class="feed-grid" id="feed-container"></div>
+            <!-- Liste des Publications -->
+            <div id="feed-container">
+                <!-- Injecté dynamiquement par JavaScript -->
             </div>
-        </div>
+        </main>
+
+        <!-- 3. COLONNE DROITE : Profil, Ventes & Modèle Économique Admin -->
+        <aside class="right-sidebar">
+            <div class="profile-card-box">
+                <div class="profile-avatar-large">RB</div>
+                <h3 style="font-size: 1rem; margin-bottom: 2px;">Roland Busimba</h3>
+                <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 12px;">Ingénieur / Entrepreneur MVP</p>
+                
+                <div class="stat-grid">
+                    <div class="stat-box">
+                        <div class="val" id="stat-revenue">$0.00</div>
+                        <div class="lbl">Gagné (Ventes)</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="val" id="stat-sales-count">0</div>
+                        <div class="lbl">Articles Vendus</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gestion Admin & Monétisation du MVP -->
+            <div class="business-model-box">
+                <h4>💡 Modèle Économique (Admin)</h4>
+                <p>Pour que ce MVP devienne rentable, l'administrateur gagne de l'argent de 3 manières :</p>
+                <ul style="margin-left: 15px; margin-top: 6px; font-size: 0.75rem;">
+                    <li><strong>Commission (5%)</strong> sur chaque vente sécurisée via la plateforme.</li>
+                    <li><strong>Frais de livraison</strong> (frais de logistique intégrés).</li>
+                    <li><strong>Sponsoring / Mises en avant</strong> payantes des projets d'entrepreneurs.</li>
+                </ul>
+            </div>
+
+            <div style="margin-top: 20px;">
+                <h4 style="font-size: 0.85rem; margin-bottom: 10px;">Mes Publications Récentes</h4>
+                <div id="user-mini-posts" style="font-size: 0.8rem; color: var(--text-muted);">
+                    <!-- Liste des posts persos -->
+                </div>
+            </div>
+        </aside>
+
     </div>
 
     <script>
-        // Catalogue complet incluant TOUT, LIVRAISON, et les autres secteurs
-        const categories = [
-            { id: 'all', name: 'Tout', symbol: '🌐' },
-            { id: 'livr', name: 'Livraison', symbol: '🚚' },
-            { id: 'constr', name: 'Construction & Matériaux', symbol: '🏗️' },
-            { id: 'tech', name: 'E-commerce & High-Tech', symbol: '💻' },
-            { id: 'agri', name: 'Agriculture & Élevage', symbol: '🌱' },
-            { id: 'logi', name: 'Logistique & Transport', symbol: '🚀' },
-            { id: 'mode', name: 'Mode & Vêtements', symbol: '👕' },
-            { id: 'immo', name: 'Immobilier & Terrains', symbol: '🏢' },
-            { id: 'sante', name: 'Santé & Bien-être', symbol: '💊' },
-            { id: 'auto', name: 'Véhicules & Pièces', symbol: '🚗' },
-            { id: 'alim', name: 'Alimentation & Boissons', symbol: '🍎' },
-            { id: 'serv', name: 'Services Professionnels', symbol: '⚙️' }
-        ];
-
-        let selectedCategoryFilter = 'all';
+        let currentCategory = 'all';
         let searchQuery = '';
-        let currentUser = { isAdmin: false };
 
-        // Initialisation des catégories graphiques et du menu déroulant de publication
-        function initCategories() {
-            const container = document.getElementById('categories-container');
-            const selectDropdown = document.getElementById('pub-category');
-            
-            container.innerHTML = '';
-            selectDropdown.innerHTML = '<option value="">-- Choisir une niche --</option>';
-
-            categories.forEach(cat => {
-                // Bouton cliquable de la grille
-                const card = document.createElement('div');
-                card.className = `category-card ${cat.id === 'all' ? 'active' : ''}`;
-                card.innerHTML = `
-                    <div class="category-icon">${cat.symbol}</div>
-                    <div class="category-name">${cat.name}</div>
-                `;
-                card.onclick = () => filterByCategory(cat.id, card);
-                container.appendChild(card);
-
-                // Option dans le formulaire de publication (sauf "Tout")
-                if (cat.id !== 'all') {
-                    const option = document.createElement('option');
-                    option.value = cat.id;
-                    option.textContent = `${cat.symbol} ${cat.name}`;
-                    selectDropdown.appendChild(option);
-                }
-            });
+        function getPublications() {
+            const data = localStorage.getItem('style_mvp_posts');
+            if(data) {
+                try { return JSON.parse(data); } catch(e) { return getDefaultPosts(); }
+            }
+            return getDefaultPosts();
         }
 
-        function filterByCategory(catId, element) {
-            document.querySelectorAll('.category-card').forEach(c => c.classList.remove('active'));
-            selectedCategoryFilter = catId;
-            element.classList.add('active');
+        function savePublications(posts) {
+            localStorage.setItem('style_mvp_posts', JSON.stringify(posts));
+        }
+
+        function getDefaultPosts() {
+            return [
+                {
+                    id: 1,
+                    category: 'constr',
+                    title: 'Pavés écologiques en plastique recyclé',
+                    price: 15.00,
+                    desc: 'Idéal pour vos chantiers durables à bas coût.',
+                    mediaUrl: 'https://images.unsplash.com/photo-1590069261209-f8e9b8642343?auto=format&fit=crop&w=500&q=80',
+                    author: 'Roland Busimba',
+                    date: 'Il y a 2h',
+                    sold: false
+                },
+                {
+                    id: 2,
+                    category: 'livr',
+                    title: 'Service de Livraison Express Urbain',
+                    price: 5.00,
+                    desc: 'Course rapide sécurisée avec suivi GPS.',
+                    mediaUrl: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=500&q=80',
+                    author: 'Logistique Express',
+                    date: 'Il y a 5h',
+                    sold: false
+                }
+            ];
+        }
+
+        function createPost(e) {
+            e.preventDefault();
+            const category = document.getElementById('pub-cat').value;
+            const title = document.getElementById('pub-title').value;
+            const price = parseFloat(document.getElementById('pub-price').value);
+            const desc = document.getElementById('pub-desc').value;
+            const fileInput = document.getElementById('pub-file');
+
+            let mediaUrl = 'https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=500&q=80';
+            if(fileInput.files.length > 0) {
+                mediaUrl = URL.createObjectURL(fileInput.files[0]);
+            }
+
+            const newPost = {
+                id: Date.now(),
+                category,
+                title,
+                price,
+                desc,
+                mediaUrl,
+                author: 'Roland Busimba',
+                date: 'À l\'instant',
+                sold: false
+            };
+
+            let posts = getPublications();
+            posts.unshift(newPost);
+            savePublications(posts);
+
+            document.getElementById('pub-form').reset();
+            renderAll();
+            alert('Publication ajoutée au flux avec succès !');
+        }
+
+        function filterByCategory(cat, element) {
+            currentCategory = cat;
+            document.querySelectorAll('.sidebar-item').forEach(item => item.classList.remove('active'));
+            if(element) element.classList.add('active');
             renderFeed();
         }
 
@@ -476,173 +528,109 @@
             renderFeed();
         }
 
-        // Accès administrateur sécurisé via la barre de recherche
-        function promptAdminAccess() {
-            const code = prompt('Entrez le code d\'accès administrateur :');
-            if (code === 'ADMIN99') {
-                currentUser.isAdmin = true;
-                document.getElementById('display-role').textContent = 'Administrateur';
-                document.getElementById('admin-badge-container').innerHTML = '<span class="admin-badge">ADMIN</span>';
-                alert('Accès administrateur accordé avec succès ! Vous pouvez maintenant supprimer des publications.');
-                renderFeed();
-            } else if (code !== null) {
-                alert('Code d\'accès incorrect.');
+        function simulateSale(id) {
+            let posts = getPublications();
+            const post = posts.find(p => p.id === id);
+            if(post) {
+                post.sold = true;
+                savePublications(posts);
+                renderAll();
+                alert(`Félicitations ! L'article "${post.title}" a été vendu. Commission administrateur perçue avec succès.`);
             }
         }
 
-        // Gestion du chargement de fichiers multimédias
-        const dropzone = document.getElementById('dropzone');
-        const fileInput = document.getElementById('pub-file');
-
-        dropzone.onclick = () => fileInput.click();
-        fileInput.onchange = (e) => {
-            if (e.target.files.length > 0) {
-                dropzone.innerHTML = `✅ Fichier sélectionné : <strong>${e.target.files[0].name}</strong>`;
+        function deletePost(id) {
+            if(confirm('Voulez-vous supprimer cette publication ?')) {
+                let posts = getPublications();
+                posts = posts.filter(p => p.id !== id);
+                savePublications(posts);
+                renderAll();
             }
-        };
-
-        // Persistance des données avec localStorage
-        function getSavedPublications() {
-            const data = localStorage.getItem('style_app_publications');
-            if (data) {
-                try { return JSON.parse(data); } catch (err) { return getDefaultPublications(); }
-            }
-            return getDefaultPublications();
         }
 
-        function savePublications(pubs) {
-            localStorage.setItem('style_app_publications', JSON.stringify(pubs));
-        }
-
-        function getDefaultPublications() {
-            return [
-                {
-                    id: 1,
-                    category: 'livr',
-                    title: 'Service de Livraison Express Sécurisé',
-                    price: 5.00,
-                    desc: 'Livraison rapide de colis et marchandises en ville avec suivi.',
-                    mediaUrl: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=500&q=80',
-                    author: 'Équipe Logistique',
-                    date: 'Aujourd\'hui'
-                },
-                {
-                    id: 2,
-                    category: 'constr',
-                    title: 'Pavés écologiques en plastique recyclé',
-                    price: 15.00,
-                    desc: 'Résistants et durables pour tous vos aménagements.',
-                    mediaUrl: 'https://images.unsplash.com/photo-1590069261209-f8e9b8642343?auto=format&fit=crop&w=500&q=80',
-                    author: 'Roland B.',
-                    date: 'Aujourd\'hui'
-                }
-            ];
-        }
-
-        // Soumission de publication enregistrée durablement
-        document.getElementById('publish-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const category = document.getElementById('pub-category').value;
-            const title = document.getElementById('pub-title').value;
-            const price = parseFloat(document.getElementById('pub-price').value);
-            const desc = document.getElementById('pub-desc').value;
-
-            let mediaUrl = 'https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=500&q=80';
-            if (fileInput.files.length > 0) {
-                mediaUrl = URL.createObjectURL(fileInput.files[0]);
-            }
-
-            const newPub = {
-                id: Date.now(),
-                category,
-                title,
-                price,
-                desc,
-                mediaUrl,
-                author: currentUser.isAdmin ? 'Administrateur' : 'Membre',
-                date: 'À l\'instant'
-            };
-
-            let publications = getSavedPublications();
-            publications.unshift(newPub);
-            savePublications(publications);
-
-            renderFeed();
-            this.reset();
-            dropzone.innerHTML = '📁 Glissez ou cliquez pour charger photo/vidéo';
-            alert('Publication enregistrée et ajoutée au flux permanent !');
-        });
-
-        // Suppression (Réservée exclusivement à l'administration)
-        window.deletePublication = function(id) {
-            if (!currentUser.isAdmin) {
-                alert('Action refusée : Seuls les membres de l\'administration peuvent supprimer une publication.');
-                return;
-            }
-            if (confirm('Voulez-vous vraiment supprimer définitivement cette publication ?')) {
-                let publications = getSavedPublications();
-                publications = publications.filter(p => p.id !== id);
-                savePublications(publications);
-                renderFeed();
-            }
-        };
-
-        // Affichage dynamique et filtré du flux
         function renderFeed() {
-            const feedContainer = document.getElementById('feed-container');
-            feedContainer.innerHTML = '';
+            const container = document.getElementById('feed-container');
+            container.innerHTML = '';
 
-            let publications = getSavedPublications();
+            let posts = getPublications();
 
-            // Filtrage par catégorie (si ce n'est pas "all")
-            if (selectedCategoryFilter !== 'all') {
-                publications = publications.filter(p => p.category === selectedCategoryFilter);
+            if(currentCategory !== 'all') {
+                posts = posts.filter(p => p.category === currentCategory);
             }
 
-            // Filtrage par recherche textuelle (barre de recherche en haut)
-            if (searchQuery) {
-                publications = publications.filter(p => 
-                    p.title.toLowerCase().includes(searchQuery) || 
-                    p.desc.toLowerCase().includes(searchQuery)
-                );
+            if(searchQuery) {
+                posts = posts.filter(p => p.title.toLowerCase().includes(searchQuery) || p.desc.toLowerCase().includes(searchQuery));
             }
 
-            if (publications.length === 0) {
-                feedContainer.innerHTML = '<p style="color: var(--text-muted); grid-column: 1/-1; text-align: center; padding: 40px;">Aucune publication trouvée.</p>';
+            if(posts.length === 0) {
+                container.innerHTML = '<p style="text-align:center; color:var(--text-muted); padding:30px;">Aucune publication disponible.</p>';
                 return;
             }
 
-            publications.forEach(pub => {
-                const catObj = categories.find(c => c.id === pub.category);
+            posts.forEach(post => {
                 const card = document.createElement('div');
-                card.className = 'item-card glass-panel';
+                card.className = 'feed-post';
                 
-                let adminControlHtml = '';
-                if (currentUser.isAdmin) {
-                    adminControlHtml = `<button class="btn-delete-admin" onclick="deletePublication(${pub.id})">🗑️ Supprimer (Admin)</button>`;
-                }
+                let badgeSold = post.sold ? '<span style="background:#10b981; color:white; padding:2px 6px; border-radius:4px; font-size:0.7rem;">Vendu</span>' : '';
 
                 card.innerHTML = `
-                    <img src="${pub.mediaUrl}" class="item-media" alt="Média publication">
-                    <div class="item-content">
-                        <div class="item-niche">${catObj ? catObj.symbol + ' ' + catObj.name : 'Général'}</div>
-                        <div class="item-title">${pub.title}</div>
-                        <div class="item-price">$${pub.price.toFixed(2)}</div>
-                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 5px;">${pub.desc}</p>
-                        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 8px;">Par : <strong>${pub.author || 'Membre'}</strong></p>
+                    <div class="post-header">
+                        <div class="post-author-info">
+                            <div class="avatar-placeholder">${post.author.charAt(0)}</div>
+                            <div>
+                                <div class="post-author-name">${post.author}</div>
+                                <div class="post-time">${post.date}</div>
+                            </div>
+                        </div>
+                        ${badgeSold}
                     </div>
-                    <div class="item-footer">
-                        <span>${pub.date}</span>
-                        ${adminControlHtml}
+                    <img src="${post.mediaUrl}" class="post-media" alt="Média">
+                    <div class="post-body">
+                        <div class="post-title">${post.title}</div>
+                        <div class="post-price">$${post.price.toFixed(2)}</div>
+                        <div class="post-desc">${post.desc}</div>
+                    </div>
+                    <div class="post-actions">
+                        <button class="post-btn" onclick="simulateSale(${post.id})">🛒 Simuler Achat</button>
+                        <button class="post-btn" onclick="deletePost(${post.id})" style="color:#ef4444;">🗑️ Supprimer</button>
                     </div>
                 `;
-                feedContainer.appendChild(card);
+                container.appendChild(card);
             });
         }
 
+        function renderProfileStats() {
+            const posts = getPublications().filter(p => p.author === 'Roland Busimba');
+            const soldPosts = posts.filter(p => p.sold);
+            
+            const totalRevenue = soldPosts.reduce((acc, curr) => acc + curr.price, 0);
+            
+            document.getElementById('stat-revenue').textContent = `$${totalRevenue.toFixed(2)}`;
+            document.getElementById('stat-sales-count').textContent = soldPosts.length;
+
+            const miniContainer = document.getElementById('user-mini-posts');
+            miniContainer.innerHTML = '';
+            
+            if(posts.length === 0) {
+                miniContainer.innerHTML = 'Aucune publication pour l\'instant.';
+                return;
+            }
+
+            posts.slice(0, 4).forEach(p => {
+                const item = document.createElement('div');
+                item.style.cssText = 'padding:6px 0; border-bottom:1px solid rgba(255,255,255,0.03); display:flex; justify-content:space-between; align-items:center;';
+                item.innerHTML = `<span>${p.title.substring(0, 20)}...</span> <strong style="color:${p.sold ? '#10b981' : 'var(--text-main)'}">$${p.price}</strong>`;
+                miniContainer.appendChild(item);
+            });
+        }
+
+        function renderAll() {
+            renderFeed();
+            renderProfileStats();
+        }
+
         // Lancement initial
-        initCategories();
-        renderFeed();
+        renderAll();
     </script>
 </body>
 </html>
