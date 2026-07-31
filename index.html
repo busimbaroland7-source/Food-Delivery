@@ -14,6 +14,7 @@
             --text-muted: #6d7175;
             --border-color: #e1e3e5;
             --sidebar-bg: #1a1a1a;
+            --theme-color: #008060;
         }
 
         * {
@@ -53,7 +54,7 @@
         }
 
         .sidebar-brand span {
-            color: #50e3c2;
+            color: var(--theme-color);
         }
 
         .sidebar-menu {
@@ -117,8 +118,8 @@
 
         .search-box input:focus {
             background-color: white;
-            border-color: var(--shopify-green);
-            box-shadow: 0 0 0 1px var(--shopify-green);
+            border-color: var(--theme-color);
+            box-shadow: 0 0 0 1px var(--theme-color);
         }
 
         .search-box span {
@@ -136,7 +137,7 @@
         }
 
         .btn {
-            background-color: var(--shopify-green);
+            background-color: var(--theme-color);
             color: white;
             border: none;
             padding: 8px 16px;
@@ -148,7 +149,7 @@
         }
 
         .btn:hover {
-            background-color: var(--shopify-green-hover);
+            opacity: 0.9;
         }
 
         .btn-secondary {
@@ -200,6 +201,7 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 20px;
+            margin-bottom: 20px;
         }
 
         .metric-card {
@@ -220,6 +222,24 @@
             font-weight: 700;
             margin-top: 8px;
             color: var(--text-dark);
+        }
+
+        .theme-picker-box {
+            background: #f6f6f7;
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .theme-picker-box input[type="color"] {
+            border: none;
+            width: 40px;
+            height: 35px;
+            cursor: pointer;
+            background: none;
         }
 
         /* Products Grid Shopify Style */
@@ -282,7 +302,7 @@
 
         .store-name {
             font-size: 0.8rem;
-            color: var(--shopify-green);
+            color: var(--theme-color);
             font-weight: 600;
             margin-bottom: 4px;
         }
@@ -354,8 +374,8 @@
         }
 
         .form-group input:focus {
-            border-color: var(--shopify-green);
-            box-shadow: 0 0 0 1px var(--shopify-green);
+            border-color: var(--theme-color);
+            box-shadow: 0 0 0 1px var(--theme-color);
         }
 
         .modal-actions {
@@ -376,7 +396,7 @@
             <div class="sidebar-item" onclick="filterCategory('fastfood')">🍟 Fast-Food & Burgers</div>
             <div class="sidebar-item" onclick="filterCategory('local')">🍲 Cuisine Locale</div>
             <div class="sidebar-item" onclick="filterCategory('grill')">🔥 Grillades</div>
-            <div class="sidebar-item" style="margin-top: 20px; color:#50e3c2;" onclick="openVendorModal()">+ Ajouter un Restaurant</div>
+            <div class="sidebar-item" style="margin-top: 20px; color:var(--theme-color);" onclick="openVendorModal()">+ Ajouter un Restaurant</div>
             <div class="sidebar-item" onclick="openAdminPrompt()">🔒 Panneau Admin</div>
         </div>
     </aside>
@@ -396,7 +416,7 @@
 
         <div class="container">
 
-            <!-- TABLEAU DE BORD ADMINISTRATEUR (STYLE ANALYTICS SHOPIFY) -->
+            <!-- TABLEAU DE BORD ADMINISTRATEUR -->
             <div id="admin-panel" class="admin-panel">
                 <div class="section-header">
                     <h2>📊 Tableau de Bord Administrateur & Commissions</h2>
@@ -409,11 +429,23 @@
                     </div>
                     <div class="metric-card">
                         <div class="label">Commission Plateforme (10%)</div>
-                        <div class="value" id="stat-commission" style="color: var(--shopify-green);">$0.00</div>
+                        <div class="value" id="stat-commission" style="color: var(--theme-color);">$0.00</div>
                     </div>
                     <div class="metric-card">
                         <div class="label">Commandes Totales</div>
                         <div class="value" id="stat-sales-count">0</div>
+                    </div>
+                </div>
+
+                <!-- SELECTEUR DE COULEUR PERSONNALISABLE SANS CODE -->
+                <div class="theme-picker-box">
+                    <div>
+                        <strong>🎨 Personnalisation de la Couleur du Thème</strong>
+                        <div style="font-size: 0.8rem; color: var(--text-muted);">Changez la couleur dominante de toute l'application instantanément.</div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <input type="color" id="theme-color-picker" value="#008060" onchange="changeThemeColor(this.value)">
+                        <button class="btn" onclick="resetThemeColor()">Défaut</button>
                     </div>
                 </div>
             </div>
@@ -489,6 +521,23 @@
 
         let cartCount = 0;
         let currentFilter = 'all';
+
+        // Gestion de la couleur dynamique (Persistante)
+        function applyStoredTheme() {
+            const savedColor = localStorage.getItem('ss_theme_color') || '#008060';
+            document.documentElement.style.setProperty('--theme-color', savedColor);
+            const picker = document.getElementById('theme-color-picker');
+            if(picker) picker.value = savedColor;
+        }
+
+        function changeThemeColor(color) {
+            document.documentElement.style.setProperty('--theme-color', color);
+            localStorage.setItem('ss_theme_color', color);
+        }
+
+        function resetThemeColor() {
+            changeThemeColor('#008060');
+        }
 
         function getAdminCode() {
             return localStorage.getItem('socialshopping_admin_code') || 'admin 9D93';
@@ -625,6 +674,8 @@
             renderProducts(filtered);
         }
 
+        // Initialisation
+        applyStoredTheme();
         renderProducts(products);
         updateAdminStats();
     </script>
